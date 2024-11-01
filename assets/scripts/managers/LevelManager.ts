@@ -1,17 +1,27 @@
 import { _decorator, Component } from 'cc';
+import { GridManager } from './GridManager';
 import { Level } from '../../data/level';
 const { ccclass, property } = _decorator;
 
-@ccclass('LevelManager')
+@ccclass("LevelManager")
 export class LevelManager extends Component {
 
-    private level: Level = new Level();
+    @property(GridManager)
+    public gridManager: GridManager = null!;
+
+    private level = new Level();
 
     onLoad() {
-        const matrix = this.level.getLevelMatrix("level_1");
+        this.loadLevel("level_1");
+    }
+
+    // `levelName` adı verilen seviyeyi yükler ve `GridManager` aracılığıyla grid oluşturur
+    loadLevel(levelName: string) {
+        const matrix = this.level.getLevelMatrix(levelName);
         if (matrix) {
-            console.log("Loaded level matrix:", matrix);
-            // Grid oluşturmak için `matrix` verisini kullanabilirsiniz.
+            this.gridManager.createGrid(matrix);
+        } else {
+            console.error(`Level ${levelName} not found in level data`);
         }
     }
 }

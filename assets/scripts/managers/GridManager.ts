@@ -1,54 +1,45 @@
-import { _decorator, Component, Node, Vec3, instantiate, Prefab } from 'cc';
+import { _decorator, Component, Node, Prefab, instantiate, Vec3 } from 'cc';
+import { Tile } from '../entity/Tile';
 const { ccclass, property } = _decorator;
 
 @ccclass("GridManager")
 export class GridManager extends Component {
 
     @property(Prefab)
-    tilePrefab: Prefab = null!; // Tile prefabini ayarlayın
+    public tilePrefab: Prefab = null!; // Her bir Tile için prefab
 
+    private tileSize = 1.5; // Tile'lar arasındaki mesafe
 
+    // Level verisi olarak 0 ve 6 arasında sayılar içeren 2D bir matrix alır
+    public createGrid(matrix: number[][]) {
+        // Grid’i merkezlemek için offset hesapla
+        const offsetX = (matrix[0].length - 1) * this.tileSize * 0.5;
+        const offsetY = (matrix.length - 1) * this.tileSize * 0.5;
 
-    @property
-    rows: number = 5; // Satır sayısı
-
-    @property
-    cols: number = 5; // Sütun sayısı
-
-    @property
-    spacing: number = 1.2; // Tile'lar arasındaki boşluk
-
-    private tiles: Node[][] = []; // 2D array to hold the tiles
-
-    onLoad() {
-        this.createGrid();
-    }
-
-    createGrid() {
-        // Grid'in toplam genişlik ve yüksekliğini hesaplayarak ortalama yapmak için offset belirle
-        const totalWidth = (this.cols - 1) * this.spacing;
-        const totalHeight = (this.rows - 1) * this.spacing;
-
-        for (let row = 0; row < this.rows; row++) {
-            const rowTiles: Node[] = [];
-            for (let col = 0; col < this.cols; col++) {
-                const tile = this.createTile(row, col, totalWidth, totalHeight);
-                rowTiles.push(tile);
+        // Grid’i oluştur
+        for (let row = 0; row < matrix.length; row++) {
+            for (let col = 0; col < matrix[row].length; col++) {
+                const tileType = matrix[row][col];
+                if (tileType > 0) { // 0 olmayan değerlere göre tile oluştur
+                    this.createTile(tileType, row, col, offsetX, offsetY);
+                }
             }
-            this.tiles.push(rowTiles);
         }
     }
 
-    createTile(row: number, col: number, totalWidth: number, totalHeight: number): Node {
-        const tileNode = instantiate(this.tilePrefab); // Yeni bir Tile oluştur
-        tileNode.parent = this.node; // Tile'ı gridArea altında konumlandır
+    private createTile(type: number, row: number, col: number, offsetX: number, offsetY: number) {
+        const tileNode = instantiate(this.tilePrefab);
+        tileNode.parent = this.node;
 
-        // Tile'ın gridArea içindeki pozisyonunu merkezlemek için offset uygula
-        const x = (col * this.spacing) - totalWidth / 2;
-        const y = 0;
-        const z = row * this.spacing - totalHeight / 2;
-        tileNode.setPosition(new Vec3(x, y, z));
+        // Tile’ın pozisyonunu hesapla ve offset uygula
+        const position = new Vec3(col * this.tileSize - offsetX, 0 , -(row * this.tileSize - offsetY));
+        tileNode.setPosition(position);
 
-        return tileNode;
+        // Tile bileşenine type ve renk ata
+        const tileComponent = tileNode.getComponent(Tile);
+        if (tileComponent) {
+            tileComponent.type = type;
+            tileComponent.updateColor(); // Rengi güncelle
+        }
     }
 }

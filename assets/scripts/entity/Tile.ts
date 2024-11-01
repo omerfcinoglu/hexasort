@@ -7,7 +7,7 @@ export class Tile extends Component {
 
     public type: number = 1;
 
-    public isSelectable: boolean = true;
+    public isSelectable: boolean = false;
     private originalPosition: Vec3 = new Vec3();
     private isDragging: boolean = false;
     private body: Node = null;
