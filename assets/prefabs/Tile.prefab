@@ -64,7 +64,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Cylinder",
+    "_name": "Body",
     "_objFlags": 0,
     "_parent": {
       "__id__": 1
@@ -180,6 +180,7 @@
     "__prefab": {
       "__id__": 8
     },
+    "body": null,
     "_id": ""
   },
   {
