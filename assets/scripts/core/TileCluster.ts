@@ -1,5 +1,11 @@
-import { Node, Prefab, instantiate, Vec3, tween } from 'cc';
+import { Node, Prefab, instantiate, Vec3, tween, RigidBody, ERigidBodyType } from 'cc';
 import { Tile } from '../entity/Tile';
+
+export enum RigidBodyGroup {
+    Default = 1 << 0,
+    SelectableTile = 1 << 1,
+    NonSelectableTile = 1 << 2
+}
 
 export class TileCluster {
     private tiles: Node[] = [];
@@ -16,14 +22,22 @@ export class TileCluster {
         }
     }
 
-    createTile(tilePrefab: Prefab, localPosition: Vec3 , isTileSelectable : boolean): Node {
+    createTile(tilePrefab: Prefab, localPosition: Vec3, isTileSelectable: boolean): Node {
         const tileNode = instantiate(tilePrefab);
         const tileComp = tileNode.getComponent(Tile);
         tileComp.isSelectable = isTileSelectable;
+    
+        const rigidBody = tileNode.getComponent(RigidBody);
+        if (rigidBody) {
+            rigidBody.group = isTileSelectable ? RigidBodyGroup.SelectableTile : RigidBodyGroup.NonSelectableTile;
+            rigidBody.type = ERigidBodyType.KINEMATIC;
+        }
+    
         tileNode.parent = this.rootNode;
         tileNode.setPosition(localPosition);
         return tileNode;
     }
+    
 
     moveToPosition(targetPosition: Vec3, duration: number): Promise<void> {
         return new Promise((resolve) => {
@@ -38,7 +52,7 @@ export class TileCluster {
         for (const tile of this.tiles) {
             await new Promise<void>((resolve) => {
                 tween(tile)
-                    .to(0.3, { eulerAngles: new Vec3(-180, 0, 0) }) // Y ekseni etrafında flip hareketi
+                    .to(0.3, { eulerAngles: new Vec3(-180, 0, 0) }) 
                     .call(() => {
                         resolve();
                     })

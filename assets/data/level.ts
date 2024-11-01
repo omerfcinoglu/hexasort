@@ -8,11 +8,11 @@ export class Level extends Component {
     private levelData = {
         "level_1": {
             "matrix": [
+                [0, 0, 0, 0, 0],  // Kırmızı satır
                 [1, 1, 1, 1, 1], // Mavi satır
                 [1, 1, 1, 1, 1], // Mavi satır
                 [1, 1, 1, 1, 1], // Mavi satır
                 [2, 2, 2, 2, 2], // Kırmızı satır
-                [2, 2, 2, 2, 0]  // Kırmızı satır
             ]
         }
     };

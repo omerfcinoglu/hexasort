@@ -9,11 +9,6 @@ export class GroundTile extends Tile {
     private collider: BoxCollider | null = null;
 
     onLoad() {
-        this.collider = this.getComponent(BoxCollider);
-        if (this.collider) {
-            this.collider.on('onCollisionEnter', this.onCollisionEnter, this);
-        }
-
         this.type = -1; // Ground tile type -1
         this.updateColor(); // Ground için rengi ayarla
 
@@ -22,11 +17,6 @@ export class GroundTile extends Tile {
         this.updateColliderState();
     }
     
-    onDestroy() {
-        if (this.collider) {
-            this.collider.off('onCollisionEnter', this.onCollisionEnter, this);
-        }
-    }
 
     addChildTile(tileNode: Node) {
         this.childrenTiles.push(tileNode);
@@ -48,15 +38,11 @@ export class GroundTile extends Tile {
 
     public updateColliderState() {
         const collider = this.node.getComponent(BoxCollider);
-        if (collider) {
-            collider.enabled = this.childrenTiles.length === 0; // Çocuk varsa collider kapalı
-            console.log(collider.enabled);
+        // if (collider) {
+        //     collider.enabled = this.childrenTiles.length === 0;
             
-        }
+        // }
     }
-
-
-
 
     public hasChildTile(): boolean {
         // Eğer ground tile'ın bir çocuğu varsa collider'ı kapat
@@ -68,14 +54,5 @@ export class GroundTile extends Tile {
         return false;
     }
 
-    private onCollisionEnter(event: ITriggerEvent) {
-        // Eğer collider açıksa ve çarpışma varsa "ah" mesajı yazdır
-        if (this.collider!.enabled) {
-            const otherCollider = event.otherCollider;
-            const tile = otherCollider.node.getComponent(Tile); // Çarpışan tile'ı al
-            if (tile && tile.isDragging) {
-                console.log("ah");
-            }
-        }
-    }
+    
 }

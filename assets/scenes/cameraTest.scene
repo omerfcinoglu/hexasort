@@ -24,32 +24,29 @@
         "__id__": 5
       },
       {
-        "__id__": 13
+        "__id__": 10
       },
       {
-        "__id__": 29
+        "__id__": 26
       },
       {
         "__id__": 8
       },
       {
-        "__id__": 32
+        "__id__": 29
       },
       {
-        "__id__": 17
-      },
-      {
-        "__id__": 9
+        "__id__": 14
       }
     ],
     "_active": true,
     "_components": [],
     "_prefab": {
-      "__id__": 36
+      "__id__": 33
     },
     "autoReleaseAssets": false,
     "_globals": {
-      "__id__": 37
+      "__id__": 34
     },
     "_id": "12d3a900-9e7e-4c5c-be95-3ba1b702097e"
   },
@@ -209,7 +206,7 @@
         "__id__": 6
       },
       {
-        "__id__": 12
+        "__id__": 9
       }
     ],
     "_prefab": null,
@@ -252,9 +249,6 @@
     "__prefab": null,
     "cameraCom": {
       "__id__": 7
-    },
-    "saphire": {
-      "__id__": 9
     },
     "_id": "aeMMoq0LVGTYHgKw3XkRK2"
   },
@@ -317,15 +311,15 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 23.239,
-      "z": 2.716
+      "y": 20.364,
+      "z": 8.388
     },
     "_lrot": {
       "__type__": "cc.Quat",
-      "x": -0.7071067811865475,
+      "x": -0.6018219925387196,
       "y": 0,
       "z": 0,
-      "w": 0.7071067811865476
+      "w": 0.7986302581900622
     },
     "_lscale": {
       "__type__": "cc.Vec3",
@@ -336,100 +330,11 @@
     "_layer": 1073741824,
     "_euler": {
       "__type__": "cc.Vec3",
-      "x": -90,
+      "x": -74.001,
       "y": 0,
       "z": 0
     },
     "_id": "c9DMICJLFO5IeO07EPon7U"
-  },
-  {
-    "__type__": "cc.Node",
-    "_name": "Sphere",
-    "_objFlags": 0,
-    "_parent": {
-      "__id__": 1
-    },
-    "_children": [],
-    "_active": true,
-    "_components": [
-      {
-        "__id__": 10
-      }
-    ],
-    "_prefab": null,
-    "_lpos": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "_lrot": {
-      "__type__": "cc.Quat",
-      "x": 0,
-      "y": 0,
-      "z": 0,
-      "w": 1
-    },
-    "_lscale": {
-      "__type__": "cc.Vec3",
-      "x": 1,
-      "y": 1,
-      "z": 1
-    },
-    "_layer": 1073741824,
-    "_euler": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "_id": "098xpz36dODKvSed2c3+ue"
-  },
-  {
-    "__type__": "cc.MeshRenderer",
-    "_name": "Sphere<ModelComponent>",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 9
-    },
-    "_enabled": true,
-    "__prefab": null,
-    "_materials": [
-      {
-        "__uuid__": "d3c7820c-2a98-4429-8bc7-b8453bc9ac41",
-        "__expectedType__": "cc.Material"
-      }
-    ],
-    "_visFlags": 0,
-    "lightmapSettings": {
-      "__id__": 11
-    },
-    "_mesh": {
-      "__uuid__": "1263d74c-8167-4928-91a6-4e2672411f47@17020",
-      "__expectedType__": "cc.Mesh"
-    },
-    "_shadowCastingMode": 0,
-    "_shadowReceivingMode": 1,
-    "_shadowBias": 0,
-    "_shadowNormalBias": 0,
-    "_enableMorph": true,
-    "_id": "38nKVaN1VH67dkbuKAVKPK"
-  },
-  {
-    "__type__": "cc.ModelLightmapSettings",
-    "texture": null,
-    "uvParam": {
-      "__type__": "cc.Vec4",
-      "x": 0,
-      "y": 0,
-      "z": 0,
-      "w": 0
-    },
-    "_bakeable": false,
-    "_castShadow": false,
-    "_receiveShadow": false,
-    "_recieveShadow": false,
-    "_lightmapSize": 64
   },
   {
     "__type__": "7735eiviClDXLOQOqEKcCzR",
@@ -456,7 +361,7 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 14
+        "__id__": 11
       }
     ],
     "_prefab": null,
@@ -493,12 +398,12 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 13
+      "__id__": 10
     },
     "_enabled": true,
     "__prefab": null,
     "gridManager": {
-      "__id__": 15
+      "__id__": 12
     },
     "_id": "56ZAJR4WhL6ZqbTIgFP94+"
   },
@@ -507,7 +412,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 16
+      "__id__": 13
     },
     "_enabled": true,
     "__prefab": null,
@@ -526,17 +431,17 @@
     "_name": "GridManager",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 17
+      "__id__": 14
     },
     "_children": [
       {
-        "__id__": 25
+        "__id__": 22
       }
     ],
     "_active": true,
     "_components": [
       {
-        "__id__": 15
+        "__id__": 12
       }
     ],
     "_prefab": null,
@@ -577,10 +482,10 @@
     },
     "_children": [
       {
-        "__id__": 16
+        "__id__": 13
       },
       {
-        "__id__": 18
+        "__id__": 15
       }
     ],
     "_active": true,
@@ -619,20 +524,20 @@
     "_name": "SelectableManager",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 17
+      "__id__": 14
     },
     "_children": [
       {
-        "__id__": 19
+        "__id__": 16
       },
       {
-        "__id__": 23
+        "__id__": 20
       }
     ],
     "_active": true,
     "_components": [
       {
-        "__id__": 24
+        "__id__": 21
       }
     ],
     "_prefab": null,
@@ -669,23 +574,23 @@
     "_name": "AreaBackground",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 18
+      "__id__": 15
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 20
+        "__id__": 17
       },
       {
-        "__id__": 22
+        "__id__": 19
       }
     ],
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 0.619,
+      "y": 0,
       "z": 0
     },
     "_lrot": {
@@ -715,7 +620,7 @@
     "_name": "Plane<ModelComponent>",
     "_objFlags": 0,
     "node": {
-      "__id__": 19
+      "__id__": 16
     },
     "_enabled": true,
     "__prefab": null,
@@ -727,7 +632,7 @@
     ],
     "_visFlags": 0,
     "lightmapSettings": {
-      "__id__": 21
+      "__id__": 18
     },
     "_mesh": {
       "__uuid__": "1263d74c-8167-4928-91a6-4e2672411f47@2e76e",
@@ -761,7 +666,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 19
+      "__id__": 16
     },
     "_enabled": true,
     "__prefab": null,
@@ -772,7 +677,7 @@
     "_name": "TilesInitalPoint",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 18
+      "__id__": 15
     },
     "_children": [],
     "_active": true,
@@ -811,7 +716,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 18
+      "__id__": 15
     },
     "_enabled": true,
     "__prefab": null,
@@ -820,7 +725,7 @@
       "__expectedType__": "cc.Prefab"
     },
     "startPoint": {
-      "__id__": 23
+      "__id__": 20
     },
     "clusterCount": 3,
     "_id": "b1zmLSyBFDU6c/Y4qsfgzI"
@@ -830,16 +735,16 @@
     "_name": "AreaBackground",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 16
+      "__id__": 13
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 26
+        "__id__": 23
       },
       {
-        "__id__": 28
+        "__id__": 25
       }
     ],
     "_prefab": null,
@@ -876,7 +781,7 @@
     "_name": "Plane<ModelComponent>",
     "_objFlags": 0,
     "node": {
-      "__id__": 25
+      "__id__": 22
     },
     "_enabled": true,
     "__prefab": null,
@@ -888,7 +793,7 @@
     ],
     "_visFlags": 0,
     "lightmapSettings": {
-      "__id__": 27
+      "__id__": 24
     },
     "_mesh": {
       "__uuid__": "1263d74c-8167-4928-91a6-4e2672411f47@2e76e",
@@ -922,7 +827,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 25
+      "__id__": 22
     },
     "_enabled": true,
     "__prefab": null,
@@ -939,7 +844,7 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 30
+        "__id__": 27
       }
     ],
     "_prefab": null,
@@ -976,7 +881,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 29
+      "__id__": 26
     },
     "_enabled": true,
     "__prefab": null,
@@ -990,7 +895,7 @@
     "_useColorTemperature": false,
     "_colorTemperature": 6550,
     "_staticSettings": {
-      "__id__": 31
+      "__id__": 28
     },
     "_illuminanceHDR": 65000,
     "_illuminance": 65000,
@@ -1027,7 +932,7 @@
     },
     "_children": [
       {
-        "__id__": 33
+        "__id__": 30
       }
     ],
     "_active": true,
@@ -1066,13 +971,13 @@
     "_name": "Ground",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 32
+      "__id__": 29
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 34
+        "__id__": 31
       }
     ],
     "_prefab": null,
@@ -1109,7 +1014,7 @@
     "_name": "Plane<ModelComponent>",
     "_objFlags": 0,
     "node": {
-      "__id__": 33
+      "__id__": 30
     },
     "_enabled": true,
     "__prefab": null,
@@ -1121,7 +1026,7 @@
     ],
     "_visFlags": 0,
     "lightmapSettings": {
-      "__id__": 35
+      "__id__": 32
     },
     "_mesh": {
       "__uuid__": "1263d74c-8167-4928-91a6-4e2672411f47@2e76e",
@@ -1157,19 +1062,19 @@
   {
     "__type__": "cc.SceneGlobals",
     "ambient": {
-      "__id__": 38
+      "__id__": 35
     },
     "shadows": {
-      "__id__": 39
+      "__id__": 36
     },
     "_skybox": {
-      "__id__": 40
+      "__id__": 37
     },
     "fog": {
-      "__id__": 41
+      "__id__": 38
     },
     "octree": {
-      "__id__": 42
+      "__id__": 39
     }
   },
   {

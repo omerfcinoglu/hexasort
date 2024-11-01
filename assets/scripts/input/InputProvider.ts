@@ -1,4 +1,4 @@
-import { _decorator, Component, Camera, geometry, input, Input, EventMouse, Vec3, Node, PhysicsSystem } from 'cc';
+import { _decorator, Component, Camera, geometry, input, Input, EventTouch, Vec3, Node, Color, MeshRenderer, PhysicsSystem } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass("InputProvider")
@@ -6,32 +6,46 @@ export class InputProvider extends Component {
     @property(Camera)
     readonly cameraCom!: Camera;
 
-    @property(Node)
-    public saphire: Node = null!; // Mouse'u takip eden saphire node'u
 
-    private _ray: geometry.Ray = new geometry.Ray();
+    public _ray: geometry.Ray = new geometry.Ray();
     public onRaycastResult: ((resultNode: Node | null) => void) | null = null;
+    public onTouchStart: ((event: EventTouch) => void) | null = null;
+    public onTouchMove: ((event: EventTouch) => void) | null = null;
+    public onTouchEnd: ((event: EventTouch) => void) | null = null;
 
     onLoad() {
-        input.on(Input.EventType.MOUSE_MOVE, this.onMouseMove, this);
+        input.on(Input.EventType.TOUCH_MOVE, this.onTouchMoveEvent, this);
+        input.on(Input.EventType.TOUCH_START, this.onTouchStartEvent, this);
+        input.on(Input.EventType.TOUCH_END, this.onTouchEndEvent, this);
     }
 
     onDestroy() {
-        input.off(Input.EventType.MOUSE_MOVE, this.onMouseMove, this);
+        input.off(Input.EventType.TOUCH_MOVE, this.onTouchMoveEvent, this);
+        input.off(Input.EventType.TOUCH_START, this.onTouchStartEvent, this);
+        input.off(Input.EventType.TOUCH_END, this.onTouchEndEvent, this);
     }
 
-    onMouseMove(event: EventMouse) {
-        const mousePosition = event.getLocation();
-        this.cameraCom.screenPointToRay(mousePosition.x, mousePosition.y, this._ray);
+    private onTouchMoveEvent(event: EventTouch) {
+        this.performRaycast(new Vec3(event.getLocation().x, event.getLocation().y, 0));
+        if (this.onTouchMove) {
+            this.onTouchMove(event);
+        }
+    }
 
-        const distance = 20;
-        const projectedPoint = new Vec3(
-            this._ray.o.x + this._ray.d.x * distance,
-            this._ray.o.y + this._ray.d.y * distance,
-            this._ray.o.z + this._ray.d.z * distance
-        );
-        this.saphire.setWorldPosition(projectedPoint);
+    private onTouchStartEvent(event: EventTouch) {
+        if (this.onTouchStart) {
+            this.onTouchStart(event);
+        }
+    }
 
+    private onTouchEndEvent(event: EventTouch) {
+        if (this.onTouchEnd) {
+            this.onTouchEnd(event);
+        }
+    }
+
+    private performRaycast(touchPosition: Vec3) {
+        this.cameraCom.screenPointToRay(touchPosition.x, touchPosition.y, this._ray);
         let hitNode: Node | null = null;
         if (PhysicsSystem.instance.raycast(this._ray)) {
             const results = PhysicsSystem.instance.raycastResults;
@@ -44,4 +58,5 @@ export class InputProvider extends Component {
             this.onRaycastResult(hitNode);
         }
     }
+
 }

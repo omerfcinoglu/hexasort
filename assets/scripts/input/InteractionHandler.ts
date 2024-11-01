@@ -1,5 +1,6 @@
-import { _decorator, Component, Node, Color } from 'cc';
+import { _decorator, Component, Node, Vec3, EventTouch, PhysicsSystem, Collider, ICollisionEvent } from 'cc';
 import { InputProvider } from './InputProvider';
+import { Tile } from '../entity/Tile';
 const { ccclass, property } = _decorator;
 
 @ccclass("InteractionHandler")
@@ -7,16 +8,79 @@ export class InteractionHandler extends Component {
     @property(InputProvider)
     inputProvider: InputProvider = null!;
 
+    private selectedTile: Tile | null = null;
+    private resultTile: Tile | null = null;
+    private canSelect: boolean = false;
+    private originalPosition: Vec3 = new Vec3();
+    private touchOffset: Vec3 = new Vec3();
+
     onLoad() {
         this.inputProvider.onRaycastResult = this.handleRaycastResult.bind(this);
+        this.inputProvider.onTouchStart = this.handleTouchStart.bind(this);
+        this.inputProvider.onTouchMove = this.handleTouchMove.bind(this);
+        this.inputProvider.onTouchEnd = this.handleTouchEnd.bind(this);
     }
 
     handleRaycastResult(resultNode: Node | null) {
         if (resultNode) {
-            console.log("Hit node:", resultNode.name);
-            // Burada farklı etkileşimleri yönetebilirsiniz
-        } else {
-            console.log("No hit detected");
+            const resultTileComp = resultNode.getComponent(Tile);
+            if (resultTileComp && resultTileComp.isSelectable) {
+                this.resultTile = resultTileComp;
+                this.canSelect = true;
+            }
+        }
+    }
+
+    handleTouchStart(event: EventTouch) {
+        if (this.canSelect) {
+            this.selectedTile = this.resultTile;
+            this.originalPosition = this.selectedTile.node.getWorldPosition().clone();
+            const touchWorldPos = this.getTouchWorldPosition(event);
+            this.touchOffset = this.originalPosition.subtract(touchWorldPos);
+            this.selectedTile.select();
+        }
+    }
+
+    handleTouchMove(event: EventTouch) {
+        if (this.selectedTile && this.selectedTile.isDragging) {
+            const touchWorldPos = this.getTouchWorldPosition(event);
+            const newPosition = touchWorldPos.add(this.touchOffset);
+            this.selectedTile.node.setWorldPosition(newPosition);
+            this.checkCollision(this.selectedTile.node);
+        }
+    }
+
+    handleTouchEnd(event: EventTouch) {
+        if (this.selectedTile) {
+            this.selectedTile.deselect();
+            this.selectedTile.node.setWorldPosition(this.originalPosition);
+            this.selectedTile = null;
+            this.resultTile = null;
+            this.canSelect = false;
+        }
+    }
+
+    private getTouchWorldPosition(event: EventTouch): Vec3 {
+        this.inputProvider.cameraCom.screenPointToRay(event.getLocationX(), event.getLocationY(), this.inputProvider._ray);
+        const distance = 10;
+        return new Vec3(
+            this.inputProvider._ray.o.x + this.inputProvider._ray.d.x * distance,
+            this.inputProvider._ray.o.y + this.inputProvider._ray.d.y * 0,
+            this.inputProvider._ray.o.z + this.inputProvider._ray.d.z * distance
+        );
+    }
+
+    private checkCollision(tileNode: Node) {
+        const collider = tileNode.getComponent(Collider);
+        if (collider) {
+            collider.on('onCollisionEnter', this.onTileCollision, this);
+        }
+    }
+
+    private onTileCollision(event: ICollisionEvent) {
+        const otherCollider = event.otherCollider;
+        if (otherCollider.node.getComponent('GroundTile')) {
+            console.log('Tile collided with GroundTile');
         }
     }
 }

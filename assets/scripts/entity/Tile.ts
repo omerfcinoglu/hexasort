@@ -1,4 +1,4 @@
-import { _decorator, Component, tween, Vec3, EventTouch, Sprite, MeshRenderer , Node } from 'cc';
+import { _decorator, Component, tween, Vec3,  MeshRenderer , Node, Collider,  ITriggerEvent } from 'cc';
 import { ColorProvider } from '../core/ColorProvider';
 const { ccclass , property } = _decorator;
 
@@ -18,6 +18,7 @@ export class Tile extends Component {
         this.updateColor();
         this.originalPosition = this.node.getPosition().clone();
         this.body = this.node.getChildByName("Body");
+        this.setupCollisionListener();
     }
 
     select() {
@@ -27,16 +28,12 @@ export class Tile extends Component {
 
     move(delta: Vec3) {
         if (!this.isDragging) return;
-
-        // Pozisyonu fare hareketine göre güncelle
         const currentPosition = this.node.getPosition();
         this.node.setPosition(currentPosition.add(delta));
     }
 
     deselect() {
         if (!this.isDragging) return;
-
-        // Sürükleme işlemi sona erdiğinde başlangıç pozisyonuna dön
         this.isDragging = false;
         tween(this.node)
             .to(0.3, { position: this.originalPosition })
@@ -56,9 +53,22 @@ export class Tile extends Component {
                 if (material) {
                     material.setProperty('albedo', color);
                 } else {
-                    console.error("MeshRenderer üzerinde materyal yok.");
+                    console.error("no mat");
                 }
             }
+        }
+    }
+    setupCollisionListener() {
+        const collider = this.node.getComponent(Collider);
+        if (collider) {
+            collider.on('onTriggerEnter', this.onTriggerEnter, this);
+        }
+    }
+
+    private onTriggerEnter(event: ITriggerEvent) {
+        const otherNode = event.otherCollider.node;
+        if (otherNode.getComponent('GroundTile')) {
+            console.log('Tile triggered with a GroundTile');
         }
     }
 }
