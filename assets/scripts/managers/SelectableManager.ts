@@ -20,7 +20,7 @@ export class SelectableManager extends Component {
         this.createClusters();
         this.startMovement(); // Oyun başladığında hareketi başlat
     }
-
+    
     createClusters() {
         for (let i = 0; i < this.clusterCount; i++) {
             const initialPosition = this.startPoint.position.clone(); // Her cluster başlangıç noktasından başlasın
