@@ -17,25 +17,28 @@ export class SelectableManager extends Component {
     private clusters: TileCluster[] = []; // TileCluster nesneleri
 
     onLoad() {
-        this.createClusters();
+        this.createSelectableClusters();
         this.startMovement(); // Oyun başladığında hareketi başlat
     }
-    
-    createClusters() {
+
+    createSelectableClusters() {
         for (let i = 0; i < this.clusterCount; i++) {
             const initialPosition = this.startPoint.position.clone(); // Her cluster başlangıç noktasından başlasın
-            const cluster = new TileCluster(this.node , this.tilePrefab, 1, initialPosition);
+            const isTilesSelectable = true;
+            const cluster = new TileCluster(this.node, this.tilePrefab, 1, initialPosition, isTilesSelectable);
             this.clusters.push(cluster);
         }
     }
 
     async startMovement() {
-        const targetX = [-2 , 0 , 2]
-        const duration = 0.5; // Hareket süresi
+        const targetX = [-2, 0, 2];
+        const duration = 0.2; // Hareket süresi
 
-        this.clusters.forEach( async (cluster , i ) => {
-            const targetPosition = new Vec3(targetX[i], 0, 0); 
+        for (let i = 0; i < this.clusters.length; i++) {
+            const cluster = this.clusters[i];
+            const targetPosition = new Vec3(targetX[i], 0, 0);
             await cluster.moveToPosition(targetPosition, duration); // Cluster hareketini bekleyin
-        })
+            await cluster.flipAnimation(); // Flip hareketini bekleyin
+        }
     }
 }
