@@ -1,5 +1,6 @@
-import { _decorator, Component } from 'cc';
+import { _decorator, Component, director, ERaycast2DType, PhysicsSystem } from 'cc';
 const { ccclass } = _decorator;
+
 
 @ccclass('Level')
 export class Level extends Component {
@@ -11,7 +12,7 @@ export class Level extends Component {
                 [1, 1, 1, 1, 1], // Mavi satır
                 [1, 1, 1, 1, 1], // Mavi satır
                 [2, 2, 2, 2, 2], // Kırmızı satır
-                [2, 2, 2, 2, 2]  // Kırmızı satır
+                [2, 2, 2, 2, 0]  // Kırmızı satır
             ]
         }
     };

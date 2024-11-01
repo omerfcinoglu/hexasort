@@ -1,6 +1,5 @@
-import { _decorator, Component, Color } from 'cc';
+import { _decorator, Component, Color, director } from 'cc';
 const { ccclass, property } = _decorator;
-
 @ccclass("ColorProvider")
 export class ColorProvider extends Component {
     private static _instance: ColorProvider | null = null;
@@ -23,6 +22,9 @@ export class ColorProvider extends Component {
     @property({ type: Color })
     public color6: Color = Color.MAGENTA.clone();
 
+    @property({ type: Color })
+    public groundColor: Color = new Color(150, 150, 150); // Varsayılan ground rengi
+
     onLoad() {
         if (ColorProvider._instance === null) {
             ColorProvider._instance = this;
@@ -30,6 +32,8 @@ export class ColorProvider extends Component {
             this.destroy();
             console.warn("Only one instance of ColorProvider is allowed.");
         }
+
+        
     }
 
     public static getInstance(): ColorProvider {
@@ -41,6 +45,7 @@ export class ColorProvider extends Component {
 
     public getColor(type: number): Color {
         switch(type) {
+            case -1: return this.groundColor.clone(); // ground tile için renk
             case 1: return this.color1.clone();
             case 2: return this.color2.clone();
             case 3: return this.color3.clone();
