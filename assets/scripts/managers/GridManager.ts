@@ -27,7 +27,7 @@ export class GridManager extends Component {
                 const groundComp = groundTile.getComponent(GroundTile);
                 // Eğer level tile varsa, groundTile üzerine yerleştir
                 if (tileType > 0) {
-                    this.createLevelTile(tileType, groundTile);
+                    this.createLevelTile(tileType, groundTile , groundComp);
                     groundComp.updateColliderState();
                 }
             }
@@ -50,9 +50,10 @@ export class GridManager extends Component {
         return groundNode;
     }
 
-    private createLevelTile(type: number, groundTile: Node) {
+    private createLevelTile(type: number, groundTile: Node , groundComp: GroundTile) {
         const tileNode = instantiate(this.tilePrefab);
         tileNode.parent = groundTile;
+        groundComp.addChildTile(tileNode);
 
         // Tile'ın yerel pozisyonunu ground üzerinde sıfırlayın
         tileNode.setPosition(0, 0.2, 0); // ground üzerinde hafif yukarıda

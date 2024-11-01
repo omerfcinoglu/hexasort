@@ -25,7 +25,9 @@ export class SelectableManager extends Component {
         for (let i = 0; i < this.clusterCount; i++) {
             const initialPosition = this.startPoint.position.clone(); // Her cluster başlangıç noktasından başlasın
             const isTilesSelectable = true;
-            const cluster = new TileCluster(this.node, this.tilePrefab, 1, initialPosition, isTilesSelectable);
+            // const tileCount = Math.floor(Math.random() * 5) + 1;
+            const tileCount = 1;
+            const cluster = new TileCluster(this.node, this.tilePrefab, tileCount, initialPosition, isTilesSelectable);
             this.clusters.push(cluster);
         }
     }

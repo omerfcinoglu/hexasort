@@ -1,29 +1,33 @@
-import { _decorator, Component, director, ERaycast2DType, PhysicsSystem } from 'cc';
+import {
+  _decorator,
+  Component,
+  director,
+  ERaycast2DType,
+  PhysicsSystem,
+} from "cc";
 const { ccclass } = _decorator;
 
-
-@ccclass('Level')
+@ccclass("Level")
 export class Level extends Component {
+  private levelData = {
+    level_1: {
+      matrix: [
+        [1, 0, 0, 0, 1],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [1, 0, 0, 0, 1],
+      ],
+    },
+  };
 
-    private levelData = {
-        "level_1": {
-            "matrix": [
-                [0, 0, 0, 0, 0],  // Kırmızı satır
-                [1, 1, 1, 1, 1], // Mavi satır
-                [1, 1, 1, 1, 1], // Mavi satır
-                [1, 1, 1, 1, 1], // Mavi satır
-                [2, 2, 2, 2, 2], // Kırmızı satır
-            ]
-        }
-    };
-
-    getLevelMatrix(levelName: string): number[][] | null {
-        const level = this.levelData[levelName];
-        if (level) {
-            return level.matrix;
-        } else {
-            console.error(`Level ${levelName} not found`);
-            return null;
-        }
+  getLevelMatrix(levelName: string): number[][] | null {
+    const level = this.levelData[levelName];
+    if (level) {
+      return level.matrix;
+    } else {
+      console.error(`Level ${levelName} not found`);
+      return null;
     }
+  }
 }

@@ -38,10 +38,11 @@ export class GroundTile extends Tile {
 
     public updateColliderState() {
         const collider = this.node.getComponent(BoxCollider);
-        // if (collider) {
-        //     collider.enabled = this.childrenTiles.length === 0;
+        if (collider) {
+            console.log(this.childrenTiles.length);
             
-        // }
+            collider.enabled = this.childrenTiles.length === 0;
+        }
     }
 
     public hasChildTile(): boolean {

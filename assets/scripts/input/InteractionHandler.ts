@@ -62,7 +62,7 @@ export class InteractionHandler extends Component {
 
     private getTouchWorldPosition(event: EventTouch): Vec3 {
         this.inputProvider.cameraCom.screenPointToRay(event.getLocationX(), event.getLocationY(), this.inputProvider._ray);
-        const distance = 10;
+        const distance = 25;
         return new Vec3(
             this.inputProvider._ray.o.x + this.inputProvider._ray.d.x * distance,
             this.inputProvider._ray.o.y + this.inputProvider._ray.d.y * 0,

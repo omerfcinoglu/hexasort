@@ -17,7 +17,7 @@ export class TileCluster {
         this.rootNode.setPosition(initialPosition);
 
         for (let i = 0; i < tileCount; i++) {
-            const tileNode = this.createTile(tilePrefab, new Vec3(0, i * 0.3, 0.01 * i) , isTileSelectable);
+            const tileNode = this.createTile(tilePrefab, new Vec3(0, i * 0.5, 0.01 * i) , isTileSelectable);
             this.tiles.push(tileNode);
         }
     }
