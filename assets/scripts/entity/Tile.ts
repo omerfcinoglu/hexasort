@@ -1,26 +1,38 @@
-import { _decorator, Component,  EventMouse, EventTouch, input, Input } from 'cc';
+import { _decorator, Component, tween, Vec3, EventTouch } from 'cc';
 const { ccclass } = _decorator;
 
 @ccclass('Tile')
 export class Tile extends Component {
 
-    public isSelectable : boolean = false;
+    public isSelectable: boolean = true;
+    private originalPosition: Vec3 = new Vec3();
+    private isDragging: boolean = false;
 
-    onLoad () {
-        input.on(Input.EventType.TOUCH_START, this.onTouchStart, this);
+    onLoad() {
+        // Başlangıç pozisyonunu kaydet
+        this.originalPosition = this.node.getPosition().clone();
     }
 
-    onDestroy () {
-        input.off(Input.EventType.TOUCH_START, this.onTouchStart, this);
+    select() {
+        if (!this.isSelectable) return;
+        this.isDragging = true;
     }
 
-    onTouchStart(event: EventTouch) {
+    move(delta: Vec3) {
+        if (!this.isDragging) return;
 
+        // Pozisyonu fare hareketine göre güncelle
+        const currentPosition = this.node.getPosition();
+        this.node.setPosition(currentPosition.add(delta));
     }
 
-    select(){
-        if(!this.isSelectable) return;
-        console.log(this.node.name);
-    }
+    deselect() {
+        if (!this.isDragging) return;
 
+        // Sürükleme işlemi sona erdiğinde başlangıç pozisyonuna dön
+        this.isDragging = false;
+        tween(this.node)
+            .to(0.3, { position: this.originalPosition })
+            .start();
+    }
 }

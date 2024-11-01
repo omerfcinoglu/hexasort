@@ -7,8 +7,7 @@ export class GridManager extends Component {
     @property(Prefab)
     tilePrefab: Prefab = null!; // Tile prefabini ayarlayın
 
-    @property(Node)
-    gridArea: Node = null!; // Grid'in oluşturulacağı ana alan
+
 
     @property
     rows: number = 5; // Satır sayısı
@@ -42,7 +41,7 @@ export class GridManager extends Component {
 
     createTile(row: number, col: number, totalWidth: number, totalHeight: number): Node {
         const tileNode = instantiate(this.tilePrefab); // Yeni bir Tile oluştur
-        tileNode.parent = this.gridArea; // Tile'ı gridArea altında konumlandır
+        tileNode.parent = this.node; // Tile'ı gridArea altında konumlandır
 
         // Tile'ın gridArea içindeki pozisyonunu merkezlemek için offset uygula
         const x = (col * this.spacing) - totalWidth / 2;
