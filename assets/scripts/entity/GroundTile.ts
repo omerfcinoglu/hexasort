@@ -1,5 +1,6 @@
-import { _decorator, Component, Node, BoxCollider, ITriggerEvent } from 'cc';
+import { _decorator, Component, Node, BoxCollider, ITriggerEvent, MeshRenderer, Color } from 'cc';
 import { Tile } from './Tile';
+import { ColorProvider } from '../core/ColorProvider';
 const { ccclass, property } = _decorator;
 
 @ccclass("GroundTile")
@@ -7,11 +8,12 @@ export class GroundTile extends Tile {
     
     public childrenTiles: Node[] = []; // Çocuk tile'ları tutan dizi
     private collider: BoxCollider | null = null;
+    public type = 0;
+    private originalColor: Color | null = null;
 
     onLoad() {
-        this.type = -1; // Ground tile type -1
+        super.onLoad();
         this.updateColor(); // Ground için rengi ayarla
-
         const collider = this.node.getComponent(BoxCollider) || this.node.addComponent(BoxCollider);
         collider.size.set(1.5, 0.2, 1.5); // Collider boyutunu ayarla (örneğin tile boyutuna göre)
         this.updateColliderState();
@@ -37,10 +39,8 @@ export class GroundTile extends Tile {
     }
 
     public updateColliderState() {
-        const collider = this.node.getComponent(BoxCollider);
+        const collider = this.body.getComponent(BoxCollider);
         if (collider) {
-            console.log(this.childrenTiles.length);
-            
             collider.enabled = this.childrenTiles.length === 0;
         }
     }
@@ -54,6 +54,9 @@ export class GroundTile extends Tile {
         this.collider!.enabled = true;
         return false;
     }
+
+
+
 
     
 }

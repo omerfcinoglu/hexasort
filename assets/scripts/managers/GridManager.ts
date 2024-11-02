@@ -22,10 +22,9 @@ export class GridManager extends Component {
             for (let col = 0; col < levelMatrix[row].length; col++) {
                 const tileType = levelMatrix[row][col];
 
-                // Ground tile yerleştir
                 const groundTile = this.createGroundTile(row, col, offsetX, offsetY);
                 const groundComp = groundTile.getComponent(GroundTile);
-                // Eğer level tile varsa, groundTile üzerine yerleştir
+                
                 if (tileType > 0) {
                     this.createLevelTile(tileType, groundTile , groundComp);
                     groundComp.updateColliderState();
@@ -43,7 +42,7 @@ export class GridManager extends Component {
 
         const groundComponent = groundNode.getComponent(GroundTile);
         if (groundComponent) {
-            groundComponent.type = -1; // Ground tile type -1
+            groundComponent.type = 0;
             groundComponent.updateColor();
         }
 

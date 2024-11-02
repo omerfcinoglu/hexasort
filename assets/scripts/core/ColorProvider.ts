@@ -22,8 +22,6 @@ export class ColorProvider extends Component {
     @property({ type: Color })
     public color6: Color = Color.MAGENTA.clone();
 
-    @property({ type: Color })
-    public groundColor: Color = new Color(150, 150, 150); // Varsayılan ground rengi
 
     onLoad() {
         if (ColorProvider._instance === null) {
@@ -45,14 +43,13 @@ export class ColorProvider extends Component {
 
     public getColor(type: number): Color {
         switch(type) {
-            case -1: return this.groundColor.clone(); // ground tile için renk
-            case 1: return this.color1.clone();
-            case 2: return this.color2.clone();
-            case 3: return this.color3.clone();
-            case 4: return this.color4.clone();
-            case 5: return this.color5.clone();
-            case 6: return this.color6.clone();
-            default: return Color.WHITE.clone();
+            case 0: return this.color1.clone()
+            case 1: return this.color2.clone();
+            case 2: return this.color3.clone();
+            case 3: return this.color4.clone();
+            case 4: return this.color5.clone();
+            case 5: return this.color6.clone();
+            default: return Color.RED.clone();
         }
     }
 }

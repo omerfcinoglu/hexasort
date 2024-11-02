@@ -1,6 +1,7 @@
 import { _decorator, Component, Node, Vec3, EventTouch, PhysicsSystem, Collider, ICollisionEvent } from 'cc';
 import { InputProvider } from './InputProvider';
 import { Tile } from '../entity/Tile';
+import { GroundTile } from '../entity/GroundTile';
 const { ccclass, property } = _decorator;
 
 @ccclass("InteractionHandler")
@@ -9,6 +10,8 @@ export class InteractionHandler extends Component {
     inputProvider: InputProvider = null!;
 
     private selectedTile: Tile | null = null;
+    private resultGroundTile: GroundTile | null = null;
+    private canPlaceTile: boolean = false;
     private resultTile: Tile | null = null;
     private canSelect: boolean = false;
     private originalPosition: Vec3 = new Vec3();
@@ -23,11 +26,20 @@ export class InteractionHandler extends Component {
 
     handleRaycastResult(resultNode: Node | null) {
         if (resultNode) {
+
             const resultTileComp = resultNode.getComponent(Tile);
             if (resultTileComp && resultTileComp.isSelectable) {
                 this.resultTile = resultTileComp;
                 this.canSelect = true;
             }
+
+            const groundTileComp = resultNode.getComponent(GroundTile);
+            if (groundTileComp) {
+                this.resultGroundTile = groundTileComp;
+                this.canPlaceTile = true;
+            }
+        } else {
+            this.canPlaceTile = false;
         }
     }
 
@@ -51,12 +63,11 @@ export class InteractionHandler extends Component {
     }
 
     handleTouchEnd(event: EventTouch) {
-        if (this.selectedTile) {
-            this.selectedTile.deselect();
-            this.selectedTile.node.setWorldPosition(this.originalPosition);
+        if (this.selectedTile && this.canPlaceTile && this.resultGroundTile) {
+            this.resultGroundTile.addChildTile(this.selectedTile.node);
             this.selectedTile = null;
-            this.resultTile = null;
-            this.canSelect = false;
+            this.resultGroundTile = null;
+            this.canPlaceTile = false;
         }
     }
 
@@ -65,7 +76,7 @@ export class InteractionHandler extends Component {
         const distance = 25;
         return new Vec3(
             this.inputProvider._ray.o.x + this.inputProvider._ray.d.x * distance,
-            this.inputProvider._ray.o.y + this.inputProvider._ray.d.y * 0,
+            this.inputProvider._ray.o.y + this.inputProvider._ray.d.y * 2,
             this.inputProvider._ray.o.z + this.inputProvider._ray.d.z * distance
         );
     }

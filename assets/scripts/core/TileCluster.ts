@@ -25,19 +25,15 @@ export class TileCluster {
     createTile(tilePrefab: Prefab, localPosition: Vec3, isTileSelectable: boolean): Node {
         const tileNode = instantiate(tilePrefab);
         const tileComp = tileNode.getComponent(Tile);
-        tileComp.isSelectable = isTileSelectable;
-    
-        const rigidBody = tileNode.getComponent(RigidBody);
-        if (rigidBody) {
-            rigidBody.group = isTileSelectable ? RigidBodyGroup.SelectableTile : RigidBodyGroup.NonSelectableTile;
-            rigidBody.type = ERigidBodyType.KINEMATIC;
+        if (tileComp) {
+            tileComp.isSelectable = isTileSelectable;
+            tileComp.type = Math.floor(Math.random() * 2) + 1;
+            tileComp.updateColor(); 
         }
-    
         tileNode.parent = this.rootNode;
         tileNode.setPosition(localPosition);
         return tileNode;
     }
-    
 
     moveToPosition(targetPosition: Vec3, duration: number): Promise<void> {
         return new Promise((resolve) => {

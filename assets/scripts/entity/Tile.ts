@@ -1,4 +1,4 @@
-import { _decorator, Component, tween, Vec3,  MeshRenderer , Node, Collider,  ITriggerEvent } from 'cc';
+import { _decorator, Component, tween, Vec3,  MeshRenderer , Node, Collider,  ITriggerEvent, Color } from 'cc';
 import { ColorProvider } from '../core/ColorProvider';
 const { ccclass , property } = _decorator;
 
@@ -10,14 +10,14 @@ export class Tile extends Component {
     public isSelectable: boolean = false;
     private originalPosition: Vec3 = new Vec3();
     public isDragging: boolean = false;
-    private body: Node = null;
+    protected body: Node = null;
 
 
 
     onLoad() {
-        this.updateColor();
-        this.originalPosition = this.node.getPosition().clone();
         this.body = this.node.getChildByName("Body");
+        this.originalPosition = this.node.getPosition().clone();
+        this.updateColor();
         this.setupCollisionListener();
     }
 
@@ -46,7 +46,6 @@ export class Tile extends Component {
         if (colorProvider && this.body) {
             const color = colorProvider.getColor(this.type);
             const meshRenderer= this.body.getComponent(MeshRenderer) ;
-
             if (meshRenderer) {
                 // Mevcut materyali alın ve rengini değiştirin
                 const material = meshRenderer.material;
@@ -55,6 +54,22 @@ export class Tile extends Component {
                 } else {
                     console.error("no mat");
                 }
+            }
+        }
+    }
+    
+    public highlight() {
+        const meshRenderer = this.body.getComponent(MeshRenderer);
+        if (meshRenderer && meshRenderer.material) {
+            const color = meshRenderer.material.getProperty('albedo') as Color;
+            if (color) {
+                const highlightedColor = new Color(
+                    color.r * 1.5, 
+                    color.g * 1.5, 
+                    color.b * 1.5, 
+                    color.a
+                );
+                meshRenderer.material.setProperty('albedo', highlightedColor);
             }
         }
     }
@@ -67,8 +82,10 @@ export class Tile extends Component {
 
     private onTriggerEnter(event: ITriggerEvent) {
         const otherNode = event.otherCollider.node;
+        console.log(otherNode.name);
+        
         if (otherNode.getComponent('GroundTile')) {
-            console.log('Tile triggered with a GroundTile');
+            const groundTile = otherNode.getComponent('GroundTile');
         }
     }
 }
