@@ -1,21 +1,17 @@
-import { _decorator, Component, EventTouch, Vec3, Vec2, Node, geometry } from 'cc';
+import { _decorator, Component, EventTouch, Vec3, Node, tween, geometry } from 'cc';
 import { InputProvider } from './InputProvider';
-import { Tile } from '../entity/Tile';
+import { TileCluster } from '../core/TileCluster';
+import { GroundTile } from '../entity/GroundTile';
 import { CollisionHandler } from '../handlers/CollisionHandler';
-import { TilePlacementHandler } from '../handlers/TilePlacementHandler';
-import { TileSelectionHandler } from '../handlers/TileSelectionHandler';
-
 const { ccclass, property } = _decorator;
 
-@ccclass("InteractionHandler")
+@ccclass('InteractionHandler')
 export class InteractionHandler extends Component {
     @property(InputProvider)
     inputProvider: InputProvider | null = null;
 
-    private tileSelectionHandler: TileSelectionHandler = new TileSelectionHandler();
-    private tilePlacementHandler: TilePlacementHandler = new TilePlacementHandler();
+    private selectedCluster: TileCluster | null = null;
     private collisionHandler: CollisionHandler | null = null;
-    private touchOffset: Vec3 = new Vec3();
 
     onLoad() {
         if (!this.inputProvider) {
@@ -23,59 +19,85 @@ export class InteractionHandler extends Component {
             return;
         }
 
-        // Set up input event listeners
+        // Input olaylarını ayarla
         this.inputProvider.onTouchStart = this.handleTouchStart.bind(this);
         this.inputProvider.onTouchMove = this.handleTouchMove.bind(this);
         this.inputProvider.onTouchEnd = this.handleTouchEnd.bind(this);
+        
     }
-
     private handleTouchStart(event: EventTouch) {
-        const touchPos = event.getLocation(); // Vec2
-        const touchPos3D = new Vec3(touchPos.x, touchPos.y, 0); // Convert to Vec3
+        const touchPos = event.getLocation();
+        const touchPos3D = new Vec3(touchPos.x, touchPos.y, 0);
         const hitNode = this.performRaycast(touchPos3D);
-
+    
         if (hitNode) {
-            const tile = hitNode.getComponent(Tile);
-            if (tile && tile.isSelectable) {
-                this.tileSelectionHandler.handleTileSelection(tile);
-
-                const tilePos = tile.node.getWorldPosition();
+            console.log("Raycast hit node:", hitNode.name);
+            const cluster = this.getTileClusterFromNode(hitNode);
+            if (cluster && cluster.isSelectable) {
                 const touchWorldPos = this.getTouchWorldPosition(event);
-                this.touchOffset = tilePos.subtract(touchWorldPos);
-
-                // Attach CollisionHandler to the tile
-                this.collisionHandler = tile.node.getComponent(CollisionHandler);
+                cluster.select(touchWorldPos);
+                this.selectedCluster = cluster;
+                console.log("Selected cluster set:", this.selectedCluster.node.name);
+    
+                // CollisionHandler ekleyelim   
+                this.collisionHandler = cluster.node.getComponent(CollisionHandler);
                 if (!this.collisionHandler) {
-                    this.collisionHandler = tile.node.addComponent(CollisionHandler);
+                    this.collisionHandler = cluster.node.addComponent(CollisionHandler);
                 }
+            } else {
+                console.log("Cluster not found or not selectable.");
             }
+        } else {
+            console.log("Raycast did not hit any node.");
         }
+    }
+    
+    private getTileClusterFromNode(node: Node): TileCluster | null {
+        let currentNode: Node | null = node;
+        while (currentNode) {
+            const cluster = currentNode.getComponent(TileCluster);
+            if (cluster) {
+                return cluster;
+            }
+            currentNode = currentNode.parent;
+        }
+        return null;
     }
 
     private handleTouchMove(event: EventTouch) {
-        const selectedTile = this.tileSelectionHandler.getSelectedTile();
-        if (selectedTile) {
+        if (this.selectedCluster) {
+            console.log("Moving cluster:", this.selectedCluster.node.name);
             const touchWorldPos = this.getTouchWorldPosition(event);
-            const newPosition = touchWorldPos.add(this.touchOffset);
-            selectedTile.node.setWorldPosition(newPosition);
+            
+            this.selectedCluster.move(touchWorldPos);
+        } else {
+            console.log("No cluster selected during move.");
+        }
+    }
+    
+
+    private handleTouchEnd(event: EventTouch) {
+        if (this.selectedCluster) {
+            if (this.collisionHandler?.collidedGroundTile) {
+                this.selectedCluster.placeOnGrid(this.collisionHandler.collidedGroundTile);
+            } else {
+                // Cluster'ın pozisyonunu sıfırla
+                this.selectedCluster.resetPosition();
+            }
+
+            // CollisionHandler'ı kaldırın
+            this.selectedCluster.node.removeComponent(CollisionHandler);
+            this.collisionHandler = null;
+            this.selectedCluster.deselect();
+            this.selectedCluster = null;
         }
     }
 
-    private handleTouchEnd(event: EventTouch) {
-        const selectedTile = this.tileSelectionHandler.getSelectedTile();
-        if (selectedTile) {
-            if (this.collisionHandler?.collidedGroundTile) {
-                this.tilePlacementHandler.handleTilePlacement(selectedTile, this.collisionHandler.collidedGroundTile);
-            } else {
-                // If no collision detected, reset the tile position
-                this.tileSelectionHandler.resetSelection();
-            }
-
-            // Remove CollisionHandler from the tile
-            selectedTile.node.removeComponent(CollisionHandler);
-            this.collisionHandler = null;
-            this.tileSelectionHandler.resetSelection();
+    private performRaycast(screenPos: Vec3): Node | null {
+        if (!this.inputProvider) {
+            return null;
         }
+        return this.inputProvider.performRaycast(screenPos);
     }
 
     private getTouchWorldPosition(event: EventTouch): Vec3 {
@@ -83,18 +105,11 @@ export class InteractionHandler extends Component {
         const touchLocation = event.getLocation();
         const ray = new geometry.Ray();
         camera.screenPointToRay(touchLocation.x, touchLocation.y, ray);
-        const distance = 10; // Adjust based on your scene scale
+        const distance = 10; // Scene ölçeğinize göre ayarlayın
         return new Vec3(
             ray.o.x + ray.d.x * distance,
             ray.o.y + ray.d.y * distance,
             ray.o.z + ray.d.z * distance
         );
-    }
-
-    private performRaycast(touchPos: Vec3): Node | null {
-        if (!this.inputProvider) {
-            return null;
-        }
-        return this.inputProvider.performRaycast(touchPos);
     }
 }

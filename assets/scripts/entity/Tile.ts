@@ -1,4 +1,4 @@
-import { _decorator, Component, tween, Vec3,  MeshRenderer , Node, Collider,  ITriggerEvent, Color } from 'cc';
+import { _decorator, Component, tween, Vec3,  MeshRenderer , Node, Collider,  ITriggerEvent, Color, BoxCollider } from 'cc';
 import { ColorProvider } from '../core/ColorProvider';
 const { ccclass , property } = _decorator;
 
@@ -18,7 +18,7 @@ export class Tile extends Component {
         this.body = this.node.getChildByName("Body");
         this.originalPosition = this.node.getPosition().clone();
         this.updateColor();
-        this.setupCollisionListener();
+        this.setupCollider();
     }
 
     select() {
@@ -40,6 +40,12 @@ export class Tile extends Component {
             .start();
     }
 
+    private setupCollider() {
+        let collider = this.getComponent(Collider);
+        if (!collider) {
+            collider = this.addComponent(BoxCollider);
+        }
+    }
 
     updateColor() {
         const colorProvider = ColorProvider.getInstance();
@@ -73,19 +79,6 @@ export class Tile extends Component {
             }
         }
     }
-    setupCollisionListener() {
-        const collider = this.node.getComponent(Collider);
-        if (collider) {
-            collider.on('onTriggerEnter', this.onTriggerEnter, this);
-        }
-    }
 
-    private onTriggerEnter(event: ITriggerEvent) {
-        const otherNode = event.otherCollider.node;
-        console.log(otherNode.name);
-        
-        if (otherNode.getComponent('GroundTile')) {
-            const groundTile = otherNode.getComponent('GroundTile');
-        }
-    }
+
 }

@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Prefab, Vec3 } from 'cc';
+import { _decorator, Component, Node, Prefab, Vec3, tween, instantiate } from 'cc';
 import { TileCluster } from '../core/TileCluster';
 const { ccclass, property } = _decorator;
 
@@ -6,7 +6,7 @@ const { ccclass, property } = _decorator;
 export class SelectableManager extends Component {
 
     @property(Prefab)
-    tilePrefab: Prefab = null!; // Her bir Tile için prefab
+    tileClusterPrefab: Prefab = null!; // TileCluster prefab'ı
 
     @property(Node)
     startPoint: Node = null!;
@@ -18,29 +18,42 @@ export class SelectableManager extends Component {
 
     onLoad() {
         this.createSelectableClusters();
-        this.startMovement(); // Oyun başladığında hareketi başlat
     }
 
     createSelectableClusters() {
+        const startX = - (this.clusterCount - 1) * 1.5; // Cluster'lar arasındaki mesafe
         for (let i = 0; i < this.clusterCount; i++) {
-            const initialPosition = this.startPoint.position.clone(); // Her cluster başlangıç noktasından başlasın
-            const isTilesSelectable = true;
-            // const tileCount = Math.floor(Math.random() * 5) + 1;
-            const tileCount = 1;
-            const cluster = new TileCluster(this.node, this.tilePrefab, tileCount, initialPosition, isTilesSelectable);
-            this.clusters.push(cluster);
+            const position = new Vec3(startX + i * 3, 0, 0); // Cluster'ların konumu
+            const clusterNode = instantiate(this.tileClusterPrefab);
+            clusterNode.parent = this.node;
+            clusterNode.setPosition(position.clone());
+
+            const cluster = clusterNode.getComponent(TileCluster);
+            if (cluster) {
+                cluster.initializeCluster();
+                cluster.isSelectable = true;
+                this.clusters.push(cluster);
+
+                // Hareket animasyonu ekleyelim
+                tween(clusterNode)
+                    .to(0.5, { position: position })
+                    .start();
+            }
         }
     }
 
-    async startMovement() {
-        const targetX = [-2, 0, 2];
-        const duration = 0.2; // Hareket süresi
+    removeCluster(cluster: TileCluster) {
+        const index = this.clusters.indexOf(cluster);
+        if (index !== -1) {
+            this.clusters.splice(index, 1);
+            cluster.node.destroy();
+            this.checkAndRefillClusters();
+        }
+    }
 
-        for (let i = 0; i < this.clusters.length; i++) {
-            const cluster = this.clusters[i];
-            const targetPosition = new Vec3(targetX[i], 0, 0);
-            await cluster.moveToPosition(targetPosition, duration); // Cluster hareketini bekleyin
-            await cluster.flipAnimation(); // Flip hareketini bekleyin
+    checkAndRefillClusters() {
+        if (this.clusters.length < this.clusterCount) {
+            this.createSelectableClusters();
         }
     }
 }

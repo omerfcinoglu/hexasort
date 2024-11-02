@@ -31,6 +31,7 @@ export class InputProvider extends Component {
     private handleTouchMove(event: EventTouch) {
         this.onTouchMove?.(event);
     }
+    
 
     private handleTouchEnd(event: EventTouch) {
         this.onTouchEnd?.(event);
@@ -46,9 +47,12 @@ export class InputProvider extends Component {
         if (PhysicsSystem.instance.raycast(this._ray)) {
             const results = PhysicsSystem.instance.raycastResults;
             if (results.length > 0) {
-                return results[0].collider.node;
+                const hitNode = results[0].collider.node;
+                console.log("Raycast hit node:", hitNode.name);
+                return hitNode;
             }
         }
+        console.log("Raycast did not hit any node.");
         return null;
     }
 }

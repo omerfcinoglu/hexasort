@@ -1,8 +1,8 @@
-import { _decorator, Component, Collider, ICollisionEvent, Node } from 'cc';
+import { _decorator, Component, Collider, ICollisionEvent } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
 const { ccclass } = _decorator;
 
-@ccclass("CollisionHandler")
+@ccclass('CollisionHandler')
 export class CollisionHandler extends Component {
     public collidedGroundTile: GroundTile | null = null;
 
