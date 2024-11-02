@@ -1,14 +1,31 @@
-import { _decorator, Component, Node } from 'cc';
-const { ccclass, property } = _decorator;
+import { _decorator, Component, Collider, ICollisionEvent, Node } from 'cc';
+import { GroundTile } from '../entity/GroundTile';
+const { ccclass } = _decorator;
 
-@ccclass('CollisionHandler')
+@ccclass("CollisionHandler")
 export class CollisionHandler extends Component {
-    start() {
+    public collidedGroundTile: GroundTile | null = null;
 
+    onEnable() {
+        const collider = this.getComponent(Collider);
+        if (collider) {
+            collider.on('onCollisionEnter', this.onCollisionEnter, this);
+        }
     }
 
-    update(deltaTime: number) {
-        
+    onDisable() {
+        const collider = this.getComponent(Collider);
+        if (collider) {
+            collider.off('onCollisionEnter', this.onCollisionEnter, this);
+        }
+    }
+
+    private onCollisionEnter(event: ICollisionEvent) {
+        const otherNode = event.otherCollider.node;
+        const groundTile = otherNode.getComponent(GroundTile);
+        if (groundTile) {
+            this.collidedGroundTile = groundTile;
+            console.log('Collision detected with GroundTile');
+        }
     }
 }
-

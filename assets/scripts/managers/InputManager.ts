@@ -1,25 +1,23 @@
-import { _decorator, Component, EventTouch, Vec3, Vec2, Node, geometry } from 'cc';
-import { InputProvider } from './InputProvider';
-import { Tile } from '../entity/Tile';
-import { CollisionHandler } from '../handlers/CollisionHandler';
-import { TilePlacementHandler } from '../handlers/TilePlacementHandler';
+import { _decorator, Component, EventTouch, geometry, Vec3 } from 'cc';
+import { InputProvider } from '../input/InputProvider';
 import { TileSelectionHandler } from '../handlers/TileSelectionHandler';
+import { TilePlacementHandler } from '../handlers/TilePlacementHandler';
+import { CollisionHandler } from '../handlers/CollisionHandler';
+import { Tile } from '../entity/Tile';
+const { ccclass } = _decorator;
 
-const { ccclass, property } = _decorator;
-
-@ccclass("InteractionHandler")
-export class InteractionHandler extends Component {
-    @property(InputProvider)
-    inputProvider: InputProvider | null = null;
-
+@ccclass("InputManager")
+export class InputManager extends Component {
+    private inputProvider: InputProvider | null = null;
     private tileSelectionHandler: TileSelectionHandler = new TileSelectionHandler();
     private tilePlacementHandler: TilePlacementHandler = new TilePlacementHandler();
     private collisionHandler: CollisionHandler | null = null;
     private touchOffset: Vec3 = new Vec3();
 
     onLoad() {
+        this.inputProvider = this.getComponent(InputProvider);
         if (!this.inputProvider) {
-            console.error("InputProvider is not assigned in InteractionHandler.");
+            console.error("InputProvider not found on InputManager node.");
             return;
         }
 
@@ -30,24 +28,19 @@ export class InteractionHandler extends Component {
     }
 
     private handleTouchStart(event: EventTouch) {
-        const touchPos = event.getLocation(); // Vec2
-        const touchPos3D = new Vec3(touchPos.x, touchPos.y, 0); // Convert to Vec3
-        const hitNode = this.performRaycast(touchPos3D);
+        const touchPos = event.getLocation();
+        const hitNode = this.inputProvider!.performRaycast(new Vec3(touchPos.x, touchPos.y, 0));
 
         if (hitNode) {
             const tile = hitNode.getComponent(Tile);
-            if (tile && tile.isSelectable) {
+            if (tile) {
                 this.tileSelectionHandler.handleTileSelection(tile);
-
                 const tilePos = tile.node.getWorldPosition();
                 const touchWorldPos = this.getTouchWorldPosition(event);
                 this.touchOffset = tilePos.subtract(touchWorldPos);
 
                 // Attach CollisionHandler to the tile
-                this.collisionHandler = tile.node.getComponent(CollisionHandler);
-                if (!this.collisionHandler) {
-                    this.collisionHandler = tile.node.addComponent(CollisionHandler);
-                }
+                this.collisionHandler = tile.node.addComponent(CollisionHandler);
             }
         }
     }
@@ -67,7 +60,6 @@ export class InteractionHandler extends Component {
             if (this.collisionHandler?.collidedGroundTile) {
                 this.tilePlacementHandler.handleTilePlacement(selectedTile, this.collisionHandler.collidedGroundTile);
             } else {
-                // If no collision detected, reset the tile position
                 this.tileSelectionHandler.resetSelection();
             }
 
@@ -89,12 +81,5 @@ export class InteractionHandler extends Component {
             ray.o.y + ray.d.y * distance,
             ray.o.z + ray.d.z * distance
         );
-    }
-
-    private performRaycast(touchPos: Vec3): Node | null {
-        if (!this.inputProvider) {
-            return null;
-        }
-        return this.inputProvider.performRaycast(touchPos);
     }
 }
