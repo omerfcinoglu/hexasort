@@ -685,6 +685,9 @@
     "inputProvider": {
       "__id__": 17
     },
+    "tilePlacementHandler": {
+      "__id__": 21
+    },
     "_id": "1anbEpXPNLEbBgkglDFkyI"
   },
   {
@@ -696,9 +699,6 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "tileSelectionHandler": {
-      "__id__": 20
-    },
     "_id": "ecqQ9C/9tEiqDbKP8G9wXB"
   },
   {

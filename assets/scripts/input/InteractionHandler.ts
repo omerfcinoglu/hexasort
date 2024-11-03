@@ -26,8 +26,8 @@ export class InteractionHandler extends Component {
         if (selectedCluster && selectedCluster.isDragging) {
             this.collisionHandler = selectedCluster.getComponent(CollisionHandler);
             if (this.collisionHandler?.collidedGroundTile) {
-                selectedCluster.placeOnGrid(this.collisionHandler.collidedGroundTile);
-                this.tileSelectionHandler!.selectedCluster = null;
+                // selectedCluster.placeOnGrid(this.collisionHandler.collidedGroundTile);
+                // this.tileSelectionHandler!.selectedCluster = null;
             }
         }
     }

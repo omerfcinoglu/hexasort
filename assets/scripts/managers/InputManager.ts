@@ -30,6 +30,7 @@ export class InputManager extends Component {
     private handleTouchStart(event: EventTouch) {
         const touchPos = event.getLocation();
         const hitNode = this.inputProvider!.performRaycast(new Vec3(touchPos.x, touchPos.y, 0));
+        console.log(hitNode);
 
         if (hitNode) {
             const tile = hitNode.getComponent(Tile);
@@ -41,6 +42,7 @@ export class InputManager extends Component {
 
                 // Attach CollisionHandler to the tile
                 this.collisionHandler = tile.node.addComponent(CollisionHandler);
+                
             }
         }
     }

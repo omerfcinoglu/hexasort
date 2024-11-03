@@ -1,6 +1,7 @@
 import { _decorator, Component, EventTouch, Vec3, Node, geometry } from 'cc';
 import { TileCluster } from '../core/TileCluster';
 import { InputProvider } from '../input/InputProvider';
+import { TilePlacementHandler } from './TilePlacementHandler';
 const { ccclass, property } = _decorator;
 
 @ccclass('TileSelectionHandler')
@@ -8,6 +9,10 @@ export class TileSelectionHandler extends Component {
     @property(InputProvider)
     inputProvider: InputProvider | null = null;
 
+    @property(TilePlacementHandler)
+    tilePlacementHandler: TilePlacementHandler | null = null;
+
+    
     public selectedCluster: TileCluster | null = null;
 
     onLoad() {
@@ -45,8 +50,13 @@ export class TileSelectionHandler extends Component {
 
     private handleTouchEnd(event: EventTouch) {
         if (this.selectedCluster) {
-            this.selectedCluster.deselect();
-            this.selectedCluster = null;
+            if(this.selectedCluster.lastGroundTile){
+                this.tilePlacementHandler.Place(this.selectedCluster);
+            }
+            else{
+                this.selectedCluster.deselect();
+                this.selectedCluster = null;
+            }
         }
     }
 

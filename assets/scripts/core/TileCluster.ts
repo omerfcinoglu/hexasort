@@ -2,7 +2,6 @@
 
 import { _decorator, Component, Node, Vec3, tween, Prefab, instantiate, Collider, RigidBody, BoxCollider, PhysicsGroup, ICollisionEvent } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
-import { SelectableManager } from '../managers/SelectableManager';
 import { Tile } from '../entity/Tile';
 const { ccclass, property } = _decorator;
 
@@ -19,11 +18,10 @@ export class TileCluster extends Component {
     public originalPosition: Vec3 = new Vec3();
 
     private tiles: Node[] = [];
-    private colliderNode: Node | null = null;
     private touchOffset: Vec3 = new Vec3();
 
-    public selectableManager: SelectableManager | null = null;
     private collider : Collider = null;
+    public lastGroundTile : GroundTile = null;
 
     onLoad() {
         this.initializeCollider();
@@ -56,14 +54,14 @@ export class TileCluster extends Component {
     private onCollisionEnter(event: ICollisionEvent) {
         const groundTile = event.otherCollider.node.getComponent(GroundTile);
         if (groundTile) {
-            // Collision with GroundTile
+            this.lastGroundTile = groundTile;
         }
     }
 
     private onCollisionExit(event: ICollisionEvent) {
         const groundTile = event.otherCollider.node.getComponent(GroundTile);
         if (groundTile) {
-            // Collision exit with GroundTile
+            this.lastGroundTile = null;
         }
     }
 
@@ -89,10 +87,24 @@ export class TileCluster extends Component {
         this.resetPosition();
     }
 
-
     public resetPosition() {
         tween(this.node)
             .to(0.3, { position: this.originalPosition })
             .start();
+    }
+
+    public placement(){
+        if(this.lastGroundTile){
+            this.node.removeFromParent();
+            this.lastGroundTile.node.parent.addChild(this.node);
+            console.log(this.node.parent , this.lastGroundTile.node.parent);
+            this.node.setPosition(this.lastGroundTile.node.position)
+            this.isSelectable = false;
+            this.isDragging = false;
+        }
+        else{
+            console.log("last ground tile is null");
+            
+        }
     }
 }

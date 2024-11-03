@@ -8,6 +8,7 @@ const { ccclass, property } = _decorator;
 export class GroundTile extends Component {
     public gridPosition: { row: number; col: number } = { row: 0, col: 0 };
     public attachedTiles : Node[] = [];
+    public colliderNode: Node | null = null;
 
     private collider : Collider = null;
 
@@ -15,6 +16,8 @@ export class GroundTile extends Component {
         this.collider = this.getComponent(Collider);
         this.collider.on('onCollisionEnter', this.onCollisionEnter, this);
         this.collider.on('onCollisionExit', this.onCollisionExit, this);
+        this.node.on(Node.EventType.CHILD_ADDED, this.onChildAdded, this);
+        this.node.on(Node.EventType.CHILD_REMOVED, this.onChildRemoved, this);
 
         this.updateColliderState();
     }
@@ -22,19 +25,20 @@ export class GroundTile extends Component {
 
     public updateColliderState() {
         if(this.attachedTiles.length > 0){
+            this.collider.on('onCollisionEnter', this.onCollisionEnter, this);
+            this.collider.on('onCollisionExit', this.onCollisionExit, this);
             this.collider.off('onCollisionEnter', this.onCollisionEnter, this);
             this.collider.off('onCollisionExit', this.onCollisionExit, this);
         }
         else{
-            this.collider.on('onCollisionEnter', this.onCollisionEnter, this);
-            this.collider.on('onCollisionExit', this.onCollisionExit, this);
+
         }
     }
 
     private onCollisionEnter(event: ICollisionEvent) {
         const tileCluster = event.otherCollider.node.getComponent(TileCluster);
         if (tileCluster) {
-            // Handle collision with TileCluster
+            console.log("beni yerleştir konum" , this.gridPosition);
         }
     }
 
@@ -45,6 +49,17 @@ export class GroundTile extends Component {
         }
     }
 
+    private onChildAdded(child: Node) {
+        if (child !== this.colliderNode) {
+            this.updateColliderState();
+        }
+    }
+
+    private onChildRemoved(child: Node) {
+        if (child !== this.colliderNode) {
+            this.updateColliderState();
+        }
+    }
 
     public addChildTileCluster(tileClusterNode: Node) {
         const tileCount = this.attachedTiles.length + 1;
