@@ -1,6 +1,6 @@
 // TileCluster.ts
 
-import { _decorator, Component, Node, Vec3, tween, Prefab, instantiate, Collider, RigidBody, BoxCollider } from 'cc';
+import { _decorator, Component, Node, Vec3, tween, Prefab, instantiate, Collider, RigidBody, BoxCollider, PhysicsGroup, ICollisionEvent } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
 import { SelectableManager } from '../managers/SelectableManager';
 import { Tile } from '../entity/Tile';
@@ -23,34 +23,18 @@ export class TileCluster extends Component {
     private touchOffset: Vec3 = new Vec3();
 
     public selectableManager: SelectableManager | null = null;
+    private collider : Collider = null;
 
     onLoad() {
-        this.colliderNode = this.node.getChildByName('Collider');
-        if (!this.colliderNode) {
-            console.error('Collider node not found in TileCluster.');
-            return;
-        }
         this.initializeCollider();
         this.initializeCluster();
         this.originalPosition = this.node.getPosition().clone();
     }
 
     private initializeCollider() {
-        const collider = this.colliderNode!.getComponent(BoxCollider);
-        if (!collider) {
-            console.error('BoxCollider component missing on Collider node.');
-            return;
-        }
-        collider.isTrigger = true;
-
-        const rigidBody = this.colliderNode!.getComponent(RigidBody);
-        if (rigidBody) {
-            rigidBody.type = RigidBody.Type.KINEMATIC;
-            rigidBody.useGravity = false;
-        } else {
-            console.error('Rigidbody component missing on Collider node.');
-            return;
-        }
+        this.collider = this.getComponent(Collider);
+        this.collider.on('onCollisionEnter', this.onCollisionEnter, this);
+        this.collider.on('onCollisionExit', this.onCollisionExit, this);
     }
 
     public initializeCluster() {
@@ -67,14 +51,20 @@ export class TileCluster extends Component {
 
             this.tiles.push(tileNode);
         }
-
-        this.updateColliderSize();
     }
 
-    private updateColliderSize() {
-    //    if(this.tiles.length>0){
-    //     this.colliderNode.active = false;
-    //    }
+    private onCollisionEnter(event: ICollisionEvent) {
+        const groundTile = event.otherCollider.node.getComponent(GroundTile);
+        if (groundTile) {
+            // Collision with GroundTile
+        }
+    }
+
+    private onCollisionExit(event: ICollisionEvent) {
+        const groundTile = event.otherCollider.node.getComponent(GroundTile);
+        if (groundTile) {
+            // Collision exit with GroundTile
+        }
     }
 
     public select(touchWorldPos: Vec3) {
@@ -99,58 +89,10 @@ export class TileCluster extends Component {
         this.resetPosition();
     }
 
-    public async placeOnGrid(groundTile: GroundTile) {
-        const tileCount = groundTile.node.children.filter(child => child !== groundTile.colliderNode).length;
-        const tileHeight = tileCount * 0.2;
-
-        const targetPosition = groundTile.node.getWorldPosition().add3f(0, tileHeight, 0);
-        this.isSelectable = false;
-
-        await new Promise<void>((resolve) => {
-            tween(this.node)
-                .to(0.2, { worldPosition: targetPosition })
-                .call(() => {
-                    resolve();
-                })
-                .start();
-        });
-
-        groundTile.addChildTileCluster(this.node);
-
-        if (this.selectableManager) {
-            this.selectableManager.removeCluster(this);
-        }
-    }
 
     public resetPosition() {
         tween(this.node)
             .to(0.3, { position: this.originalPosition })
             .start();
-    }
-
-    public addTile(tileType: number) {
-        const tileNode = instantiate(this.tilePrefab);
-        tileNode.parent = this.node;
-        tileNode.setPosition(new Vec3(0, this.tiles.length * 0.2, 0));
-
-        const tileComp = tileNode.getComponent(Tile);
-        if (tileComp) {
-            tileComp.type = tileType;
-            tileComp.updateColor();
-        }
-
-        this.tiles.push(tileNode);
-        this.tileCount = this.tiles.length;
-        this.updateColliderSize();
-    }
-
-    public removeTile(tileNode: Node) {
-        const index = this.tiles.indexOf(tileNode);
-        if (index !== -1) {
-            this.tiles.splice(index, 1);
-            tileNode.destroy();
-            this.tileCount = this.tiles.length;
-            this.updateColliderSize();
-        }
     }
 }

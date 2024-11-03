@@ -30,13 +30,11 @@ export class GridManager extends Component {
             for (let col = 0; col < numCols; col++) {
                 const tileType = levelMatrix[row][col];
                 const position = new Vec3(col * this.tileSize - offsetX, 0, -(row * this.tileSize - offsetZ));
-
                 const groundTileNode = this.createGroundTile(position);
                 const groundTileComp = groundTileNode.getComponent(GroundTile);
                 if (groundTileComp) {
                     groundTileComp.gridPosition = { row, col };
                     this.grid[row][col] = groundTileComp;
-
                     if (tileType > 0) {
                         this.createLevelTile(tileType, groundTileNode, groundTileComp);
                     }
@@ -59,7 +57,6 @@ export class GridManager extends Component {
             tileComp.type = tileType;
             tileComp.updateColor();
         }
-        groundTileComp.setCollider(false);
         groundTileComp.addChildTileCluster(tileNode);
     }
 

@@ -1,4 +1,4 @@
-import { _decorator, Component, Collider, ITriggerEvent } from 'cc';
+import { _decorator, Component, Collider, ICollisionEvent } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
 const { ccclass } = _decorator;
 
@@ -8,21 +8,22 @@ export class CollisionHandler extends Component {
 
     onEnable() {
         const collider = this.getComponentInChildren(Collider);
+        
         if (collider) {
-            collider.on('onTriggerEnter', this.onTriggerEnter, this);
-            collider.on('onTriggerExit', this.onTriggerExit, this);
+            collider.on('onCollisionEnter', this.onCollisionEnter, this);
+            collider.on('onCollisionExit', this.onCollisionExit, this);
         }
     }
 
     onDisable() {
         const collider = this.getComponentInChildren(Collider);
         if (collider) {
-            collider.off('onTriggerEnter', this.onTriggerEnter, this);
-            collider.off('onTriggerExit', this.onTriggerExit, this);
+            collider.off('onCollisionEnter', this.onCollisionEnter, this);
+            collider.off('onCollisionExit', this.onCollisionExit, this);
         }
     }
 
-    private onTriggerEnter(event: ITriggerEvent) {
+    private onCollisionEnter(event: ICollisionEvent) {
         const otherNode = event.otherCollider.node;
         const groundTile = otherNode.getComponent(GroundTile);
         if (groundTile) {
@@ -30,7 +31,7 @@ export class CollisionHandler extends Component {
         }
     }
 
-    private onTriggerExit(event: ITriggerEvent) {
+    private onCollisionExit(event: ICollisionEvent) {
         const otherNode = event.otherCollider.node;
         const groundTile = otherNode.getComponent(GroundTile);
         if (groundTile && this.collidedGroundTile === groundTile) {
