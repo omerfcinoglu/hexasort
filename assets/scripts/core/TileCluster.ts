@@ -16,11 +16,10 @@ export class TileCluster extends Component {
     public isDragging: boolean = false;
 
     private tiles: Node[] = [];
-    private originalPosition: Vec3 = new Vec3();
+    public originalPosition: Vec3 = new Vec3();
     private touchOffset: Vec3 = new Vec3();
 
     onLoad() {
-        this.originalPosition = this.node.getPosition().clone();
         this.initializeCluster();
     }
 
@@ -28,7 +27,7 @@ export class TileCluster extends Component {
         for (let i = 0; i < this.tileCount; i++) {
             const tileNode = instantiate(this.tilePrefab);
             tileNode.parent = this.node;
-            tileNode.setPosition(new Vec3(0, i * 0.5, 0.01 * i)); 
+            tileNode.setPosition(new Vec3(0, i * 0.2, -0.05 * i)); 
 
             const tileComp = tileNode.getComponent(Tile);
             if (tileComp) {
@@ -47,7 +46,6 @@ export class TileCluster extends Component {
         }
         this.isDragging = true;
         this.touchOffset = this.node.getWorldPosition().subtract(touchWorldPos);
-        console.log("Cluster selected for dragging:", this.node.name);
     }
     
     public move(touchWorldPos: Vec3) {
@@ -57,7 +55,6 @@ export class TileCluster extends Component {
         }
         const newPosition = touchWorldPos.add(this.touchOffset);
         this.node.setWorldPosition(newPosition);
-        console.log("Cluster moved to:", newPosition.toString());
     }
     
     public deselect() {

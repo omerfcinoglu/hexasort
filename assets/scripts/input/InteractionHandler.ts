@@ -66,7 +66,6 @@ export class InteractionHandler extends Component {
 
     private handleTouchMove(event: EventTouch) {
         if (this.selectedCluster) {
-            console.log("Moving cluster:", this.selectedCluster.node.name);
             const touchWorldPos = this.getTouchWorldPosition(event);
             
             this.selectedCluster.move(touchWorldPos);

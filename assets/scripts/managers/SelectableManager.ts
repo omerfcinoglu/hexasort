@@ -27,14 +27,14 @@ export class SelectableManager extends Component {
             const clusterNode = instantiate(this.tileClusterPrefab);
             clusterNode.parent = this.node;
             clusterNode.setPosition(position.clone());
-
+            
             const cluster = clusterNode.getComponent(TileCluster);
             if (cluster) {
                 cluster.initializeCluster();
+                cluster.originalPosition = position;
                 cluster.isSelectable = true;
                 this.clusters.push(cluster);
 
-                // Hareket animasyonu ekleyelim
                 tween(clusterNode)
                     .to(0.5, { position: position })
                     .start();
