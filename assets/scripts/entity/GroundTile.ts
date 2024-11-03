@@ -1,62 +1,56 @@
-import { _decorator, Component, Node, BoxCollider, ITriggerEvent, MeshRenderer, Color } from 'cc';
-import { Tile } from './Tile';
-import { ColorProvider } from '../core/ColorProvider';
+import { _decorator, Component, Node, Collider, RigidBody, BoxCollider, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
-@ccclass("GroundTile")
-export class GroundTile extends Tile {
-    
-    public childrenTiles: Node[] = []; // Çocuk tile'ları tutan dizi
-    private collider: BoxCollider | null = null;
-    public type = 0;
-    private originalColor: Color | null = null;
+@ccclass('GroundTile')
+export class GroundTile extends Component {
+    public gridPosition: { row: number; col: number } = { row: 0, col: 0 };
+    public hasTileCluster: boolean = false;
+
+    private colliderNode: Node | null = null;
 
     onLoad() {
-        super.onLoad();
-        this.updateColor(); // Ground için rengi ayarla
-        const collider = this.node.getComponent(BoxCollider) || this.node.addComponent(BoxCollider);
-        collider.size.set(1.5, 0.2, 1.5); // Collider boyutunu ayarla (örneğin tile boyutuna göre)
-        this.updateColliderState();
-    }
-    
-
-    addChildTile(tileNode: Node) {
-        this.childrenTiles.push(tileNode);
-        tileNode.parent = this.node; // Ground tile’ın çocuğu yap
-        tileNode.setPosition(0, 0.2, 0); // Hafif yukarıda konumlandır
-        
-        this.updateColliderState();
-    }
-
-    removeChildTile(tileNode: Node) {
-        const index = this.childrenTiles.indexOf(tileNode);
-        if (index > -1) {
-            this.childrenTiles.splice(index, 1);
+        this.colliderNode = this.node.getChildByName('Collider');
+        if (!this.colliderNode) {
+            console.error('Collider node not found in GroundTile.');
+            return;
         }
-        tileNode.parent = null; // Çocukluktan çıkar
-        
-        this.updateColliderState();
+        this.initializeCollider();
+    }
+
+    private initializeCollider() {
+        const collider = this.colliderNode!.getComponent(BoxCollider);
+        if (!collider) {
+            console.error('BoxCollider component missing on Collider node.');
+            return;
+        }
+        collider.isTrigger = false;
+
+        const rigidBody = this.colliderNode!.getComponent(RigidBody);
+        if (rigidBody) {
+            rigidBody.type = RigidBody.Type.STATIC;
+            rigidBody.useGravity = false;
+        } else {
+            console.error('Rigidbody component missing on Collider node.');
+            return;
+        }
     }
 
     public updateColliderState() {
-        const collider = this.body.getComponent(BoxCollider);
+        const collider = this.colliderNode!.getComponent(Collider);
         if (collider) {
-            collider.enabled = this.childrenTiles.length === 0;
+            collider.enabled = !this.hasTileCluster;
         }
     }
 
-    public hasChildTile(): boolean {
-        // Eğer ground tile'ın bir çocuğu varsa collider'ı kapat
-        if (this.node.children.length > 0) {
-            this.collider!.enabled = false;
-            return true;
-        }
-        this.collider!.enabled = true;
-        return false;
+    public addChildTileCluster(tileClusterNode: Node) {
+        tileClusterNode.parent = this.node;
+        tileClusterNode.setPosition(Vec3.ZERO);
+        this.hasTileCluster = true;
+        this.updateColliderState();
     }
 
-
-
-
-    
+    public removeChildTileCluster() {
+        this.hasTileCluster = false;
+        this.updateColliderState();
+    }
 }

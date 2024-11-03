@@ -6,61 +6,78 @@ const { ccclass, property } = _decorator;
 @ccclass("GridManager")
 export class GridManager extends Component {
 
-    @property(Prefab)
-    public groundTilePrefab: Prefab = null!; // Ground tile prefab
+    @property({ type: Prefab })
+    public groundTilePrefab: Prefab = null!;
 
-    @property(Prefab)
-    public tilePrefab: Prefab = null!; // Level tile prefab
+    @property({ type: Prefab })
+    public tilePrefab: Prefab = null!;
 
-    private tileSize = 1; // Tile'lar arasındaki mesafe
+    @property
+    public tileSize: number = 1;
 
-    public createGrid(levelMatrix: number[][]) {
-        const offsetX = (levelMatrix[0].length - 1) * this.tileSize * 0.5;
-        const offsetY = (levelMatrix.length - 1) * this.tileSize * 0.5;
+    private grid: GroundTile[][] = [];
 
-        for (let row = 0; row < levelMatrix.length; row++) {
-            for (let col = 0; col < levelMatrix[row].length; col++) {
+    public createGrid(levelMatrix: number[][]): void {
+        const numRows = levelMatrix.length;
+        const numCols = levelMatrix[0].length;
+        const offsetX = (numCols - 1) * this.tileSize * 0.5;
+        const offsetZ = (numRows - 1) * this.tileSize * 0.5;
+
+        for (let row = 0; row < numRows; row++) {
+            this.grid[row] = [];
+            for (let col = 0; col < numCols; col++) {
                 const tileType = levelMatrix[row][col];
+                const position = new Vec3(col * this.tileSize - offsetX, 0, -(row * this.tileSize - offsetZ));
 
-                const groundTile = this.createGroundTile(row, col, offsetX, offsetY);
-                const groundComp = groundTile.getComponent(GroundTile);
-                
-                if (tileType > 0) {
-                    this.createLevelTile(tileType, groundTile , groundComp);
-                    groundComp.updateColliderState();
+                const groundTileNode = this.createGroundTile(position);
+                const groundTileComp = groundTileNode.getComponent(GroundTile);
+                if (groundTileComp) {
+                    groundTileComp.gridPosition = { row, col };
+                    this.grid[row][col] = groundTileComp;
+
+                    if (tileType > 0) {
+                        this.createLevelTile(tileType, groundTileNode);
+                        groundTileComp.updateColliderState();
+                    }
                 }
             }
         }
     }
 
-    private createGroundTile(row: number, col: number, offsetX: number, offsetY: number): Node {
-        const groundNode = instantiate(this.groundTilePrefab);
-        groundNode.parent = this.node;
-
-        const position = new Vec3(col * this.tileSize - offsetX, 0, -(row * this.tileSize - offsetY));
-        groundNode.setPosition(position);
-
-        const groundComponent = groundNode.getComponent(GroundTile);
-        if (groundComponent) {
-            groundComponent.type = 0;
-            groundComponent.updateColor();
-        }
-
-        return groundNode;
+    private createGroundTile(position: Vec3): Node {
+        const groundTileNode = instantiate(this.groundTilePrefab);
+        groundTileNode.parent = this.node;
+        groundTileNode.setPosition(position);
+        return groundTileNode;
     }
 
-    private createLevelTile(type: number, groundTile: Node , groundComp: GroundTile) {
+    private createLevelTile(tileType: number, parentNode: Node): void {
         const tileNode = instantiate(this.tilePrefab);
-        tileNode.parent = groundTile;
-        groundComp.addChildTile(tileNode);
+        tileNode.parent = parentNode;
+        tileNode.setPosition(0, 0.2, 0);
 
-        // Tile'ın yerel pozisyonunu ground üzerinde sıfırlayın
-        tileNode.setPosition(0, 0.2, 0); // ground üzerinde hafif yukarıda
-
-        const tileComponent = tileNode.getComponent(Tile);
-        if (tileComponent) {
-            tileComponent.type = type;
-            tileComponent.updateColor();
+        const tileComp = tileNode.getComponent(Tile);
+        if (tileComp) {
+            tileComp.type = tileType;
+            tileComp.updateColor();
         }
+    }
+
+    public getGroundTile(row: number, col: number): GroundTile | null {
+        if (this.grid[row] && this.grid[row][col]) {
+            return this.grid[row][col];
+        }
+        return null;
+    }
+
+    public resetGrid(): void {
+        this.grid.forEach(row => {
+            row.forEach(groundTile => {
+                if (groundTile.node) {
+                    groundTile.node.destroy();
+                }
+            });
+        });
+        this.grid = [];
     }
 }

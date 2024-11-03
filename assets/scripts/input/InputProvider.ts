@@ -29,17 +29,14 @@ export class InputProvider extends Component {
     }
 
     private handleTouchStart(event: EventTouch) {
-        console.log("InputProvider handleTouchStart called");
         this.onTouchStart?.(event);
     }
 
     private handleTouchMove(event: EventTouch) {
-        console.log("InputProvider handleTouchMove called");
         this.onTouchMove?.(event);
     }
 
     private handleTouchEnd(event: EventTouch) {
-        console.log("InputProvider handleTouchEnd called");
         this.onTouchEnd?.(event);
     }
 
@@ -54,11 +51,9 @@ export class InputProvider extends Component {
             const results = PhysicsSystem.instance.raycastResults;
             if (results.length > 0) {
                 const hitNode = results[0].collider.node;
-                console.log("Raycast hit node:", hitNode.name);
                 return hitNode;
             }
         }
-        console.log("Raycast did not hit any node.");
         return null;
     }
 }
