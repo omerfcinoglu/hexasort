@@ -55,8 +55,8 @@ export class TileSelectionHandler extends Component {
             }
             else{
                 this.selectedCluster.deselect();
-                this.selectedCluster = null;
             }
+            this.selectedCluster = null;
         }
     }
 

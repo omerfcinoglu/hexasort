@@ -23,6 +23,12 @@ export class ColorProvider extends Component {
     @property
     public color6: Color = Color.MAGENTA.clone();
 
+    @property
+    public ground: Color = Color.MAGENTA.clone();
+    
+    @property
+    public highlight: Color = Color.MAGENTA.clone();
+    
     onLoad() {
         if (ColorProvider._instance === null) {
             ColorProvider._instance = this;
@@ -49,6 +55,8 @@ export class ColorProvider extends Component {
             case 3: return this.color4.clone();
             case 4: return this.color5.clone();
             case 5: return this.color6.clone();
+            case 6: return this.ground.clone();
+            case 7: return this.highlight.clone();
             default: return Color.WHITE.clone();
         }
     }

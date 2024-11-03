@@ -78,6 +78,7 @@ export class TileCluster extends Component {
             return;
         }
         const newPosition = touchWorldPos.add(this.touchOffset);
+        newPosition.y += 0.5; // Y ekseninde yukarı konumlandırma için
         this.node.setWorldPosition(newPosition);
     }
 
@@ -93,18 +94,21 @@ export class TileCluster extends Component {
             .start();
     }
 
-    public placement(){
-        if(this.lastGroundTile){
+    public placement() {
+        if (this.lastGroundTile) {
             this.node.removeFromParent();
             this.lastGroundTile.node.parent.addChild(this.node);
-            console.log(this.node.parent , this.lastGroundTile.node.parent);
-            this.node.setPosition(this.lastGroundTile.node.position)
+    
+            // Y eksenini 0.5 artırarak pozisyonu ayarlayın
+            const targetPosition = this.lastGroundTile.node.position.clone();
+            targetPosition.y += 0.2;
+    
+            this.node.setPosition(targetPosition);
             this.isSelectable = false;
             this.isDragging = false;
-        }
-        else{
+        } else {
             console.log("last ground tile is null");
-            
         }
     }
+    
 }
