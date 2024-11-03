@@ -1,3 +1,5 @@
+// GridManager.ts
+
 import { _decorator, Component, Node, Prefab, instantiate, Vec3 } from 'cc';
 import { Tile } from '../entity/Tile';
 import { GroundTile } from '../entity/GroundTile';
@@ -36,8 +38,7 @@ export class GridManager extends Component {
                     this.grid[row][col] = groundTileComp;
 
                     if (tileType > 0) {
-                        this.createLevelTile(tileType, groundTileNode);
-                        groundTileComp.updateColliderState();
+                        this.createLevelTile(tileType, groundTileNode, groundTileComp);
                     }
                 }
             }
@@ -51,16 +52,15 @@ export class GridManager extends Component {
         return groundTileNode;
     }
 
-    private createLevelTile(tileType: number, parentNode: Node): void {
+    private createLevelTile(tileType: number, groundTileNode: Node, groundTileComp: GroundTile): void {
         const tileNode = instantiate(this.tilePrefab);
-        tileNode.parent = parentNode;
-        tileNode.setPosition(0, 0.2, 0);
-
         const tileComp = tileNode.getComponent(Tile);
         if (tileComp) {
             tileComp.type = tileType;
             tileComp.updateColor();
         }
+        groundTileComp.setCollider(false);
+        groundTileComp.addChildTileCluster(tileNode);
     }
 
     public getGroundTile(row: number, col: number): GroundTile | null {

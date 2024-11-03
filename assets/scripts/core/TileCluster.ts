@@ -1,3 +1,5 @@
+// TileCluster.ts
+
 import { _decorator, Component, Node, Vec3, tween, Prefab, instantiate, Collider, RigidBody, BoxCollider } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
 import { SelectableManager } from '../managers/SelectableManager';
@@ -59,7 +61,7 @@ export class TileCluster extends Component {
 
             const tileComp = tileNode.getComponent(Tile);
             if (tileComp) {
-                tileComp.type = Math.floor(Math.random() * 6); // Adjust as needed
+                tileComp.type = Math.floor(Math.random() * 6);
                 tileComp.updateColor();
             }
 
@@ -70,13 +72,9 @@ export class TileCluster extends Component {
     }
 
     private updateColliderSize() {
-        const collider = this.colliderNode!.getComponent(BoxCollider);
-        if (collider) {
-            const width = 1; // Adjust according to your tile size
-            const height = this.tileCount * 0.2; // Adjust according to tile count
-            collider.size = new Vec3(width, height, width);
-            collider.center = new Vec3(0, height / 2, 0);
-        }
+    //    if(this.tiles.length>0){
+    //     this.colliderNode.active = false;
+    //    }
     }
 
     public select(touchWorldPos: Vec3) {
@@ -102,7 +100,10 @@ export class TileCluster extends Component {
     }
 
     public async placeOnGrid(groundTile: GroundTile) {
-        const targetPosition = groundTile.node.getWorldPosition();
+        const tileCount = groundTile.node.children.filter(child => child !== groundTile.colliderNode).length;
+        const tileHeight = tileCount * 0.2;
+
+        const targetPosition = groundTile.node.getWorldPosition().add3f(0, tileHeight, 0);
         this.isSelectable = false;
 
         await new Promise<void>((resolve) => {
@@ -114,8 +115,7 @@ export class TileCluster extends Component {
                 .start();
         });
 
-        this.node.parent = groundTile.node;
-        this.node.setPosition(Vec3.ZERO);
+        groundTile.addChildTileCluster(this.node);
 
         if (this.selectableManager) {
             this.selectableManager.removeCluster(this);

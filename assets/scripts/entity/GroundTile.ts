@@ -1,12 +1,13 @@
+// GroundTile.ts
+
 import { _decorator, Component, Node, Collider, RigidBody, BoxCollider, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('GroundTile')
 export class GroundTile extends Component {
     public gridPosition: { row: number; col: number } = { row: 0, col: 0 };
-    public hasTileCluster: boolean = false;
-
-    private colliderNode: Node | null = null;
+    
+    public colliderNode: Node | null = null;
 
     onLoad() {
         this.colliderNode = this.node.getChildByName('Collider');
@@ -15,6 +16,11 @@ export class GroundTile extends Component {
             return;
         }
         this.initializeCollider();
+
+        this.node.on(Node.EventType.CHILD_ADDED, this.onChildAdded, this);
+        this.node.on(Node.EventType.CHILD_REMOVED, this.onChildRemoved, this);
+
+        this.updateColliderState();
     }
 
     private initializeCollider() {
@@ -35,22 +41,39 @@ export class GroundTile extends Component {
         }
     }
 
+    public setCollider(value : boolean){
+        this.colliderNode.active = value;
+    }
+
     public updateColliderState() {
         const collider = this.colliderNode!.getComponent(Collider);
         if (collider) {
-            collider.enabled = !this.hasTileCluster;
+            const hasChildren = this.node.children.some(child => child !== this.colliderNode);
+            collider.enabled = !hasChildren;
+        }
+    }
+
+    private onChildAdded(child: Node) {
+        if (child !== this.colliderNode) {
+            this.updateColliderState();
+        }
+    }
+
+    private onChildRemoved(child: Node) {
+        if (child !== this.colliderNode) {
+            this.updateColliderState();
         }
     }
 
     public addChildTileCluster(tileClusterNode: Node) {
+        const tileCount = this.node.children.filter(child => child !== this.colliderNode).length;
+        const tileHeight = tileCount * 0.2; // Adjust according to your tile height
+
         tileClusterNode.parent = this.node;
-        tileClusterNode.setPosition(Vec3.ZERO);
-        this.hasTileCluster = true;
-        this.updateColliderState();
+        tileClusterNode.setPosition(0, tileHeight, 0);
     }
 
-    public removeChildTileCluster() {
-        this.hasTileCluster = false;
-        this.updateColliderState();
+    public removeChildTileCluster(tileClusterNode: Node) {
+        tileClusterNode.removeFromParent();
     }
 }
