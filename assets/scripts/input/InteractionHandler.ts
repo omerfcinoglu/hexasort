@@ -1,4 +1,4 @@
-import { _decorator, Component, EventTouch, Vec3, Node, tween, geometry } from 'cc';
+import { _decorator, Component, EventTouch, Vec3, Node, tween, geometry, Vec2 } from 'cc';
 import { InputProvider } from './InputProvider';
 import { TileCluster } from '../core/TileCluster';
 import { GroundTile } from '../entity/GroundTile';
@@ -34,7 +34,7 @@ export class InteractionHandler extends Component {
             console.log("Raycast hit node:", hitNode.name);
             const cluster = this.getTileClusterFromNode(hitNode);
             if (cluster && cluster.isSelectable) {
-                const touchWorldPos = this.getTouchWorldPosition(event);
+                const touchWorldPos = this.getTouchWorldPosition(event.getLocation());
                 cluster.select(touchWorldPos);
                 this.selectedCluster = cluster;
                 console.log("Selected cluster set:", this.selectedCluster.node.name);
@@ -66,9 +66,10 @@ export class InteractionHandler extends Component {
 
     private handleTouchMove(event: EventTouch) {
         if (this.selectedCluster) {
-            const touchWorldPos = this.getTouchWorldPosition(event);
-            
-            this.selectedCluster.move(touchWorldPos);
+            const touchWorldPos = this.getTouchWorldPosition(event.getLocation());
+            const clusterWorldPos = this.getTouchWorldPosition(new Vec2(this.selectedCluster.originalPosition.x , this.selectedCluster.node.position.y)) 
+            const clusterPos = new Vec3(touchWorldPos.x,clusterWorldPos.y + 2,touchWorldPos.z);
+            this.selectedCluster.move(clusterPos);
         } else {
             console.log("No cluster selected during move.");
         }
@@ -99,9 +100,9 @@ export class InteractionHandler extends Component {
         return this.inputProvider.performRaycast(screenPos);
     }
 
-    private getTouchWorldPosition(event: EventTouch): Vec3 {
+    private getTouchWorldPosition(touchPos: Vec2): Vec3 {
         const camera = this.inputProvider!.cameraCom!;
-        const touchLocation = event.getLocation();
+        const touchLocation = touchPos;
         const ray = new geometry.Ray();
         camera.screenPointToRay(touchLocation.x, touchLocation.y, ray);
         const distance = 10; // Scene ölçeğinize göre ayarlayın
