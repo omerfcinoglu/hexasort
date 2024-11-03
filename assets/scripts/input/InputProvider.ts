@@ -1,21 +1,25 @@
 import { _decorator, Component, Camera, geometry, input, Input, EventTouch, Vec3, Node, PhysicsSystem } from 'cc';
 const { ccclass, property } = _decorator;
 
-@ccclass("InputProvider")
+@ccclass('InputProvider')
 export class InputProvider extends Component {
     @property(Camera)
-    cameraCom: Camera | null = null;
-
-    public _ray: geometry.Ray = new geometry.Ray();
+    public cameraCom: Camera | null = null;
 
     public onTouchStart: ((event: EventTouch) => void) | null = null;
     public onTouchMove: ((event: EventTouch) => void) | null = null;
     public onTouchEnd: ((event: EventTouch) => void) | null = null;
 
+    private _ray: geometry.Ray = new geometry.Ray();
+
     onLoad() {
         input.on(Input.EventType.TOUCH_START, this.handleTouchStart, this);
         input.on(Input.EventType.TOUCH_MOVE, this.handleTouchMove, this);
         input.on(Input.EventType.TOUCH_END, this.handleTouchEnd, this);
+
+        if (!this.cameraCom) {
+            console.error("Camera component is not assigned in InputProvider.");
+        }
     }
 
     onDestroy() {
@@ -25,15 +29,17 @@ export class InputProvider extends Component {
     }
 
     private handleTouchStart(event: EventTouch) {
+        console.log("InputProvider handleTouchStart called");
         this.onTouchStart?.(event);
     }
 
     private handleTouchMove(event: EventTouch) {
+        console.log("InputProvider handleTouchMove called");
         this.onTouchMove?.(event);
     }
-    
 
     private handleTouchEnd(event: EventTouch) {
+        console.log("InputProvider handleTouchEnd called");
         this.onTouchEnd?.(event);
     }
 

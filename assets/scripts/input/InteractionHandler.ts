@@ -1,7 +1,6 @@
-import { _decorator, Component, EventTouch, Vec3, Node, tween, geometry, Vec2 } from 'cc';
+import { _decorator, Component, EventTouch, Vec3, Node, tween, geometry } from 'cc';
 import { InputProvider } from './InputProvider';
 import { TileCluster } from '../core/TileCluster';
-import { GroundTile } from '../entity/GroundTile';
 import { CollisionHandler } from '../handlers/CollisionHandler';
 const { ccclass, property } = _decorator;
 
@@ -23,23 +22,25 @@ export class InteractionHandler extends Component {
         this.inputProvider.onTouchStart = this.handleTouchStart.bind(this);
         this.inputProvider.onTouchMove = this.handleTouchMove.bind(this);
         this.inputProvider.onTouchEnd = this.handleTouchEnd.bind(this);
-        
+
+        console.log("InputProvider events bound to InteractionHandler.");
     }
+
     private handleTouchStart(event: EventTouch) {
         const touchPos = event.getLocation();
         const touchPos3D = new Vec3(touchPos.x, touchPos.y, 0);
         const hitNode = this.performRaycast(touchPos3D);
-    
+
         if (hitNode) {
             console.log("Raycast hit node:", hitNode.name);
             const cluster = this.getTileClusterFromNode(hitNode);
             if (cluster && cluster.isSelectable) {
-                const touchWorldPos = this.getTouchWorldPosition(event.getLocation());
+                const touchWorldPos = this.getTouchWorldPosition(event);
                 cluster.select(touchWorldPos);
                 this.selectedCluster = cluster;
                 console.log("Selected cluster set:", this.selectedCluster.node.name);
-    
-                // CollisionHandler ekleyelim   
+
+                // CollisionHandler ekleyelim
                 this.collisionHandler = cluster.node.getComponent(CollisionHandler);
                 if (!this.collisionHandler) {
                     this.collisionHandler = cluster.node.addComponent(CollisionHandler);
@@ -51,30 +52,15 @@ export class InteractionHandler extends Component {
             console.log("Raycast did not hit any node.");
         }
     }
-    
-    private getTileClusterFromNode(node: Node): TileCluster | null {
-        let currentNode: Node | null = node;
-        while (currentNode) {
-            const cluster = currentNode.getComponent(TileCluster);
-            if (cluster) {
-                return cluster;
-            }
-            currentNode = currentNode.parent;
-        }
-        return null;
-    }
 
     private handleTouchMove(event: EventTouch) {
         if (this.selectedCluster) {
-            const touchWorldPos = this.getTouchWorldPosition(event.getLocation());
-            const clusterWorldPos = this.getTouchWorldPosition(new Vec2(this.selectedCluster.originalPosition.x , this.selectedCluster.node.position.y)) 
-            const clusterPos = new Vec3(touchWorldPos.x,clusterWorldPos.y + 2,touchWorldPos.z);
-            this.selectedCluster.move(clusterPos);
+            const touchWorldPos = this.getTouchWorldPosition(event);
+            this.selectedCluster.move(touchWorldPos);
         } else {
             console.log("No cluster selected during move.");
         }
     }
-    
 
     private handleTouchEnd(event: EventTouch) {
         if (this.selectedCluster) {
@@ -93,6 +79,22 @@ export class InteractionHandler extends Component {
         }
     }
 
+    private getTileClusterFromNode(node: Node): TileCluster | null {
+        let currentNode: Node | null = node;
+        while (currentNode) {
+            const components = currentNode.components.map(comp => comp.constructor.name);
+            console.log("Components on node:", components);
+            const cluster = currentNode.getComponent(TileCluster);
+            if (cluster) {
+                console.log("TileCluster found on node:", currentNode.name);
+                return cluster;
+            }
+            currentNode = currentNode.parent;
+        }
+        console.log("TileCluster not found from node:", node.name);
+        return null;
+    }
+
     private performRaycast(screenPos: Vec3): Node | null {
         if (!this.inputProvider) {
             return null;
@@ -100,16 +102,23 @@ export class InteractionHandler extends Component {
         return this.inputProvider.performRaycast(screenPos);
     }
 
-    private getTouchWorldPosition(touchPos: Vec2): Vec3 {
+    private getTouchWorldPosition(event: EventTouch): Vec3 {
         const camera = this.inputProvider!.cameraCom!;
-        const touchLocation = touchPos;
+        const touchLocation = event.getLocation();
         const ray = new geometry.Ray();
         camera.screenPointToRay(touchLocation.x, touchLocation.y, ray);
-        const distance = 10; // Scene ölçeğinize göre ayarlayın
-        return new Vec3(
+
+        // Yükseklik değerini ayarlayın (örneğin, zemin seviyesinde olsun)
+        const groundY = 0;
+
+        // Dokunuş pozisyonunu dünya uzayında hesaplayın
+        const distance = (groundY - ray.o.y) / ray.d.y;
+        const worldPos = new Vec3(
             ray.o.x + ray.d.x * distance,
-            ray.o.y + ray.d.y * distance,
+            groundY,
             ray.o.z + ray.d.z * distance
         );
+
+        return worldPos;
     }
 }

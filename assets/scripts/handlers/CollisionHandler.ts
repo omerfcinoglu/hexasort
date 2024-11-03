@@ -1,4 +1,4 @@
-import { _decorator, Component, Collider, ITriggerEvent, PhysicsSystem } from 'cc';
+import { _decorator, Component, Collider, ITriggerEvent } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
 const { ccclass } = _decorator;
 
