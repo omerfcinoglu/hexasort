@@ -8,6 +8,9 @@ export class SelectableManager extends Component {
     @property(Prefab)
     tileClusterPrefab: Prefab = null!;
 
+    @property(Node)
+    public selectableArea: Node = null!;
+    
     @property
     clusterCount: number = 3;
 
@@ -25,14 +28,13 @@ export class SelectableManager extends Component {
         for (let i = 0; i < clustersToCreate; i++) {
             const position = new Vec3(startX + (existingClusterCount + i) * 3, 0, 0);
             const clusterNode = instantiate(this.tileClusterPrefab);
-            clusterNode.parent = this.node;
-            clusterNode.setPosition(position.clone().add3f(0, 5, 0));
+            clusterNode.parent = this.selectableArea;
+            clusterNode.setPosition(position.clone().add3f(0, 7, 0));
 
             const cluster = clusterNode.getComponent(TileCluster);
             if (cluster) {
                 cluster.originalPosition = position.clone();
                 cluster.isSelectable = true;
-                cluster.selectableManager = this;
                 this.clusters.push(cluster);
 
                 tween(clusterNode)

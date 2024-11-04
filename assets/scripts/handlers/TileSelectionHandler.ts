@@ -1,4 +1,4 @@
-import { _decorator, Component, EventTouch, Vec3, Node, geometry } from 'cc';
+import { _decorator, Component, EventTouch, Vec3, Node, geometry, Game } from 'cc';
 import { TileCluster } from '../core/TileCluster';
 import { InputProvider } from '../input/InputProvider';
 import { TilePlacementHandler } from './TilePlacementHandler';
@@ -8,11 +8,9 @@ const { ccclass, property } = _decorator;
 export class TileSelectionHandler extends Component {
     @property(InputProvider)
     inputProvider: InputProvider | null = null;
-
-    @property(TilePlacementHandler)
-    tilePlacementHandler: TilePlacementHandler | null = null;
-
     
+    private tilePlacementHandler: TilePlacementHandler = null!;
+
     public selectedCluster: TileCluster | null = null;
 
     onLoad() {
@@ -20,6 +18,8 @@ export class TileSelectionHandler extends Component {
             console.error("InputProvider is not assigned in TileSelectionHandler.");
             return;
         }
+
+        this.tilePlacementHandler = this.node.getComponent(TilePlacementHandler);
 
         this.inputProvider.onTouchStart = this.handleTouchStart.bind(this);
         this.inputProvider.onTouchMove = this.handleTouchMove.bind(this);
@@ -30,7 +30,7 @@ export class TileSelectionHandler extends Component {
         const touchPos = event.getLocation();
         const touchPos3D = new Vec3(touchPos.x, touchPos.y, 0);
         const hitNode = this.performRaycast(touchPos3D);
-
+        
         if (hitNode) {
             const cluster = this.getTileClusterFromNode(hitNode);
             if (cluster && cluster.isSelectable) {
@@ -50,8 +50,9 @@ export class TileSelectionHandler extends Component {
 
     private handleTouchEnd(event: EventTouch) {
         if (this.selectedCluster) {
-            if(this.selectedCluster.lastGroundTile){
-                this.tilePlacementHandler.Place(this.selectedCluster);
+            const placingGroundTile = this.selectedCluster.lastGroundTile; 
+            if(placingGroundTile){
+                this.tilePlacementHandler.Place(placingGroundTile , this.selectedCluster);
             }
             else{
                 this.selectedCluster.deselect();

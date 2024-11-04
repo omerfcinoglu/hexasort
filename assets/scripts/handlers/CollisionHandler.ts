@@ -1,5 +1,6 @@
 import { _decorator, Component, Collider, ICollisionEvent } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
+import { TileCluster } from '../core/TileCluster';
 const { ccclass } = _decorator;
 
 @ccclass('CollisionHandler')
@@ -7,8 +8,7 @@ export class CollisionHandler extends Component {
     public collidedGroundTile: GroundTile | null = null;
 
     onEnable() {
-        const collider = this.getComponentInChildren(Collider);
-        
+        const collider = this.node.getComponent(Collider);
         if (collider) {
             collider.on('onCollisionEnter', this.onCollisionEnter, this);
             collider.on('onCollisionExit', this.onCollisionExit, this);
@@ -28,6 +28,8 @@ export class CollisionHandler extends Component {
         const groundTile = otherNode.getComponent(GroundTile);
         if (groundTile) {
             this.collidedGroundTile = groundTile;
+            this.node.getComponent(TileCluster).lastGroundTile = this.collidedGroundTile;            
+            this.collidedGroundTile.highlight(true);
         }
     }
 
@@ -35,6 +37,7 @@ export class CollisionHandler extends Component {
         const otherNode = event.otherCollider.node;
         const groundTile = otherNode.getComponent(GroundTile);
         if (groundTile && this.collidedGroundTile === groundTile) {
+            this.collidedGroundTile.highlight(false);
             this.collidedGroundTile = null;
         }
     }

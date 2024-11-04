@@ -29,7 +29,7 @@ export class InputProvider extends Component {
     }
 
     private handleTouchStart(event: EventTouch) {
-        this.onTouchStart?.(event);
+            this.onTouchStart?.(event);
     }
 
     private handleTouchMove(event: EventTouch) {

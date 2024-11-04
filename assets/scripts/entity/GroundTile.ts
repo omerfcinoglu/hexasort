@@ -9,57 +9,14 @@ const { ccclass, property } = _decorator;
 export class GroundTile extends Component {
     public gridPosition: { row: number; col: number } = { row: 0, col: 0 };
     public attachedTiles: Node[] = [];
-    public colliderNode: Node | null = null;
 
-    private collider: Collider = null;
 
     onLoad() {
-        this.collider = this.getComponent(Collider);
-        this.collider.on('onCollisionEnter', this.onCollisionEnter, this);
-        this.collider.on('onCollisionExit', this.onCollisionExit, this);
-        this.node.on(Node.EventType.CHILD_ADDED, this.onChildAdded, this);
-        this.node.on(Node.EventType.CHILD_REMOVED, this.onChildRemoved, this);
         this.changeBodyColor(ColorProvider.getInstance().getColor(6))
-        this.updateColliderState();
     }
 
-    public updateColliderState() {
-        if (this.attachedTiles.length > 0) {
-            this.collider.off('onCollisionEnter', this.onCollisionEnter, this);
-            this.collider.off('onCollisionExit', this.onCollisionExit, this);
-        } else {
-            this.collider.on('onCollisionEnter', this.onCollisionEnter, this);
-            this.collider.on('onCollisionExit', this.onCollisionExit, this);
-        }
-    }
-
-    private onCollisionEnter(event: ICollisionEvent) {
-        const tileCluster = event.otherCollider.node.getComponent(TileCluster);
-        if (tileCluster) {
-            // Handle collision with TileCluster
-            this.changeBodyColor(ColorProvider.getInstance().getColor(7));
-        }
-    }
-
-    private onCollisionExit(event: ICollisionEvent) {
-        const tileCluster = event.otherCollider.node.getComponent(TileCluster);
-        if (tileCluster) {
-            // Handle collision exit with TileCluster
-            this.changeBodyColor(ColorProvider.getInstance().getColor(6))
-
-        }
-    }
-
-    private onChildAdded(child: Node) {
-        if (child !== this.colliderNode) {
-            this.updateColliderState();
-        }
-    }
-
-    private onChildRemoved(child: Node) {
-        if (child !== this.colliderNode) {
-            this.updateColliderState();
-        }
+    public setActiveCollider(value : boolean) {
+        this.node.getComponent(Collider).enabled = value;        
     }
 
     public addChildTileCluster(tileClusterNode: Node) {
@@ -69,6 +26,7 @@ export class GroundTile extends Component {
         this.attachedTiles.push(tileClusterNode);
         tileClusterNode.parent = this.node;
         tileClusterNode.setPosition(0, tileHeight, 0);
+        this.setActiveCollider(false);
     }
 
     public removeChildTileCluster(tileClusterNode: Node) {
@@ -77,7 +35,12 @@ export class GroundTile extends Component {
             this.attachedTiles.splice(index, 1);
         }
         tileClusterNode.removeFromParent();
-        this.updateColliderState();
+    }
+
+    public addTileCluster(tileCluster: TileCluster) {
+        //!!! todo adchildtilecluster ile aynı sil bunu
+        this.attachedTiles.push(tileCluster.node);
+        this.setActiveCollider(false);
     }
 
     public changeBodyColor(newColor: Color) {
@@ -97,5 +60,11 @@ export class GroundTile extends Component {
         } else {
             console.error('Body node not found.');
         }
+    }
+
+    public highlight(flag : boolean){
+        const highlightColor = ColorProvider.getInstance().getColor(7)
+        const defaultColor = ColorProvider.getInstance().getColor(6) 
+        flag ? this.changeBodyColor(highlightColor) : this.changeBodyColor(defaultColor); 
     }
 }

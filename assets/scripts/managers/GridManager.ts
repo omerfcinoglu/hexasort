@@ -14,6 +14,10 @@ export class GridManager extends Component {
     @property({ type: Prefab })
     public tilePrefab: Prefab = null!;
 
+    @property(Node)
+    public gridArea: Node = null!;
+    
+
     @property
     public tileSize: number = 1;
 
@@ -45,7 +49,7 @@ export class GridManager extends Component {
 
     private createGroundTile(position: Vec3): Node {
         const groundTileNode = instantiate(this.groundTilePrefab);
-        groundTileNode.parent = this.node;
+        groundTileNode.parent = this.gridArea;
         groundTileNode.setPosition(position);
         return groundTileNode;
     }
@@ -67,6 +71,10 @@ export class GridManager extends Component {
         return null;
     }
 
+    findNeighborsAndLog(lastGroundTile : GroundTile){
+        console.log(lastGroundTile);
+    }
+    
     public resetGrid(): void {
         this.grid.forEach(row => {
             row.forEach(groundTile => {

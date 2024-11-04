@@ -20,20 +20,13 @@ export class TileCluster extends Component {
     private tiles: Node[] = [];
     private touchOffset: Vec3 = new Vec3();
 
-    private collider : Collider = null;
     public lastGroundTile : GroundTile = null;
 
     onLoad() {
-        this.initializeCollider();
         this.initializeCluster();
         this.originalPosition = this.node.getPosition().clone();
     }
 
-    private initializeCollider() {
-        this.collider = this.getComponent(Collider);
-        this.collider.on('onCollisionEnter', this.onCollisionEnter, this);
-        this.collider.on('onCollisionExit', this.onCollisionExit, this);
-    }
 
     public initializeCluster() {
         for (let i = 0; i < this.tileCount; i++) {
@@ -43,25 +36,11 @@ export class TileCluster extends Component {
 
             const tileComp = tileNode.getComponent(Tile);
             if (tileComp) {
-                tileComp.type = Math.floor(Math.random() * 6);
+                tileComp.type = Math.floor(Math.random() * 4);
                 tileComp.updateColor();
             }
 
             this.tiles.push(tileNode);
-        }
-    }
-
-    private onCollisionEnter(event: ICollisionEvent) {
-        const groundTile = event.otherCollider.node.getComponent(GroundTile);
-        if (groundTile) {
-            this.lastGroundTile = groundTile;
-        }
-    }
-
-    private onCollisionExit(event: ICollisionEvent) {
-        const groundTile = event.otherCollider.node.getComponent(GroundTile);
-        if (groundTile) {
-            this.lastGroundTile = null;
         }
     }
 
@@ -78,7 +57,7 @@ export class TileCluster extends Component {
             return;
         }
         const newPosition = touchWorldPos.add(this.touchOffset);
-        newPosition.y += 0.5; // Y ekseninde yukarı konumlandırma için
+        newPosition.y += 0.2; // Y ekseninde yukarı konumlandırma için
         this.node.setWorldPosition(newPosition);
     }
 
@@ -94,21 +73,31 @@ export class TileCluster extends Component {
             .start();
     }
 
-    public placement() {
-        if (this.lastGroundTile) {
-            this.node.removeFromParent();
-            this.lastGroundTile.node.parent.addChild(this.node);
-    
-            // Y eksenini 0.5 artırarak pozisyonu ayarlayın
-            const targetPosition = this.lastGroundTile.node.position.clone();
-            targetPosition.y += 0.2;
-    
-            this.node.setPosition(targetPosition);
-            this.isSelectable = false;
-            this.isDragging = false;
-        } else {
-            console.log("last ground tile is null");
-        }
+    public moveToPosition(targetPosition: Vec3): Promise<void> {
+        return new Promise((resolve) => {
+            tween(this.node)
+                .to(0.3, { position: targetPosition })
+                .call(resolve)
+                .start();
+        });
     }
     
+
+    public placement() : boolean {
+        if (this.lastGroundTile) {
+            this.node.removeFromParent();
+            this.lastGroundTile.node.addChild(this.node);
+            this.lastGroundTile.addTileCluster(this);
+
+            const targetPosition = new Vec3(0,0.2,0)
+            this.node.setPosition(targetPosition);
+            
+            this.isSelectable = false;
+            this.isDragging = false;
+            return true;
+        } else {
+            console.log("last ground tile is null");
+            return false;
+        }
+    }
 }
