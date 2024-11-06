@@ -43,13 +43,8 @@ export class GridManager extends Component {
         return null;
     }
 
-    findNeighborsAndLog(lastGroundTile: GroundTile) {
-        console.log(lastGroundTile);
-    }
-
-    checkTopClusterType(targetGround: GroundTile) {
-        console.log(targetGround);
-        
+    async handlePlacementSuccess(targetGround: GroundTile) {
+        await targetGround.checkChildTypes();
     }
 
     public resetGrid(): void {

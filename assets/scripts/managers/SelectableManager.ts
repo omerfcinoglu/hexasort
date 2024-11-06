@@ -29,11 +29,11 @@ export class SelectableManager extends Component {
             const position = new Vec3(startX + (existingClusterCount + i) * 3, 0, 0);
             const clusterNode = instantiate(this.tileClusterPrefab);
             clusterNode.parent = this.selectableArea;
-            clusterNode.setPosition(position.clone().add3f(-5, 0, 0));
+            clusterNode.setPosition(position.clone().add3f(10, 0, 0));
 
             const cluster = clusterNode.getComponent(TileCluster);
             if (cluster) {
-                cluster.initCluster(0,this.selectableArea);
+                cluster.initCluster(1);
                 cluster.originalPosition = position.clone();
                 cluster.isSelectable = true;
                 this.clusters.push(cluster);

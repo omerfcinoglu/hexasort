@@ -28,10 +28,8 @@ export class TileCluster extends Component {
     }
 
 
-    public initCluster(type:number, parent:Node) {
+    public initCluster(type:number) {
         this.type = type
-        this.node.setParent(parent);
-        this.node.setPosition(Vec3.ZERO);
         this.createTile();
     }
 
@@ -39,12 +37,11 @@ export class TileCluster extends Component {
         for (let i = 0; i < this.tileCount; i++) {
             const tileNode = instantiate(this.tilePrefab);
             tileNode.parent = this.node;
-            tileNode.setPosition(new Vec3(0, i * 0.2, 0));
+            tileNode.setPosition(new Vec3(0, 0, 0));
 
             const tileComp = tileNode.getComponent(Tile);
             if (tileComp) {
-                tileComp.type = this.type;
-                tileComp.updateColor();
+                tileComp.init(this.type);
             }
 
             this.tiles.push(tileComp);
@@ -64,7 +61,7 @@ export class TileCluster extends Component {
             return;
         }
         const newPosition = touchWorldPos.add(this.touchOffset);
-        newPosition.y += 0.2; // Y ekseninde yukarı konumlandırma için
+        newPosition.y += 0.2 ; // Y ekseninde yukarı konumlandırma için
         this.node.setWorldPosition(newPosition);
     }
 
@@ -93,22 +90,13 @@ export class TileCluster extends Component {
     public placement() : boolean {
         if (this.lastGroundTile) {
             this.node.removeFromParent();
-            this.lastGroundTile.node.addChild(this.node);
             this.lastGroundTile.addTileCluster(this);
-
-            const targetPosition = new Vec3(0,0.2,0)
-            this.node.setPosition(targetPosition);
-            
-            this.isSelectable = false;
+            this.isSelectable = true;
             this.isDragging = false;
             return true;
         } else {
             console.log("last ground tile is null");
             return false;
         }
-    }
-
-    updateColor(){
-        this.tiles.forEach(tile => {tile.updateColor()})
     }
 }

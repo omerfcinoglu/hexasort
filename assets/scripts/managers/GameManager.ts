@@ -9,10 +9,10 @@ const { ccclass, property } = _decorator;
 @ccclass("GameManager")
 export class GameManager extends Component {
      @property(Node)
-     private interactionHandler : Node;
+     private interactionHandler: Node;
 
      @property(Node)
-     private gridManagerNode : Node;
+     private gridManagerNode: Node;
 
 
      private tileSelectionHandler: TileSelectionHandler;
@@ -21,7 +21,7 @@ export class GameManager extends Component {
 
 
      start() {
-          this.tileSelectionHandler  = this.interactionHandler.getComponent(TileSelectionHandler)
+          this.tileSelectionHandler = this.interactionHandler.getComponent(TileSelectionHandler)
           this.tilePlacementHandler = this.interactionHandler.getComponent(TilePlacementHandler);
           this.gridManager = this.gridManagerNode.getComponent(GridManager);
 
@@ -39,24 +39,15 @@ export class GameManager extends Component {
                targetGround
           );
           if (placementSuccess) {
-               console.log("placemnt success");
-                  const sameTypeCluster = this.gridManager.checkTopClusterType(targetGround);
-               //    if (sameTypeCluster) {
-               //        await this.triggerNeighborCheck(targetGround, sameTypeCluster);
-               //    }
+               await this.gridManager.handlePlacementSuccess(targetGround);
+               await this.triggerNeighborCheck(targetGround);
           }
      }
 
      private async triggerNeighborCheck(
           groundTile: GroundTile,
-          cluster: TileCluster
      ) {
-          // const neighbors = await this.gridManager.findNeighbors(groundTile);
-          // for (const neighbor of neighbors) {
-          //      if (this.gridManager.shouldMoveToNeighbor(neighbor, cluster)) {
-          //           await this.gridManager.moveClusterToNeighbor(neighbor, cluster);
-          //           this.triggerNeighborCheck(neighbor, cluster);
-          //      }
-          // }
+          console.log("komşuluk bakılıyor");
+          
      }
 }
