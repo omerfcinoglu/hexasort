@@ -2,15 +2,15 @@ import { _decorator, Component, EventTouch, Vec3, Node, geometry, Game } from 'c
 import { TileCluster } from '../core/TileCluster';
 import { InputProvider } from '../input/InputProvider';
 import { TilePlacementHandler } from './TilePlacementHandler';
+import { GroundTile } from '../entity/GroundTile';
 const { ccclass, property } = _decorator;
 
 @ccclass('TileSelectionHandler')
 export class TileSelectionHandler extends Component {
     @property(InputProvider)
     inputProvider: InputProvider | null = null;
-    
-    private tilePlacementHandler: TilePlacementHandler = null!;
 
+    private selectionCallback: (selectedCluster: TileCluster, targetGround: GroundTile) => void;
     public selectedCluster: TileCluster | null = null;
 
     onLoad() {
@@ -19,18 +19,21 @@ export class TileSelectionHandler extends Component {
             return;
         }
 
-        this.tilePlacementHandler = this.node.getComponent(TilePlacementHandler);
 
         this.inputProvider.onTouchStart = this.handleTouchStart.bind(this);
         this.inputProvider.onTouchMove = this.handleTouchMove.bind(this);
         this.inputProvider.onTouchEnd = this.handleTouchEnd.bind(this);
     }
 
+    onTileSelected(callback: (selectedCluster: TileCluster, targetGround: GroundTile) => void) {
+        this.selectionCallback = callback;
+    }
+
     private handleTouchStart(event: EventTouch) {
         const touchPos = event.getLocation();
         const touchPos3D = new Vec3(touchPos.x, touchPos.y, 0);
         const hitNode = this.performRaycast(touchPos3D);
-        
+
         if (hitNode) {
             const cluster = this.getTileClusterFromNode(hitNode);
             if (cluster && cluster.isSelectable) {
@@ -50,11 +53,12 @@ export class TileSelectionHandler extends Component {
 
     private handleTouchEnd(event: EventTouch) {
         if (this.selectedCluster) {
-            const placingGroundTile = this.selectedCluster.lastGroundTile; 
-            if(placingGroundTile){
-                this.tilePlacementHandler.Place(placingGroundTile , this.selectedCluster);
+            const placingGroundTile = this.selectedCluster.lastGroundTile;
+            if (placingGroundTile) {
+                console.log("handle placement");
+                this.selectionCallback?.(this.selectedCluster, placingGroundTile);
             }
-            else{
+            else {
                 this.selectedCluster.deselect();
             }
             this.selectedCluster = null;

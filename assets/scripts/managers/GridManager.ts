@@ -1,5 +1,3 @@
-// GridManager.ts
-
 import { _decorator, Component, Node, Prefab, instantiate, Vec3 } from 'cc';
 import { Tile } from '../entity/Tile';
 import { GroundTile } from '../entity/GroundTile';
