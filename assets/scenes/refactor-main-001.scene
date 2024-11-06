@@ -48,13 +48,16 @@
         "__id__": 25
       },
       {
-        "__id__": 40
+        "__id__": 39
       },
       {
-        "__id__": 42
+        "__id__": 41
       },
       {
-        "__id__": 29
+        "__id__": 43
+      },
+      {
+        "__id__": 28
       }
     ],
     "_active": true,
@@ -830,7 +833,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "LevelManager",
+    "_name": "GridManager",
     "_objFlags": 0,
     "_parent": {
       "__id__": 1
@@ -869,27 +872,15 @@
       "y": 0,
       "z": 0
     },
-    "_id": "76I30rxiNAIorxsErCBbXE"
-  },
-  {
-    "__type__": "f8055cWfd1J3YumOJBvwbOV",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 25
-    },
-    "_enabled": true,
-    "__prefab": null,
-    "gridManager": {
-      "__id__": 27
-    },
-    "_id": "56ZAJR4WhL6ZqbTIgFP94+"
+    "_id": "7e61PU1fpNEo+70SFooJy5"
   },
   {
     "__type__": "fcfc7R8o51MhpTFydI/hHkU",
     "_name": "",
     "_objFlags": 0,
-    "node": null,
+    "node": {
+      "__id__": 25
+    },
     "_enabled": true,
     "__prefab": null,
     "groundTilePrefab": {
@@ -901,21 +892,21 @@
       "__expectedType__": "cc.Prefab"
     },
     "gridArea": {
-      "__id__": 28
+      "__id__": 27
     },
     "tileSize": 1,
-    "_id": "cc9lpiYTlCP5OMHxUZFKY5"
+    "_id": "46N+JJgSxInIy5bSfG9XXc"
   },
   {
     "__type__": "cc.Node",
     "_name": "Grid Area",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 29
+      "__id__": 28
     },
     "_children": [
       {
-        "__id__": 36
+        "__id__": 35
       }
     ],
     "_active": true,
@@ -958,10 +949,10 @@
     },
     "_children": [
       {
-        "__id__": 28
+        "__id__": 27
       },
       {
-        "__id__": 30
+        "__id__": 29
       }
     ],
     "_active": true,
@@ -1000,14 +991,14 @@
     "_name": "Selectable Area",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 29
+      "__id__": 28
     },
     "_children": [
       {
-        "__id__": 31
+        "__id__": 30
       },
       {
-        "__id__": 35
+        "__id__": 34
       }
     ],
     "_active": true,
@@ -1046,16 +1037,16 @@
     "_name": "AreaBackground",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 30
+      "__id__": 29
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 32
+        "__id__": 31
       },
       {
-        "__id__": 34
+        "__id__": 33
       }
     ],
     "_prefab": null,
@@ -1092,7 +1083,7 @@
     "_name": "Plane<ModelComponent>",
     "_objFlags": 0,
     "node": {
-      "__id__": 31
+      "__id__": 30
     },
     "_enabled": true,
     "__prefab": null,
@@ -1104,7 +1095,7 @@
     ],
     "_visFlags": 0,
     "lightmapSettings": {
-      "__id__": 33
+      "__id__": 32
     },
     "_mesh": {
       "__uuid__": "1263d74c-8167-4928-91a6-4e2672411f47@2e76e",
@@ -1138,7 +1129,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 31
+      "__id__": 30
     },
     "_enabled": true,
     "__prefab": null,
@@ -1149,7 +1140,7 @@
     "_name": "TilesInitalPoint",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 30
+      "__id__": 29
     },
     "_children": [],
     "_active": true,
@@ -1188,16 +1179,16 @@
     "_name": "AreaBackground",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 28
+      "__id__": 27
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 37
+        "__id__": 36
       },
       {
-        "__id__": 39
+        "__id__": 38
       }
     ],
     "_prefab": null,
@@ -1234,7 +1225,7 @@
     "_name": "Plane<ModelComponent>",
     "_objFlags": 0,
     "node": {
-      "__id__": 36
+      "__id__": 35
     },
     "_enabled": true,
     "__prefab": null,
@@ -1246,7 +1237,7 @@
     ],
     "_visFlags": 0,
     "lightmapSettings": {
-      "__id__": 38
+      "__id__": 37
     },
     "_mesh": {
       "__uuid__": "1263d74c-8167-4928-91a6-4e2672411f47@2e76e",
@@ -1280,7 +1271,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 36
+      "__id__": 35
     },
     "_enabled": true,
     "__prefab": null,
@@ -1297,7 +1288,7 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 41
+        "__id__": 40
       }
     ],
     "_prefab": null,
@@ -1334,7 +1325,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 40
+      "__id__": 39
     },
     "_enabled": true,
     "__prefab": null,
@@ -1343,10 +1334,67 @@
       "__expectedType__": "cc.Prefab"
     },
     "selectableArea": {
-      "__id__": 30
+      "__id__": 29
     },
     "clusterCount": 3,
     "_id": "51dz1EGnJElorfPxk+faMT"
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "LevelManager",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 1
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 42
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_layer": 1073741824,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "76I30rxiNAIorxsErCBbXE"
+  },
+  {
+    "__type__": "f8055cWfd1J3YumOJBvwbOV",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 41
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "gridManager": {
+      "__id__": 26
+    },
+    "_id": "56ZAJR4WhL6ZqbTIgFP94+"
   },
   {
     "__type__": "cc.Node",
@@ -1358,9 +1406,6 @@
     "_children": [],
     "_active": true,
     "_components": [
-      {
-        "__id__": 43
-      },
       {
         "__id__": 44
       }
@@ -1399,37 +1444,17 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 42
+      "__id__": 43
     },
     "_enabled": true,
     "__prefab": null,
     "interactionHandler": {
       "__id__": 22
     },
+    "gridManagerNode": {
+      "__id__": 25
+    },
     "_id": "56/4DhjGxMrYLwjZ8vznu+"
-  },
-  {
-    "__type__": "fcfc7R8o51MhpTFydI/hHkU",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 42
-    },
-    "_enabled": true,
-    "__prefab": null,
-    "groundTilePrefab": {
-      "__uuid__": "880b233b-0391-48be-853b-4524081c205e",
-      "__expectedType__": "cc.Prefab"
-    },
-    "tilePrefab": {
-      "__uuid__": "172a7275-2c5e-4dbf-9c83-cfd060d6815a",
-      "__expectedType__": "cc.Prefab"
-    },
-    "gridArea": {
-      "__id__": 28
-    },
-    "tileSize": 1,
-    "_id": "46ENK9++xFPJ3sV3/rqXHJ"
   },
   {
     "__type__": "cc.PrefabInfo",
