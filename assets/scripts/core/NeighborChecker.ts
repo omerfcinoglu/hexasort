@@ -11,9 +11,6 @@ export class NeighborChecker  {
     }
 
     public findNeighbors(groundTile: GroundTile): Promise<GroundTile[]> {
-        console.log(groundTile);
-        return
-        
         return new Promise((resolve) => {
             const neighbors: GroundTile[] = [];
             const { row, col } = groundTile.gridPosition;

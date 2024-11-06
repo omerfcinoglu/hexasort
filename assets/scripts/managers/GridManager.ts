@@ -35,6 +35,10 @@ export class GridManager extends Component {
         this.grid = this.gridGenerator.generateGrid(levelMatrix, this.gridArea);
     }
 
+    public getGrid(): GroundTile[][] {
+        return this.grid;
+    }
+
 
     public getGroundTile(row: number, col: number): GroundTile | null {
         if (this.grid[row] && this.grid[row][col]) {
