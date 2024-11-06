@@ -1,18 +1,19 @@
 import { _decorator, Prefab, Vec3 , Node, instantiate} from "cc";
 import { GroundTile } from "../entity/GroundTile";
 import { Tile } from "../entity/Tile";
+import { TileCluster } from "./TileCluster";
 const { ccclass, property } = _decorator;
 
 @ccclass("GridGenerator")
 export class GridGenerator{
 
     groundTilePrefab: Prefab;
-    tilePrefab: Prefab;
+    tileClusterPrefab: Prefab;
     tileSize: number;
 
-    constructor(groundTilePrefab : Prefab , tilePrefab : Prefab , tileSize : number){
+    constructor(groundTilePrefab : Prefab , tileClusterPrefab : Prefab , tileSize : number){
         this.groundTilePrefab = groundTilePrefab;
-        this.tilePrefab = tilePrefab;
+        this.tileClusterPrefab = tileClusterPrefab;
         this.tileSize = tileSize
     }
 
@@ -35,7 +36,7 @@ export class GridGenerator{
                     groundTileComp.gridPosition = { row, col };
                     grid[row][col] = groundTileComp;
                     if (tileType > 0) {
-                        this.createLevelTile(tileType, groundTileNode, groundTileComp);
+                        this.createLevelCluster(tileType, groundTileNode, groundTileComp);
                     }
                 }
             }
@@ -50,13 +51,11 @@ export class GridGenerator{
         return groundTileNode;
     }
 
-    private createLevelTile(tileType: number, groundTileNode: Node, groundTileComp: GroundTile): void {
-        const tileNode = instantiate(this.tilePrefab);
-        const tileComp = tileNode.getComponent(Tile);
-        if (tileComp) {
-            tileComp.type = tileType;
-            tileComp.updateColor();
+    private createLevelCluster(tileType: number, groundTileNode: Node, groundTileComp: GroundTile): void {
+        const clusterNode = instantiate(this.tileClusterPrefab);
+        const clusterComp = clusterNode.getComponent(TileCluster);
+        if (clusterComp) {
+            clusterComp.initCluster(tileType , groundTileNode)
         }
-        groundTileComp.addChildTileCluster(tileNode);
     }
 }

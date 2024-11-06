@@ -40,7 +40,7 @@ export class GameManager extends Component {
           );
           if (placementSuccess) {
                console.log("placemnt success");
-               //    const sameTypeCluster = this.gridManager.checkTopClusterType(targetGround);
+                  const sameTypeCluster = this.gridManager.checkTopClusterType(targetGround);
                //    if (sameTypeCluster) {
                //        await this.triggerNeighborCheck(targetGround, sameTypeCluster);
                //    }
@@ -51,13 +51,12 @@ export class GameManager extends Component {
           groundTile: GroundTile,
           cluster: TileCluster
      ) {
-          return;
-          const neighbors = await this.gridManager.findNeighbors(groundTile);
-          for (const neighbor of neighbors) {
-               if (this.gridManager.shouldMoveToNeighbor(neighbor, cluster)) {
-                    await this.gridManager.moveClusterToNeighbor(neighbor, cluster);
-                    this.triggerNeighborCheck(neighbor, cluster);
-               }
-          }
+          // const neighbors = await this.gridManager.findNeighbors(groundTile);
+          // for (const neighbor of neighbors) {
+          //      if (this.gridManager.shouldMoveToNeighbor(neighbor, cluster)) {
+          //           await this.gridManager.moveClusterToNeighbor(neighbor, cluster);
+          //           this.triggerNeighborCheck(neighbor, cluster);
+          //      }
+          // }
      }
 }

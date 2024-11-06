@@ -1,4 +1,4 @@
-import { _decorator, Component, Color, director } from 'cc';
+import { _decorator, Component, Color, director , Node, MeshRenderer } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass("ColorProvider")
@@ -58,6 +58,18 @@ export class ColorProvider extends Component {
             case 6: return this.ground.clone();
             case 7: return this.highlight.clone();
             default: return Color.WHITE.clone();
+        }
+    }
+
+    public static ChangeColor(color: Color , body : Node){
+        const meshRenderer = body.getComponent(MeshRenderer);
+        if (meshRenderer) {
+            const material = meshRenderer.material;
+            if (material) {
+                material.setProperty('albedo', color);
+            } else {
+                console.error('Material not found on MeshRenderer.');
+            }
         }
     }
 }

@@ -887,8 +887,8 @@
       "__uuid__": "880b233b-0391-48be-853b-4524081c205e",
       "__expectedType__": "cc.Prefab"
     },
-    "tilePrefab": {
-      "__uuid__": "172a7275-2c5e-4dbf-9c83-cfd060d6815a",
+    "tileClusterPrefab": {
+      "__uuid__": "76c7c975-b2be-4359-ac5c-f98b097aff6b",
       "__expectedType__": "cc.Prefab"
     },
     "gridArea": {

@@ -6,11 +6,12 @@ const { ccclass, property } = _decorator;
 @ccclass("GridManager")
 export class GridManager extends Component {
 
+
     @property({ type: Prefab })
     public groundTilePrefab: Prefab = null!;
 
     @property({ type: Prefab })
-    public tilePrefab: Prefab = null!;
+    public tileClusterPrefab: Prefab = null!;
 
     @property(Node)
     public gridArea: Node = null!;
@@ -25,7 +26,7 @@ export class GridManager extends Component {
     onLoad(): void {
         this.gridGenerator = new GridGenerator(
             this.groundTilePrefab,
-            this.tilePrefab,
+            this.tileClusterPrefab,
             this.tileSize
         )
     }
@@ -44,6 +45,11 @@ export class GridManager extends Component {
 
     findNeighborsAndLog(lastGroundTile: GroundTile) {
         console.log(lastGroundTile);
+    }
+
+    checkTopClusterType(targetGround: GroundTile) {
+        console.log(targetGround);
+        
     }
 
     public resetGrid(): void {

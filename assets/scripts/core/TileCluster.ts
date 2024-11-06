@@ -11,24 +11,31 @@ export class TileCluster extends Component {
     public tilePrefab: Prefab = null!;
 
     @property
-    public tileCount: number = 1;
+    public tileCount: number = 0;
 
     public isSelectable: boolean = true;
     public isDragging: boolean = false;
     public originalPosition: Vec3 = new Vec3();
 
-    private tiles: Node[] = [];
+    private tiles: Tile[] = [];
     private touchOffset: Vec3 = new Vec3();
 
+    public type : number = null;
     public lastGroundTile : GroundTile = null;
 
     onLoad() {
-        this.initializeCluster();
         this.originalPosition = this.node.getPosition().clone();
     }
 
 
-    public initializeCluster() {
+    public initCluster(type:number, parent:Node) {
+        this.type = type
+        this.node.setParent(parent);
+        this.node.setPosition(Vec3.ZERO);
+        this.createTile();
+    }
+
+    private createTile(){
         for (let i = 0; i < this.tileCount; i++) {
             const tileNode = instantiate(this.tilePrefab);
             tileNode.parent = this.node;
@@ -36,11 +43,11 @@ export class TileCluster extends Component {
 
             const tileComp = tileNode.getComponent(Tile);
             if (tileComp) {
-                tileComp.type = Math.floor(Math.random() * 4);
+                tileComp.type = this.type;
                 tileComp.updateColor();
             }
 
-            this.tiles.push(tileNode);
+            this.tiles.push(tileComp);
         }
     }
 
@@ -99,5 +106,9 @@ export class TileCluster extends Component {
             console.log("last ground tile is null");
             return false;
         }
+    }
+
+    updateColor(){
+        this.tiles.forEach(tile => {tile.updateColor()})
     }
 }

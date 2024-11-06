@@ -12,7 +12,7 @@ export class Tile extends Component {
         this.updateColor();
     }
 
-    updateColor() {
+    public updateColor() {
         const colorProvider = ColorProvider.getInstance();
         if (colorProvider) {
             const color = colorProvider.getColor(this.type);
