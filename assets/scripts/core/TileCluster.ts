@@ -26,18 +26,20 @@ export class TileCluster extends Component {
     onLoad() {
         this.originalPosition = this.node.getPosition().clone();
     }
-
-
-    public initCluster(type:number) {
-        this.type = type
-        this.createTile();
+    public getTiles(): Tile[] {
+        return this.tiles;
     }
 
-    private createTile(){
-        for (let i = 0; i < this.tileCount; i++) {
+    public initCluster(type:number , tileCount:number) {
+        this.type = type
+        this.createTile(tileCount);
+    }
+
+    private createTile(tileCount = this.tileCount){
+        for (let i = 0; i < tileCount; i++) {
             const tileNode = instantiate(this.tilePrefab);
             tileNode.parent = this.node;
-            tileNode.setPosition(new Vec3(0, 0, 0));
+            tileNode.setPosition(new Vec3(0, i * 0.2, -i * 0.01));
 
             const tileComp = tileNode.getComponent(Tile);
             if (tileComp) {
@@ -90,6 +92,9 @@ export class TileCluster extends Component {
     public placement() : boolean {
         if (this.lastGroundTile) {
             this.node.removeFromParent();
+            this.node.parent = this.lastGroundTile.node.parent;
+            const position = this.lastGroundTile.node.position.clone();
+            this.node.setPosition(position.add3f(0,0.2,0));
             this.lastGroundTile.addTileCluster(this);
             this.isSelectable = true;
             this.isDragging = false;

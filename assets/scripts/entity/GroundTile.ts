@@ -27,15 +27,8 @@ export class GroundTile extends Component {
 
     public addTileCluster(tileCluster: TileCluster) {
         this.lastAttachedCluster = tileCluster;
-        const tileCount = this.attachedCluster.length;
-        const tileHeight = tileCount * 0.2; 
-        
-        tileCluster.node.parent = this.node;
-        tileCluster.node.setPosition(new Vec3(0, 5, 0));
         this.attachedCluster.push(tileCluster);
-
         this.setActiveCollider(false);
-        console.log(this.attachedCluster);
     }
 
     public highlight(flag: boolean) {
@@ -48,7 +41,6 @@ export class GroundTile extends Component {
         return new Promise((resolve) => {
             if (this.attachedCluster.length > 1) {
                 const topCluster = this.attachedCluster[this.attachedCluster.length - 2];
-
                 if (this.lastAttachedCluster.type === topCluster.type) {
                     // Animasyon işlemini başlatın
                     // this.playMatchAnimation().then(() => resolve());
@@ -59,6 +51,10 @@ export class GroundTile extends Component {
                 resolve();
             }
         });
+    }
+
+    getAllTileCount(): number {
+        return this.attachedCluster.reduce((total, cluster) => total + cluster.tileCount, 0);
     }
 
 }
