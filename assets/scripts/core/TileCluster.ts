@@ -45,14 +45,12 @@ export class TileCluster extends Component {
         return this.tiles;
     }
 
-    // Seçme işlemi
     public select(touchWorldPos: Vec3) {
         if (!this.isSelectable) return;
         this.isDragging = true;
         this.touchOffset = this.node.getWorldPosition().subtract(touchWorldPos);
     }
 
-    // Taşıma işlemi
     public move(touchWorldPos: Vec3) {
         if (!this.isDragging) return;
         const newPosition = touchWorldPos.add(this.touchOffset);
@@ -60,7 +58,6 @@ export class TileCluster extends Component {
         this.node.setWorldPosition(newPosition);
     }
 
-    // Seçimi bırakma işlemi
     public deselect() {
         if (!this.isDragging) return;
         this.isDragging = false;

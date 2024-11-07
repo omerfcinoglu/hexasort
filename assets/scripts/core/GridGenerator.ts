@@ -55,9 +55,6 @@ export class GridGenerator {
 
     private createLevelCluster(tileType: number, groundTileNode: Node, groundTileComp: GroundTile): void {
         const clusterNode = instantiate(this.tileClusterPrefab);
-        clusterNode.parent = groundTileNode.parent;
-        const position = groundTileNode.position.clone();
-        clusterNode.setPosition(position.add3f(0,0.2,0))
         const tileCluster = clusterNode.getComponent(TileCluster);
         if (tileCluster) {
             tileCluster.initCluster(tileType,2); 

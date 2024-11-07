@@ -5,8 +5,6 @@ const { ccclass, property } = _decorator;
 
 @ccclass("GridManager")
 export class GridManager extends Component {
-
-
     @property({ type: Prefab })
     public groundTilePrefab: Prefab = null!;
 

@@ -1,7 +1,6 @@
 import { _decorator, Component, Node, Collider, Color, Vec3, Quat } from 'cc';
 import { TileCluster } from '../core/TileCluster';
 import { ColorProvider } from '../core/ColorProvider';
-import { TileAnimator } from '../helpers/TileAnimator';
 const { ccclass, property } = _decorator;
 
 @ccclass('GroundTile')
@@ -28,30 +27,9 @@ export class GroundTile extends Component {
         this.lastAttachedCluster = tileCluster;
         tileCluster.node.removeFromParent();
         this.node.parent.addChild(tileCluster.node);
+        tileCluster.node.setPosition(new Vec3(this.node.position.x, 0.2 ,this.node.position.z))
         this.attachedCluster.push(tileCluster);
         this.setActiveCollider(false);
-    }
-
-    public attachNewCluster(tileCluster: TileCluster): Promise<void> {
-        return new Promise<void>(async (resolve) => {
-            let cumulativeHeight = this.getAllTileCount() * 0.2;
-            const tiles = tileCluster.getTiles();
-            const targetPositionBase = this.node.getPosition().clone();
-
-            for (let i = tiles.length - 1; i >= 0; i--) {
-                const tile = tiles[i];
-                const finalPosition = new Vec3(targetPositionBase.x, cumulativeHeight, targetPositionBase.z);
-                const targetRotation = new Quat();
-                Quat.fromEuler(targetRotation, 0, 0, 180); 
-
-                await TileAnimator.liftAndMoveToPosition(tile.node, 0.2, finalPosition);
-                await TileAnimator.animateToPositionWithRotation(tile.node, finalPosition, targetRotation);
-                
-                cumulativeHeight += 0.2;
-            }
-
-            resolve();
-        });
     }
 
     public checkChildTypes(): Promise<void> {

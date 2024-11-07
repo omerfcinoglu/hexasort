@@ -1,58 +1,52 @@
-import { _decorator, Component, Node } from "cc";
+import { _decorator, Color, Component, Node } from "cc";
 import { GridManager } from "./GridManager";
-import { TileSelectionHandler } from "../handlers/TileSelectionHandler";
 import { NeighborChecker } from "../core/NeighborChecker";
-import { GroundTile } from "../entity/GroundTile";
+import { TileSelectionHandler } from "../handlers/TileSelectionHandler";
+import { TileCluster } from "../core/TileCluster";
+import { TilePlacementHandler } from "../handlers/TilePlacementHandler";
 
 const { ccclass, property } = _decorator;
 
 @ccclass("GameManager")
 export class GameManager extends Component {
-     @property(Node)
-     private gridManagerNode: Node;
+     @property(GridManager)
+     gridManager: GridManager | null = null;
 
-     private gridManager: GridManager;
+     @property(TilePlacementHandler)
+     tilePlacementHandler: TilePlacementHandler | null = null;
+
+
      private neighborChecker: NeighborChecker;
 
-     start() {
-          this.gridManager = this.gridManagerNode.getComponent(GridManager);
-          this.neighborChecker = new NeighborChecker(this.gridManager.getGrid());
+     protected onLoad(): void {
+          TileSelectionHandler.placementEvent.on('placement', this.onPlacementTriggered, this);
      }
 
-     // Tetikleyici ve gözlemci işlevlerini burada yönetiyoruz
-     onTilePlacementSuccess(targetGround: GroundTile) {
-          this.triggerNeighborCheck(targetGround);
+     protected start(): void {
+          this.neighborChecker = new NeighborChecker();
+     }
+     private async onPlacementTriggered(selectedCluster: TileCluster) {
+          await this.handlePlacement(selectedCluster);
      }
 
-     private async triggerNeighborCheck(startTile: GroundTile) {
-          const neighbors = await this.neighborChecker.findNeighbors(startTile);
-          let matchFound = false;
-
-          for (const neighbor of neighbors) {
-               const matching = await this.checkMatchingNeighbors(neighbor, startTile);
-               if (matching) {
-                    matchFound = true;
+     async handlePlacement(selectedCluster: TileCluster) {
+          // Placement ve eşleşme kontrol işlemleri burada gerçekleşecek
+          const placementSuccess = await this.tilePlacementHandler?.place(selectedCluster);
+          if (placementSuccess) {
+               const grid = this.gridManager.getGrid();
+               const match = this.neighborChecker?.findFirstMatch(grid,selectedCluster.lastGroundTile);
+               if (match) {
+                    console.log("Matching cluster found:", match);
+                    // Aktarım işlemleri
+               } else {
+                    console.log("No match found.");
                }
           }
-          if (matchFound) {
-               console.log("Matching clusters found. Animations started.");
-          }
      }
 
-     private async checkMatchingNeighbors(tile: GroundTile, startTile: GroundTile): Promise<boolean> {
-          const lastCluster = startTile.lastAttachedCluster;
-          if (!lastCluster) return false;
-
-          const matchingClusters = tile.attachedCluster.filter(cluster =>
-               cluster.type === lastCluster.type &&
-               !(tile === startTile && cluster === lastCluster)
-          );
-
-          if (matchingClusters.length > 0) {
-               await startTile.attachNewCluster(matchingClusters[0]);
-               return true;
-          }
-
-          return false;
+     onDestroy() {
+          TileSelectionHandler.placementEvent.off('placement', this.onPlacementTriggered, this);
      }
 }
+
+

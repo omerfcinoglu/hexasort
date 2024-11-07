@@ -18,7 +18,7 @@ export class TileAnimator {
 
     static async liftAndMoveToPosition(node: Node, liftHeight: number, finalPosition: Vec3, duration: number = 0.2): Promise<void> {
         const initialPosition = node.position.clone();
-        const liftedPosition = new Vec3(initialPosition.x, initialPosition.y + liftHeight, initialPosition.z);
+        const liftedPosition = new Vec3(0, initialPosition.y + liftHeight, 0);
         await new Promise<void>((resolve) => {
             tween(node)
                 .to(duration / 2, { position: liftedPosition })

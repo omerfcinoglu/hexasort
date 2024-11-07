@@ -1,7 +1,6 @@
-import { _decorator, Component, EventTouch, Vec3, Node, geometry, Game } from 'cc';
+import { _decorator, Component, EventTouch, Vec3, Node, geometry, Game, EventTarget } from 'cc';
 import { TileCluster } from '../core/TileCluster';
 import { InputProvider } from '../input/InputProvider';
-import { TilePlacementHandler } from './TilePlacementHandler';
 import { GroundTile } from '../entity/GroundTile';
 const { ccclass, property } = _decorator;
 
@@ -10,18 +9,14 @@ export class TileSelectionHandler extends Component {
     @property(InputProvider)
     inputProvider: InputProvider | null = null;
 
-    private placementHandler: TilePlacementHandler = null;
-
-    private selectionCallback: (selectedCluster: TileCluster, targetGround: GroundTile) => void;
     public selectedCluster: TileCluster | null = null;
+    public static placementEvent = new EventTarget();
 
     onLoad() {
         if (!this.inputProvider) {
             console.error("InputProvider is not assigned in TileSelectionHandler.");
             return;
         }
-
-        this.placementHandler = this.node.getComponent(TilePlacementHandler);
 
         this.inputProvider.onTouchStart = this.handleTouchStart.bind(this);
         this.inputProvider.onTouchMove = this.handleTouchMove.bind(this);
@@ -58,7 +53,8 @@ export class TileSelectionHandler extends Component {
         if (this.selectedCluster) {
             const placingGroundTile = this.selectedCluster.lastGroundTile;
             if (placingGroundTile) {
-                this.placementHandler.place(this.selectedCluster);
+                // selection done trigger Event.
+                TileSelectionHandler.placementEvent.emit('placement', this.selectedCluster);
             }
             else {
                 this.selectedCluster.deselect();

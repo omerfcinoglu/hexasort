@@ -3,48 +3,47 @@ import { GroundTile } from '../entity/GroundTile';
 const { ccclass, property } = _decorator;
 
 @ccclass('NeighborChecker')
-export class NeighborChecker  {
-    private grid;
+export class NeighborChecker {
+    public findNeighbors(grid: GroundTile[][] , groundTile: GroundTile): GroundTile[] {
+        const neighbors: GroundTile[] = [];
+        const { row, col } = groundTile.gridPosition;
 
-    constructor(grid : GroundTile[][]){
-        this.grid = grid;
-    }
+        const directions = [
+            { dRow: -1, dCol: 0 }, // üst
+            { dRow: 1, dCol: 0 },  // alt
+            { dRow: 0, dCol: -1 }, // sol
+            { dRow: 0, dCol: 1 }   // sağ
+        ];
 
-    public findNeighbors(groundTile: GroundTile): Promise<GroundTile[]> {
-        return new Promise((resolve) => {
-            const neighbors: GroundTile[] = [];
-            const { row, col } = groundTile.gridPosition;
+        for (const { dRow, dCol } of directions) {
+            const neighborRow = row + dRow;
+            const neighborCol = col + dCol;
+            const neighbor = this.getGroundTile(grid , neighborRow, neighborCol);
 
-            // Komşu pozisyonlarını belirleyin
-            const directions = [
-                { dRow: -1, dCol: 0 }, // üst
-                { dRow: 1, dCol: 0 },  // alt
-                { dRow: 0, dCol: -1 }, // sol
-                { dRow: 0, dCol: 1 }   // sağ
-            ];
-
-            for (const { dRow, dCol } of directions) {
-                const neighborRow = row + dRow;
-                const neighborCol = col + dCol;
-                const neighbor = this.getGroundTile(neighborRow, neighborCol);
-
-                if (neighbor) {
-                    neighbors.push(neighbor);
-                }
+            if (neighbor) {
+                neighbors.push(neighbor);
             }
+        }
 
-            resolve(neighbors);
-        });
+        return neighbors;
     }
 
-    public getGroundTile(row: number, col: number): GroundTile | null {
-        if (this.grid[row] && this.grid[row][col]) {
-            return this.grid[row][col];
+    public findFirstMatch(grid: GroundTile[][] , targetGround: GroundTile): GroundTile | null {
+        const neighbors = this.findNeighbors(grid , targetGround);
+
+        for (const neighbor of neighbors) {
+            if (neighbor.lastAttachedCluster?.type === targetGround.lastAttachedCluster?.type) {
+                return neighbor;
+            }
         }
+
         return null;
     }
 
-    public setGrid(grid: GroundTile[][]): void {
-        this.grid = grid;
+    private getGroundTile(grid: GroundTile[][],  row: number, col: number): GroundTile | null {
+        if (grid[row] && grid[row][col]) {
+            return grid[row][col];
+        }
+        return null;
     }
 }
