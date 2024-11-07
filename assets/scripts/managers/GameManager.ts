@@ -1,50 +1,27 @@
-import { _decorator, Component, Node, tween, Vec3 } from "cc";
-import { TileSelectionHandler } from "../handlers/TileSelectionHandler";
-import { TilePlacementHandler } from "../handlers/TilePlacementHandler";
+import { _decorator, Component, Node } from "cc";
 import { GridManager } from "./GridManager";
-import { GroundTile } from "../entity/GroundTile";
-import { TileCluster } from "../core/TileCluster";
+import { TileSelectionHandler } from "../handlers/TileSelectionHandler";
 import { NeighborChecker } from "../core/NeighborChecker";
+import { GroundTile } from "../entity/GroundTile";
 
 const { ccclass, property } = _decorator;
 
 @ccclass("GameManager")
 export class GameManager extends Component {
      @property(Node)
-     private interactionHandler: Node;
-
-     @property(Node)
      private gridManagerNode: Node;
 
-     private tileSelectionHandler: TileSelectionHandler;
-     private tilePlacementHandler: TilePlacementHandler;
      private gridManager: GridManager;
      private neighborChecker: NeighborChecker;
 
      start() {
-          this.tileSelectionHandler = this.interactionHandler.getComponent(TileSelectionHandler);
-          this.tilePlacementHandler = this.interactionHandler.getComponent(TilePlacementHandler);
           this.gridManager = this.gridManagerNode.getComponent(GridManager);
-
-          this.tileSelectionHandler.onTileSelected(
-               this.handleTileSelected.bind(this)
-          );
-
           this.neighborChecker = new NeighborChecker(this.gridManager.getGrid());
      }
 
-     private async handleTileSelected(
-          selectedCluster: TileCluster,
-          targetGround: GroundTile
-     ) {
-          const placementSuccess = await this.tilePlacementHandler.place(
-               selectedCluster,
-               targetGround
-          );
-          if (placementSuccess) {
-               await this.gridManager.handlePlacementSuccess(targetGround);
-               await this.triggerNeighborCheck(targetGround);
-          }
+     // Tetikleyici ve gözlemci işlevlerini burada yönetiyoruz
+     onTilePlacementSuccess(targetGround: GroundTile) {
+          this.triggerNeighborCheck(targetGround);
      }
 
      private async triggerNeighborCheck(startTile: GroundTile) {
@@ -72,20 +49,10 @@ export class GameManager extends Component {
           );
 
           if (matchingClusters.length > 0) {
-               await this.addClusterToGround(matchingClusters, startTile);
+               await startTile.attachNewCluster(matchingClusters[0]);
                return true;
           }
 
           return false;
-     }
-
-     async addClusterToGround(clusters: TileCluster[], startTile: GroundTile){
-          for (let i = 0; i < clusters.length; i++) {
-               const cluster = clusters[i];
-               await startTile.attachNewCluster(cluster);
-          }
-     }
-     private handleMatch() {
-
      }
 }

@@ -10,6 +10,8 @@ export class TileSelectionHandler extends Component {
     @property(InputProvider)
     inputProvider: InputProvider | null = null;
 
+    private placementHandler: TilePlacementHandler = null;
+
     private selectionCallback: (selectedCluster: TileCluster, targetGround: GroundTile) => void;
     public selectedCluster: TileCluster | null = null;
 
@@ -19,16 +21,19 @@ export class TileSelectionHandler extends Component {
             return;
         }
 
+        this.placementHandler = this.node.getComponent(TilePlacementHandler);
+
 
         this.inputProvider.onTouchStart = this.handleTouchStart.bind(this);
         this.inputProvider.onTouchMove = this.handleTouchMove.bind(this);
         this.inputProvider.onTouchEnd = this.handleTouchEnd.bind(this);
     }
 
-    onTileSelected(callback: (selectedCluster: TileCluster, targetGround: GroundTile) => void) {
-        this.selectionCallback = callback;
+    onTileSelected(selectedCluster: TileCluster, targetGround: GroundTile) {
+        if (selectedCluster && targetGround) {
+            this.placementHandler.placeTile(selectedCluster, targetGround);
+        }
     }
-
     private handleTouchStart(event: EventTouch) {
         const touchPos = event.getLocation();
         const touchPos3D = new Vec3(touchPos.x, touchPos.y, 0);

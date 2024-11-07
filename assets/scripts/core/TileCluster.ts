@@ -79,16 +79,6 @@ export class TileCluster extends Component {
             .start();
     }
 
-    public moveToPosition(targetPosition: Vec3): Promise<void> {
-        return new Promise((resolve) => {
-            tween(this.node)
-                .to(0.3, { position: targetPosition })
-                .call(resolve)
-                .start();
-        });
-    }
-    
-
     public placement() : boolean {
         if (this.lastGroundTile) {
             const position = this.lastGroundTile.node.position.clone();
