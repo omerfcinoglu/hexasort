@@ -1,8 +1,7 @@
-// GroundTile.ts
-
-import { _decorator, Component, Node, Collider, Color, Vec3, tween, Quat } from 'cc';
+import { _decorator, Component, Node, Collider, Color, Vec3, Quat } from 'cc';
 import { TileCluster } from '../core/TileCluster';
 import { ColorProvider } from '../core/ColorProvider';
+import { TileAnimator } from '../helpers/TileAnimator';
 const { ccclass, property } = _decorator;
 
 @ccclass('GroundTile')
@@ -27,58 +26,32 @@ export class GroundTile extends Component {
 
     public addTileCluster(tileCluster: TileCluster) {
         this.lastAttachedCluster = tileCluster;
-        const lastWorldPos = tileCluster.node.getPosition().clone();
         tileCluster.node.removeFromParent();
         this.node.parent.addChild(tileCluster.node);
-        tileCluster.node.setPosition(lastWorldPos);
         this.attachedCluster.push(tileCluster);
         this.setActiveCollider(false);
     }
 
-
-
     public attachNewCluster(tileCluster: TileCluster): Promise<void> {
         return new Promise<void>(async (resolve) => {
-            let cumulativeHeight = this.getAllTileCount() * 0.2; 
-            const groundWorldPos = this.node.getPosition().clone() // GroundTile'ın dünya konumu
+            let cumulativeHeight = this.getAllTileCount() * 0.2;
             const tiles = tileCluster.getTiles();
+            const targetPositionBase = this.node.getPosition().clone();
+
             for (let i = tiles.length - 1; i >= 0; i--) {
                 const tile = tiles[i];
-                const targetYPosition = cumulativeHeight;
-    
-                await new Promise<void>((innerResolve) => {
-                    const targetRotation = new Quat();
-                    Quat.fromEuler(targetRotation, 0, 0, 180); // Rotasyon için Quat ayarları
-    
-                    tween(tile.node)
-                        .parallel(
-                            tween().to(2, { position: new Vec3(0, targetYPosition + 0.2, 0) }),
-                            tween().to(2, { rotation: targetRotation })
-                        )
-                        .call(() => {
-                            // Nihai hedefe gitmek için world position kullanıyoruz
-                            const finalTargetPosition = new Vec3(1, targetYPosition,0);
-                            tween(tile.node)
-                                .to(2, { position: finalTargetPosition })
-                                .call(innerResolve)
-                                .start();
-                        })
-                        .start();
-                });
-    
+                const finalPosition = new Vec3(targetPositionBase.x, cumulativeHeight, targetPositionBase.z);
+                const targetRotation = new Quat();
+                Quat.fromEuler(targetRotation, 0, 0, 180); 
+
+                await TileAnimator.liftAndMoveToPosition(tile.node, 0.2, finalPosition);
+                await TileAnimator.animateToPositionWithRotation(tile.node, finalPosition, targetRotation);
+                
                 cumulativeHeight += 0.2;
             }
-    
+
             resolve();
         });
-    }
-    
-    
-
-    public highlight(flag: boolean) {
-        flag
-            ? ColorProvider.ChangeColor(this.highlightColor, this.node)
-            : ColorProvider.ChangeColor(this.defaultColor, this.node);
     }
 
     public checkChildTypes(): Promise<void> {
@@ -97,8 +70,13 @@ export class GroundTile extends Component {
         });
     }
 
+    public highlight(flag: boolean) {
+        flag
+            ? ColorProvider.ChangeColor(this.highlightColor, this.node)
+            : ColorProvider.ChangeColor(this.defaultColor, this.node);
+    }
+
     getAllTileCount(): number {
         return this.attachedCluster.reduce((total, cluster) => total + cluster.tileCount, 0);
     }
-
 }
