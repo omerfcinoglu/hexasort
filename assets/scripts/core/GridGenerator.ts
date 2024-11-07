@@ -2,6 +2,7 @@ import { _decorator, Prefab, Vec3, Node, instantiate } from "cc";
 import { GroundTile } from "../entity/GroundTile";
 import { Tile } from "../entity/Tile";
 import { TileCluster } from "./TileCluster";
+import { ColorProvider } from "./ColorProvider";
 const { ccclass, property } = _decorator;
 
 @ccclass("GridGenerator")
@@ -41,6 +42,7 @@ export class GridGenerator {
                 }
             }
         }
+        this.test(grid);
         return grid;
     }
 
@@ -60,6 +62,14 @@ export class GridGenerator {
         if (tileCluster) {
             tileCluster.initCluster(tileType,2); 
             groundTileComp.addTileCluster(tileCluster);
+        }
+    }
+    test(grid : GroundTile[][]){
+        if(grid[0][0]){
+            ColorProvider.ChangeColor(
+                ColorProvider.getInstance().getColor(4),
+                grid[0][0].node
+            )
         }
     }
 }

@@ -91,8 +91,6 @@ export class TileCluster extends Component {
 
     public placement() : boolean {
         if (this.lastGroundTile) {
-            this.node.removeFromParent();
-            this.node.parent = this.lastGroundTile.node.parent;
             const position = this.lastGroundTile.node.position.clone();
             this.node.setPosition(position.add3f(0,0.2,0));
             this.lastGroundTile.addTileCluster(this);
