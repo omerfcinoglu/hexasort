@@ -23,7 +23,6 @@ export class TileSelectionHandler extends Component {
 
         this.placementHandler = this.node.getComponent(TilePlacementHandler);
 
-
         this.inputProvider.onTouchStart = this.handleTouchStart.bind(this);
         this.inputProvider.onTouchMove = this.handleTouchMove.bind(this);
         this.inputProvider.onTouchEnd = this.handleTouchEnd.bind(this);
@@ -31,7 +30,6 @@ export class TileSelectionHandler extends Component {
 
     onTileSelected(selectedCluster: TileCluster, targetGround: GroundTile) {
         if (selectedCluster && targetGround) {
-            this.placementHandler.placeTile(selectedCluster, targetGround);
         }
     }
     private handleTouchStart(event: EventTouch) {
@@ -60,8 +58,7 @@ export class TileSelectionHandler extends Component {
         if (this.selectedCluster) {
             const placingGroundTile = this.selectedCluster.lastGroundTile;
             if (placingGroundTile) {
-                console.log("handle placement");
-                this.selectionCallback?.(this.selectedCluster, placingGroundTile);
+                this.placementHandler.place(this.selectedCluster);
             }
             else {
                 this.selectedCluster.deselect();

@@ -1,4 +1,6 @@
 import { Node, Vec3, tween, Quat } from 'cc';
+import { TileCluster } from '../core/TileCluster';
+import { GroundTile } from '../entity/GroundTile';
 
 export class TileAnimator {
 
@@ -26,6 +28,20 @@ export class TileAnimator {
                         .call(resolve)
                         .start();
                 })
+                .start();
+        });
+    }
+
+    static animateClusterPlacement(tileCluster: TileCluster, targetGround: GroundTile): Promise<void> {
+        return new Promise((resolve) => {
+            console.log("abc");
+            
+            const targetPosition = targetGround.node.position.clone();
+            targetPosition.y += targetGround.getAllTileCount() * 0.2; // Yükseklik ayarlaması
+
+            tween(tileCluster.node)
+                .to(0.5, { position: targetPosition })
+                .call(resolve)
                 .start();
         });
     }
