@@ -25,6 +25,7 @@ export class GroundTile extends Component {
 
     public addTileCluster(tileCluster: TileCluster) {
         this.lastAttachedCluster = tileCluster;
+        tileCluster.node.setParent(this.node.parent);
         this.attachedCluster.push(tileCluster);
         this.setActiveCollider(false);
     }

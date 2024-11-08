@@ -41,7 +41,7 @@ export class TileAnimator {
 
         await new Promise<void>((resolve) => {
             tween(cluster.node)
-                .to(0.5, { position: endPosition })
+                .to(0.125, { position: endPosition })
                 .call(() => {
                     resolve();
                 })

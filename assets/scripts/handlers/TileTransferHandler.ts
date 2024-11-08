@@ -10,6 +10,7 @@ export class TileTransferHandler {
     async transferClusterToTarget(cluster: TileCluster, targetGround: GroundTile): Promise<void> {
         cluster.isSelectable = false; 
         await TileAnimator.animateClusterTransfer(cluster, targetGround);
+        //! todo bir önceki ground boşaldıysa onu tekrar yerleştirebilir hale getirmeliyiz.
         targetGround.addTileCluster(cluster);
     }
 }

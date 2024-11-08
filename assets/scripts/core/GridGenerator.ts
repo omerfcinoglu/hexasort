@@ -42,7 +42,7 @@ export class GridGenerator {
                 }
             }
         }
-        this.test(grid);
+        // this.test(grid);
         return grid;
     }
 
