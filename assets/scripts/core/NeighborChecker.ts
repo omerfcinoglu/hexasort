@@ -1,5 +1,6 @@
 import { _decorator } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
+import { TileCluster } from './TileCluster';
 const { ccclass, property } = _decorator;
 
 @ccclass('NeighborChecker')
@@ -28,12 +29,12 @@ export class NeighborChecker {
         return neighbors;
     }
 
-    public findFirstMatch(grid: GroundTile[][] , targetGround: GroundTile): GroundTile | null {
+    public findFirstMatch(grid: GroundTile[][] , targetGround: GroundTile): TileCluster | null {
         const neighbors = this.findNeighbors(grid , targetGround);
 
         for (const neighbor of neighbors) {
             if (neighbor.lastAttachedCluster?.type === targetGround.lastAttachedCluster?.type) {
-                return neighbor;
+                return neighbor.lastAttachedCluster;
             }
         }
 

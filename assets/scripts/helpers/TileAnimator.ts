@@ -1,4 +1,5 @@
-import { Node, Vec3, tween, Quat } from 'cc';
+import { Node, Vec3, tween, Quat, EJoint2DType } from 'cc';
+import { Tile } from '../entity/Tile';
 import { TileCluster } from '../core/TileCluster';
 import { GroundTile } from '../entity/GroundTile';
 
@@ -18,7 +19,7 @@ export class TileAnimator {
 
     static async liftAndMoveToPosition(node: Node, liftHeight: number, finalPosition: Vec3, duration: number = 0.2): Promise<void> {
         const initialPosition = node.position.clone();
-        const liftedPosition = new Vec3(0, initialPosition.y + liftHeight, 0);
+        const liftedPosition = new Vec3(initialPosition.x, initialPosition.y + liftHeight, initialPosition.z);
         await new Promise<void>((resolve) => {
             tween(node)
                 .to(duration / 2, { position: liftedPosition })
@@ -32,16 +33,18 @@ export class TileAnimator {
         });
     }
 
-    static animateClusterPlacement(tileCluster: TileCluster, targetGround: GroundTile): Promise<void> {
-        return new Promise((resolve) => {
-            console.log("abc");
-            
-            const targetPosition = targetGround.node.position.clone();
-            targetPosition.y += targetGround.getAllTileCount() * 0.2; // Yükseklik ayarlaması
+    static async animateClusterTransfer(cluster: TileCluster, targetGround: GroundTile): Promise<void> {
+        const startPosition = cluster.node.position.clone();
+        const endPosition = targetGround.node.position.clone();
+        endPosition.y += (targetGround.getAllTileCount() + (Math.floor(cluster.getTiles().length/2))) * 0.2; 
+        endPosition.y += 0.05;
 
-            tween(tileCluster.node)
-                .to(0.5, { position: targetPosition })
-                .call(resolve)
+        await new Promise<void>((resolve) => {
+            tween(cluster.node)
+                .to(0.5, { position: endPosition })
+                .call(() => {
+                    resolve();
+                })
                 .start();
         });
     }

@@ -25,9 +25,6 @@ export class GroundTile extends Component {
 
     public addTileCluster(tileCluster: TileCluster) {
         this.lastAttachedCluster = tileCluster;
-        tileCluster.node.removeFromParent();
-        this.node.parent.addChild(tileCluster.node);
-        tileCluster.node.setPosition(new Vec3(this.node.position.x, 0.2 ,this.node.position.z))
         this.attachedCluster.push(tileCluster);
         this.setActiveCollider(false);
     }

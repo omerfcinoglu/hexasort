@@ -4,6 +4,8 @@ import { NeighborChecker } from "../core/NeighborChecker";
 import { TileSelectionHandler } from "../handlers/TileSelectionHandler";
 import { TileCluster } from "../core/TileCluster";
 import { TilePlacementHandler } from "../handlers/TilePlacementHandler";
+import { TileTransferHandler } from "../handlers/TileTransferHandler";
+import { Tile } from "../entity/Tile";
 
 const { ccclass, property } = _decorator;
 
@@ -15,8 +17,8 @@ export class GameManager extends Component {
      @property(TilePlacementHandler)
      tilePlacementHandler: TilePlacementHandler | null = null;
 
-
      private neighborChecker: NeighborChecker;
+     private tileTransferHandler : TileTransferHandler;
 
      protected onLoad(): void {
           TileSelectionHandler.placementEvent.on('placement', this.onPlacementTriggered, this);
@@ -24,6 +26,7 @@ export class GameManager extends Component {
 
      protected start(): void {
           this.neighborChecker = new NeighborChecker();
+          this.tileTransferHandler = new TileTransferHandler();
      }
      private async onPlacementTriggered(selectedCluster: TileCluster) {
           await this.handlePlacement(selectedCluster);
@@ -35,8 +38,7 @@ export class GameManager extends Component {
                const grid = this.gridManager.getGrid();
                const match = this.neighborChecker?.findFirstMatch(grid,selectedCluster.lastGroundTile);
                if (match) {
-                    console.log("Matching cluster found:", match);
-                    // Aktarım işlemleri
+                    this.tileTransferHandler.transferClusterToTarget(match,selectedCluster.lastGroundTile);
                } else {
                     console.log("No match found.");
                }
