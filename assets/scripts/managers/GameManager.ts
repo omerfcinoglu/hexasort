@@ -30,7 +30,6 @@ export class GameManager extends Component {
      }
 
      async handlePlacement(selectedCluster: TileCluster) {
-          // Placement ve eşleşme kontrol işlemleri burada gerçekleşecek
           const placementSuccess = await this.tilePlacementHandler?.place(selectedCluster);
           if (placementSuccess) {
                const grid = this.gridManager.getGrid();
