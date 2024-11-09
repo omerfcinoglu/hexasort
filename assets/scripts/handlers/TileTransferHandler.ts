@@ -8,9 +8,12 @@ const { ccclass } = _decorator;
 export class TileTransferHandler {
 
     async transferClusterToTarget(cluster: TileCluster, targetGround: GroundTile): Promise<void> {
-        cluster.isSelectable = false; 
+        const preGround = cluster.attachedGround;        
+        if(preGround) preGround.removeTileCluster(cluster);
+
         await TileAnimator.animateClusterTransfer(cluster, targetGround);
-        //! todo bir önceki ground boşaldıysa onu tekrar yerleştirebilir hale getirmeliyiz.
+        
+        cluster.isSelectable = false; 
         targetGround.addTileCluster(cluster);
     }
 }

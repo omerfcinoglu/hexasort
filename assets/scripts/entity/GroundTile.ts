@@ -30,6 +30,23 @@ export class GroundTile extends Component {
         this.setActiveCollider(false);
     }
 
+    public removeTileCluster(tileCluster: TileCluster) {
+        const index = this.attachedCluster.indexOf(tileCluster);
+        if (index !== -1) {
+            this.attachedCluster.splice(index, 1);
+        }
+    
+        if (this.attachedCluster.length > 0) {
+            this.lastAttachedCluster = this.attachedCluster[this.attachedCluster.length - 1];
+        } else {
+            
+            this.lastAttachedCluster = null;
+            this.setActiveCollider(true);
+            console.log("açtım",this.node.getComponent(Collider).enabled);
+        }
+    }
+    
+
     public checkChildTypes(): Promise<void> {
         return new Promise((resolve) => {
             if (this.attachedCluster.length > 1) {

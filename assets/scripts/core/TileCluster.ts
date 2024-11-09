@@ -18,7 +18,7 @@ export class TileCluster extends Component {
     public isSelectable: boolean = true;
     public isDragging: boolean = false;
     public originalPosition: Vec3 = new Vec3();
-    public lastGroundTile: GroundTile | null = null;
+    public attachedGround: GroundTile | null = null;
     onLoad() {
         this.originalPosition = this.node.getPosition().clone();
     }

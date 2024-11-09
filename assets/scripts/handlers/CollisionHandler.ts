@@ -28,7 +28,7 @@ export class CollisionHandler extends Component {
         const groundTile = otherNode.getComponent(GroundTile);
         if (groundTile) {
             this.collidedGroundTile = groundTile;
-            this.node.getComponent(TileCluster).lastGroundTile = this.collidedGroundTile;            
+            this.node.getComponent(TileCluster).attachedGround = this.collidedGroundTile;            
             this.collidedGroundTile.highlight(true);
         }
     }

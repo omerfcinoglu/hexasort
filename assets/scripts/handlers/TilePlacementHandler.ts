@@ -7,7 +7,7 @@ const { ccclass, property } = _decorator;
 @ccclass("TilePlacementHandler")
 export class TilePlacementHandler extends Component {
     async place(selectedCluster: TileCluster): Promise<boolean> {
-        const targetGround = selectedCluster.lastGroundTile;
+        const targetGround = selectedCluster.attachedGround;
         if (!targetGround || !selectedCluster) return false;
 
         const cumulativeHeight = targetGround.getAllTileCount() * 0.2;
@@ -18,7 +18,7 @@ export class TilePlacementHandler extends Component {
         selectedCluster.node.setPosition(targetGround.node.position.x, 0.2, targetGround.node.position.z);
 
         targetGround.addTileCluster(selectedCluster);
-        selectedCluster.lastGroundTile = targetGround;
+        selectedCluster.attachedGround = targetGround;
 
         return true;
     }

@@ -51,7 +51,7 @@ export class TileSelectionHandler extends Component {
 
     private handleTouchEnd(event: EventTouch) {
         if (this.selectedCluster) {
-            const placingGroundTile = this.selectedCluster.lastGroundTile;
+            const placingGroundTile = this.selectedCluster.attachedGround;
             if (placingGroundTile) {
                 // selection done trigger Event.
                 TileSelectionHandler.placementEvent.emit('placement', this.selectedCluster);

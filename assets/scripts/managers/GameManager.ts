@@ -36,9 +36,9 @@ export class GameManager extends Component {
           const placementSuccess = await this.tilePlacementHandler?.place(selectedCluster);
           if (placementSuccess) {
                const grid = this.gridManager.getGrid();
-               const match = this.neighborChecker?.findFirstMatch(grid,selectedCluster.lastGroundTile);
+               const match = this.neighborChecker?.findFirstMatch(grid,selectedCluster.attachedGround);
                if (match) {
-                    this.tileTransferHandler.transferClusterToTarget(match,selectedCluster.lastGroundTile);
+                    this.tileTransferHandler.transferClusterToTarget(match,selectedCluster.attachedGround);
                } else {
                     console.log("No match found.");
                }
