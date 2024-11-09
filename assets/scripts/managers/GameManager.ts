@@ -5,7 +5,6 @@ import { TileSelectionHandler } from "../handlers/TileSelectionHandler";
 import { TileCluster } from "../core/TileCluster";
 import { TilePlacementHandler } from "../handlers/TilePlacementHandler";
 import { TileTransferHandler } from "../handlers/TileTransferHandler";
-import { Tile } from "../entity/Tile";
 
 const { ccclass, property } = _decorator;
 
@@ -20,15 +19,20 @@ export class GameManager extends Component {
      private neighborChecker: NeighborChecker;
      private tileTransferHandler : TileTransferHandler;
 
-     protected onLoad(): void {
+     onLoad(): void {
           TileSelectionHandler.placementEvent.on('placement', this.onPlacementTriggered, this);
      }
 
-     protected start(): void {
+     onDestroy() {
+          TileSelectionHandler.placementEvent.off('placement', this.onPlacementTriggered, this);
+     }
+
+     start(): void {
           this.neighborChecker = new NeighborChecker();
           this.tileTransferHandler = new TileTransferHandler();
      }
-     private async onPlacementTriggered(selectedCluster: TileCluster) {
+
+     async onPlacementTriggered(selectedCluster: TileCluster) {
           await this.handlePlacement(selectedCluster);
      }
 
@@ -38,15 +42,11 @@ export class GameManager extends Component {
                const grid = this.gridManager.getGrid();
                const match = this.neighborChecker?.findFirstMatch(grid,selectedCluster.attachedGround);
                if (match) {
-                    this.tileTransferHandler.transferClusterToTarget(match,selectedCluster.attachedGround);
+                    await this.tileTransferHandler.transferClusterToTarget(match,selectedCluster.attachedGround);
                } else {
                     console.log("No match found.");
                }
           }
-     }
-
-     onDestroy() {
-          TileSelectionHandler.placementEvent.off('placement', this.onPlacementTriggered, this);
      }
 }
 

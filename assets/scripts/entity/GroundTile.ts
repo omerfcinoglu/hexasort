@@ -7,7 +7,7 @@ const { ccclass, property } = _decorator;
 export class GroundTile extends Component {
     public gridPosition: { row: number; col: number } = { row: 0, col: 0 };
 
-    public attachedCluster: TileCluster[] = [];
+    public attachedClusters: TileCluster[] = [];
     public lastAttachedCluster: TileCluster = null;
 
     private defaultColor: Color = null;
@@ -26,31 +26,30 @@ export class GroundTile extends Component {
     public addTileCluster(tileCluster: TileCluster) {
         this.lastAttachedCluster = tileCluster;
         tileCluster.node.setParent(this.node.parent);
-        this.attachedCluster.push(tileCluster);
+        this.attachedClusters.push(tileCluster);
         this.setActiveCollider(false);
     }
 
     public removeTileCluster(tileCluster: TileCluster) {
-        const index = this.attachedCluster.indexOf(tileCluster);
+        const index = this.attachedClusters.indexOf(tileCluster);
         if (index !== -1) {
-            this.attachedCluster.splice(index, 1);
+            this.attachedClusters.splice(index, 1);
         }
     
-        if (this.attachedCluster.length > 0) {
-            this.lastAttachedCluster = this.attachedCluster[this.attachedCluster.length - 1];
+        if (this.attachedClusters.length > 0) {
+            this.lastAttachedCluster = this.attachedClusters[this.attachedClusters.length - 1];
         } else {
             
             this.lastAttachedCluster = null;
             this.setActiveCollider(true);
-            console.log("açtım",this.node.getComponent(Collider).enabled);
         }
     }
     
 
     public checkChildTypes(): Promise<void> {
         return new Promise((resolve) => {
-            if (this.attachedCluster.length > 1) {
-                const topCluster = this.attachedCluster[this.attachedCluster.length - 2];
+            if (this.attachedClusters.length > 1) {
+                const topCluster = this.attachedClusters[this.attachedClusters.length - 2];
                 if (this.lastAttachedCluster.type === topCluster.type) {
                     // Animasyon işlemini başlatın
                     // this.playMatchAnimation().then(() => resolve());
@@ -70,6 +69,6 @@ export class GroundTile extends Component {
     }
 
     getAllTileCount(): number {
-        return this.attachedCluster.reduce((total, cluster) => total + cluster.tileCount, 0);
+        return this.attachedClusters.reduce((total, cluster) => total + cluster.tileCount, 0);
     }
 }

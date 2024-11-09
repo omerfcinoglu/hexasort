@@ -61,7 +61,12 @@ export class GridGenerator {
             tileCluster.node.setPosition(new Vec3(groundTileNode.position.x, 0.2 ,groundTileNode.position.z))
             tileCluster.node.setParent(groundTileNode.parent);
             tileCluster.attachedGround = groundTileComp;
-            groundTileComp.addTileCluster(tileCluster);
+
+            groundTileComp.attachedClusters.push(tileCluster);
+            groundTileComp.lastAttachedCluster = tileCluster;
+            groundTileComp.setActiveCollider(false);
+            
+            // groundTileComp.addTileCluster(tileCluster);
         }
     }
     test(grid : GroundTile[][]){

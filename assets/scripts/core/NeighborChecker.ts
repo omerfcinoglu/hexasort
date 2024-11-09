@@ -31,7 +31,7 @@ export class NeighborChecker {
 
     public findFirstMatch(grid: GroundTile[][] , targetGround: GroundTile): TileCluster | null {
         const neighbors = this.findNeighbors(grid , targetGround);
-
+        
         for (const neighbor of neighbors) {
             if (neighbor.lastAttachedCluster?.type === targetGround.lastAttachedCluster?.type) {
                 return neighbor.lastAttachedCluster;
