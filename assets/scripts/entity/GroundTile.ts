@@ -5,6 +5,7 @@ const { ccclass, property } = _decorator;
 
 @ccclass('GroundTile')
 export class GroundTile extends Component {
+
     public gridPosition: { row: number; col: number } = { row: 0, col: 0 };
 
     public attachedClusters: TileCluster[] = [];
@@ -23,11 +24,16 @@ export class GroundTile extends Component {
         this.node.getComponent(Collider).enabled = value;
     }
 
-    public addTileCluster(tileCluster: TileCluster) {
+    public place(tileCluster: TileCluster) {
         this.lastAttachedCluster = tileCluster;
         tileCluster.node.setParent(this.node.parent);
         this.attachedClusters.push(tileCluster);
         this.setActiveCollider(false);
+    }
+
+    transferTiles(cluster: TileCluster) {
+        this.lastAttachedCluster.transferTiles(cluster.getTiles());
+        cluster.checkStatus();
     }
 
     public removeTileCluster(tileCluster: TileCluster) {

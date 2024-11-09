@@ -1,6 +1,7 @@
 import { _decorator, Component, Node, Prefab, instantiate, Vec3, tween } from 'cc';
 import { Tile } from '../entity/Tile';
 import { GroundTile } from '../entity/GroundTile';
+import { TileAnimator } from '../helpers/TileAnimator';
 
 const { ccclass, property } = _decorator;
 
@@ -38,6 +39,29 @@ export class TileCluster extends Component {
                 tileComp.init(this.type);
             }
             this.tiles.push(tileComp);
+        }
+    }
+
+    transferTiles(tiles: Tile[]) {
+        const tilesToAddCount = tiles.length;
+        for (let i = 0; i < tilesToAddCount; i++) {
+            const tile = tiles.pop();
+            const worldPosition = tile.node.getWorldPosition();
+            tile.node.removeFromParent();
+            tile.node.setParent(this.node, true); 
+            tile.node.setWorldPosition(worldPosition);
+            this.tiles.push(tile);
+        }
+        this.checkStatus();
+    }
+
+    //rename this shit
+    checkStatus(){
+        if(this.tiles.length === 5){
+            TileAnimator.animateTilesToZeroScale(this.tiles);
+        }
+        if(this.tiles.length === 0){
+            this.node.active = false;
         }
     }
 

@@ -12,8 +12,9 @@ export class TileTransferHandler {
         if(preGround) preGround.removeTileCluster(cluster);
 
         await TileAnimator.animateClusterTransfer(cluster, targetGround);
+
+        targetGround.transferTiles(cluster);
         
         cluster.isSelectable = false; 
-        targetGround.addTileCluster(cluster);
     }
 }

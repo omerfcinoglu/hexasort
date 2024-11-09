@@ -16,6 +16,8 @@ export class GameManager extends Component {
      @property(TilePlacementHandler)
      tilePlacementHandler: TilePlacementHandler | null = null;
 
+
+     private matchStackCount : number = 5;
      private neighborChecker: NeighborChecker;
      private tileTransferHandler : TileTransferHandler;
 

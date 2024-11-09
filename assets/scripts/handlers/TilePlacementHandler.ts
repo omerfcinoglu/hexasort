@@ -17,7 +17,7 @@ export class TilePlacementHandler extends Component {
 
         selectedCluster.node.setPosition(targetGround.node.position.x, 0.2, targetGround.node.position.z);
 
-        targetGround.addTileCluster(selectedCluster);
+        targetGround.place(selectedCluster);
         selectedCluster.attachedGround = targetGround;
 
         return true;
