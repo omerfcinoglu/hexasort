@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Prefab, instantiate, Vec3, tween } from 'cc';
+import { _decorator, Component, Node, Prefab, instantiate, Vec3, tween, Collider } from 'cc';
 import { Tile } from '../entity/Tile';
 import { GroundTile } from '../entity/GroundTile';
 import { TileAnimator } from '../helpers/TileAnimator';
@@ -42,7 +42,7 @@ export class TileCluster extends Component {
         }
     }
 
-    transferTiles(tiles: Tile[]) {
+    async transferTiles(tiles: Tile[]) {
         const tilesToAddCount = tiles.length;
         for (let i = 0; i < tilesToAddCount; i++) {
             const tile = tiles.pop();
@@ -52,17 +52,23 @@ export class TileCluster extends Component {
             tile.node.setWorldPosition(worldPosition);
             this.tiles.push(tile);
         }
-        this.checkStatus();
     }
-
+    public setActiveCollider(value: boolean) {
+        this.node.getComponent(Collider).enabled = value;
+    }
     //rename this shit
-    checkStatus(){
+    async isMatch() : Promise<boolean>  {
         if(this.tiles.length === 5){
-            TileAnimator.animateTilesToZeroScale(this.tiles);
+            await TileAnimator.animateTilesToZeroScale(this.tiles);
+            //!todo pool sistem yap
+            this.node.setPosition(10,10,10);
+            this.setActiveCollider(false);
+            return true;
         }
         if(this.tiles.length === 0){
             this.node.active = false;
         }
+        return false;
     }
 
     public getTiles(): Tile[] {

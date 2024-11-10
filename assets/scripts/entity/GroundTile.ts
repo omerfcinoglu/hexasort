@@ -31,9 +31,12 @@ export class GroundTile extends Component {
         this.setActiveCollider(false);
     }
 
-    transferTiles(cluster: TileCluster) {
+    async transferTiles(cluster: TileCluster) {
         this.lastAttachedCluster.transferTiles(cluster.getTiles());
-        cluster.checkStatus();
+        const isMatch = await this.lastAttachedCluster.isMatch();
+        if(isMatch){
+            this.setActiveCollider(true);
+        }
     }
 
     public removeTileCluster(tileCluster: TileCluster) {
@@ -45,7 +48,6 @@ export class GroundTile extends Component {
         if (this.attachedClusters.length > 0) {
             this.lastAttachedCluster = this.attachedClusters[this.attachedClusters.length - 1];
         } else {
-            
             this.lastAttachedCluster = null;
             this.setActiveCollider(true);
         }
