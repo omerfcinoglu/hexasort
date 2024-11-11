@@ -9,7 +9,7 @@ export class TileSelectionHandler extends Component {
     @property(InputProvider)
     inputProvider: InputProvider | null = null;
 
-    public selectedCluster: TileCluster | null = null;
+    public selectedGroundTile: GroundTile | null = null;
     public static placementEvent = new EventTarget();
 
     onLoad() {
@@ -33,42 +33,42 @@ export class TileSelectionHandler extends Component {
         const hitNode = this.performRaycast(touchPos3D);
 
         if (hitNode) {
-            const cluster = this.getTileClusterFromNode(hitNode);
-            if (cluster && cluster.isSelectable) {
+            const groundTile = this.getTileClusterFromNode(hitNode);
+            if (groundTile && groundTile.isSelectable) {
                 const touchWorldPos = this.getTouchWorldPosition(event);
-                cluster.select(touchWorldPos);
-                this.selectedCluster = cluster;
+                groundTile.select(touchWorldPos);
+                this.selectedGroundTile = groundTile;
             }
         }
     }
 
     private handleTouchMove(event: EventTouch) {
-        if (this.selectedCluster) {
+        if (this.selectedGroundTile) {
             const touchWorldPos = this.getTouchWorldPosition(event);
-            this.selectedCluster.move(touchWorldPos);
+            this.selectedGroundTile.move(touchWorldPos);
         }
     }
 
     private handleTouchEnd(event: EventTouch) {
-        if (this.selectedCluster) {
-            const placingGroundTile = this.selectedCluster.attachedGround;
+        if (this.selectedGroundTile) {
+            const placingGroundTile = this.selectedGroundTile;
             if (placingGroundTile) {
                 // selection done trigger Event.
-                TileSelectionHandler.placementEvent.emit('placement', this.selectedCluster);
+                TileSelectionHandler.placementEvent.emit('placement', this.selectedGroundTile);
             }
             else {
-                this.selectedCluster.deselect();
+                this.selectedGroundTile.deselect();
             }
-            this.selectedCluster = null;
+            this.selectedGroundTile = null;
         }
     }
 
-    private getTileClusterFromNode(node: Node): TileCluster | null {
+    private getTileClusterFromNode(node: Node): GroundTile | null {
         let currentNode: Node | null = node;
         while (currentNode) {
-            const cluster = currentNode.getComponent(TileCluster);
-            if (cluster) {
-                return cluster;
+            const selectableGroundTile = currentNode.getComponent(GroundTile);
+            if (selectableGroundTile) {
+                return selectableGroundTile;
             }
             currentNode = currentNode.parent;
         }

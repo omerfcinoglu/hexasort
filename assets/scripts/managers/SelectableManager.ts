@@ -1,62 +1,61 @@
-import { _decorator, Component, Node, Prefab, Vec3, tween, instantiate } from 'cc';
-import { TileCluster } from '../core/TileCluster';
+import { _decorator, Component, Node, Prefab, Vec3, instantiate, tween } from 'cc';
+import { GroundTile } from '../entity/GroundTile';
 const { ccclass, property } = _decorator;
 
 @ccclass("SelectableManager")
 export class SelectableManager extends Component {
 
     @property(Prefab)
-    tileClusterPrefab: Prefab = null!;
+    groundTilePrefab: Prefab = null!;
 
     @property(Node)
     public selectableArea: Node = null!;
-    
-    @property
-    clusterCount: number = 3;
 
-    private clusters: TileCluster[] = [];
+    @property
+    tileCount: number = 3; // Seçilebilir GroundTile sayısı
+
+    private groundTiles: GroundTile[] = [];
 
     onLoad() {
-        this.createSelectableClusters();
+        this.createSelectableGroundTiles();
     }
 
-    createSelectableClusters() {
-        const existingClusterCount = this.clusters.length;
-        const clustersToCreate = this.clusterCount - existingClusterCount;
-        const startX = - (this.clusterCount - 1) * 1.5;
+    createSelectableGroundTiles() {
+        const startX = - (this.tileCount - 1) * 1.5; // X ekseninde başlangıç pozisyonu ayarı
 
-        for (let i = 0; i < clustersToCreate; i++) {
-            const position = new Vec3(startX + (existingClusterCount + i) * 3, 0, 0);
-            const clusterNode = instantiate(this.tileClusterPrefab);
-            clusterNode.parent = this.selectableArea;
-            clusterNode.setPosition(position.clone().add3f(10, 0, 0));
+        for (let i = 0; i < this.tileCount; i++) {
+            const position = new Vec3(startX + i * 3, 0, 0); // Her bir tile'ın pozisyonu
+            const groundTileNode = instantiate(this.groundTilePrefab);
+            groundTileNode.parent = this.selectableArea;
+            groundTileNode.setPosition(position.clone().add3f(10, 0, 0)); // Animasyon için başlangıç pozisyonu
 
-            const cluster = clusterNode.getComponent(TileCluster);
-            if (cluster) {
-                cluster.initCluster(2 , 3);
-                cluster.originalPosition = position.clone();
-                cluster.isSelectable = true;
-                this.clusters.push(cluster);
+            const groundTile = groundTileNode.getComponent(GroundTile);
+            groundTile.isSelectable=true;
+            if (groundTile) {
+                this.groundTiles.push(groundTile);
 
-                tween(clusterNode)
+                // Animasyon ile hedef pozisyona taşır
+                tween(groundTileNode)
                     .to(0.5, { position: position })
                     .start();
             }
         }
     }
 
-    removeCluster(cluster: TileCluster) {
-        const index = this.clusters.indexOf(cluster);
+    // Belirli bir GroundTile seçildiğinde çağrılabilir
+    removeGroundTile(groundTile: GroundTile) {
+        const index = this.groundTiles.indexOf(groundTile);
         if (index !== -1) {
-            this.clusters.splice(index, 1);
-            cluster.node.destroy();
-            this.checkAndRefillClusters();
+            this.groundTiles.splice(index, 1);
+            groundTile.node.destroy();
+            this.checkAndRefillGroundTiles();
         }
     }
 
-    checkAndRefillClusters() {
-        if (this.clusters.length < this.clusterCount) {
-            this.createSelectableClusters();
+    // Seçilebilir GroundTile sayısı azaldığında yenilerini oluşturur
+    checkAndRefillGroundTiles() {
+        if (this.groundTiles.length < this.tileCount) {
+            this.createSelectableGroundTiles();
         }
     }
 }

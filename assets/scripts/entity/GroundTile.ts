@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Collider, Color, Vec3, Quat } from 'cc';
+import { _decorator, Component, Node, Collider, Color, Vec3, Quat, tween } from 'cc';
 import { TileCluster } from '../core/TileCluster';
 import { ColorProvider } from '../core/ColorProvider';
 const { ccclass, property } = _decorator;
@@ -11,10 +11,17 @@ export class GroundTile extends Component {
     public attachedClusters: TileCluster[] = [];
     public lastAttachedCluster: TileCluster = null;
 
+    public isSelectable : boolean = false;
+    public isDragging: boolean = false;
+    private touchOffset: Vec3 = new Vec3();
+    public originalPosition: Vec3 = new Vec3();
+
     private defaultColor: Color = null;
     private highlightColor: Color = null;
 
     onLoad() {
+        this.originalPosition = this.node.getPosition().clone();
+
         this.highlightColor = ColorProvider.getInstance().getColor(7);
         this.defaultColor = ColorProvider.getInstance().getColor(6);
         this.highlight(false);
@@ -31,16 +38,6 @@ export class GroundTile extends Component {
         this.setActiveCollider(false);
     }
 
-    async transferTiles(cluster: TileCluster) {
-        console.log("ABDSS");
-        
-        this.lastAttachedCluster.transferTiles(cluster.getTiles());
-        const isMatch = await this.lastAttachedCluster.isMatch();
-        if(isMatch){
-            this.attachedClusters = [];
-            this.setActiveCollider(true);
-        }
-    }
 
     public removeTileCluster(tileCluster: TileCluster) {
         const index = this.attachedClusters.indexOf(tileCluster);
@@ -57,22 +54,6 @@ export class GroundTile extends Component {
     }
     
 
-    public checkChildTypes(): Promise<void> {
-        return new Promise((resolve) => {
-            if (this.attachedClusters.length > 1) {
-                const topCluster = this.attachedClusters[this.attachedClusters.length - 2];
-                if (this.lastAttachedCluster.type === topCluster.type) {
-                    // Animasyon işlemini başlatın
-                    // this.playMatchAnimation().then(() => resolve());
-                } else {
-                    resolve();
-                }
-            } else {
-                resolve();
-            }
-        });
-    }
-
     public highlight(flag: boolean) {
         flag
             ? ColorProvider.ChangeColor(this.highlightColor, this.node)
@@ -83,4 +64,29 @@ export class GroundTile extends Component {
         return this.attachedClusters.reduce((count, cluster) => count + cluster.getTiles().length, 0);
     }
     
+
+    public select(touchWorldPos: Vec3) {
+        if (!this.isSelectable) return;
+        this.isDragging = true;
+        this.touchOffset = this.node.getWorldPosition().subtract(touchWorldPos);
+    }
+
+    public move(touchWorldPos: Vec3) {
+        if (!this.isDragging) return;
+        const newPosition = touchWorldPos.add(this.touchOffset);
+        newPosition.y += 0.2; // Y ekseninde yukarı konumlandırma için
+        this.node.setWorldPosition(newPosition);
+    }
+
+    public deselect() {
+        if (!this.isDragging) return;
+        this.isDragging = false;
+        this.resetPosition();
+    }
+
+    public resetPosition() {
+        tween(this.node)
+            .to(0.3, { position: this.originalPosition })
+            .start();
+    }
 }
