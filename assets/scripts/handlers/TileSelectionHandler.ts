@@ -49,7 +49,7 @@ export class TileSelectionHandler extends Component {
         if (this.selectedTile) {
             const placingTile = this.selectedTile;
             if (placingTile) {
-                // Selection done, trigger placement event.
+                // Seçim tamamlandı, yerleştirme etkinliği tetiklenir.
                 TileSelectionHandler.placementEvent.emit('placement', this.selectedTile);
             } else {
                 this.selectedTile.deselect();

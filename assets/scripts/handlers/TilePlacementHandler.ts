@@ -1,25 +1,16 @@
-import { _decorator, Component, Vec3 } from "cc";
-import { TileCluster } from "../core/TileCluster";
-import { GroundTile } from "../entity/GroundTile";
+import { _decorator, Component } from "cc";
+import { SelectableTiles } from "../entity/SelectableTiles";
 
-const { ccclass, property } = _decorator;
+const { ccclass } = _decorator;
 
 @ccclass("TilePlacementHandler")
 export class TilePlacementHandler extends Component {
-    async place(selectedCluster: TileCluster): Promise<boolean> {
-        const targetGround = selectedCluster.attachedGround;
-        if (!targetGround || !selectedCluster) return false;
+    async place(selectedTile: SelectableTiles): Promise<boolean> {
+        const targetGround = selectedTile.attachedGround; // SelectableTiles sınıfına bağlı GroundTile'a erişir
+        
+        if (!targetGround || !selectedTile) return false;
 
-        const cumulativeHeight = targetGround.getAllTileCount() * 0.2;
-
-        selectedCluster.node.removeFromParent();
-        selectedCluster.node.setParent(targetGround.node.parent);
-
-        selectedCluster.node.setPosition(targetGround.node.position.x, 0.2, targetGround.node.position.z);
-
-        targetGround.place(selectedCluster);
-        selectedCluster.attachedGround = targetGround;
-
+        targetGround.placeSelectableTile(selectedTile , targetGround);
         return true;
     }
 }

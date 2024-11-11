@@ -68,4 +68,13 @@ export class TileCluster extends Component {
     public getTiles(): Tile[] {
         return this.tiles;
     }
+
+    public placed(targetGround:GroundTile){
+        const tilesToAddCount = this.tiles.length;
+        for (let i = 0; i < tilesToAddCount; i++) {
+            const tile = this.tiles[i]
+            const worldPosition = targetGround.node.getWorldPosition();
+            tile.node.setWorldPosition(worldPosition);
+        } 
+    }
 }

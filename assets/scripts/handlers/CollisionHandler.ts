@@ -1,6 +1,7 @@
 import { _decorator, Component, Collider, ICollisionEvent } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
-import { TileCluster } from '../core/TileCluster';
+import { SelectableTiles } from '../entity/SelectableTiles';
+
 const { ccclass } = _decorator;
 
 @ccclass('CollisionHandler')
@@ -26,9 +27,17 @@ export class CollisionHandler extends Component {
     private onCollisionEnter(event: ICollisionEvent) {
         const otherNode = event.otherCollider.node;
         const groundTile = otherNode.getComponent(GroundTile);
+
         if (groundTile) {
             this.collidedGroundTile = groundTile;
-            this.node.getComponent(TileCluster).attachedGround = this.collidedGroundTile;            
+            
+            const selectableTiles = this.node.getComponent(SelectableTiles);
+            
+            if (selectableTiles) {
+                selectableTiles.attachedGround = this.collidedGroundTile;
+            }
+
+            // GroundTile'ı vurgula
             this.collidedGroundTile.highlight(true);
         }
     }
@@ -36,7 +45,9 @@ export class CollisionHandler extends Component {
     private onCollisionExit(event: ICollisionEvent) {
         const otherNode = event.otherCollider.node;
         const groundTile = otherNode.getComponent(GroundTile);
+
         if (groundTile && this.collidedGroundTile === groundTile) {
+            // Vurguyu kaldır
             this.collidedGroundTile.highlight(false);
             this.collidedGroundTile = null;
         }

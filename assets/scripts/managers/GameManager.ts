@@ -1,11 +1,12 @@
-import { _decorator, Color, Component, Node, } from "cc";
+// GameManager.ts
+import { _decorator, Component, Node, Color } from "cc";
 import { GridManager } from "./GridManager";
 import { NeighborChecker } from "../core/NeighborChecker";
 import { TileSelectionHandler } from "../handlers/TileSelectionHandler";
-import { TileCluster } from "../core/TileCluster";
 import { TilePlacementHandler } from "../handlers/TilePlacementHandler";
 import { TileTransferHandler } from "../handlers/TileTransferHandler";
 import { GroundTile } from "../entity/GroundTile";
+import { SelectableTiles } from "../entity/SelectableTiles";
 
 const { ccclass, property } = _decorator;
 
@@ -20,7 +21,6 @@ export class GameManager extends Component {
      private matchStackCount: number = 7;
      private neighborChecker: NeighborChecker;
      private tileTransferHandler: TileTransferHandler;
-
      private processedGrounds: GroundTile[] = [];
 
      onLoad(): void {
@@ -36,18 +36,22 @@ export class GameManager extends Component {
           this.tileTransferHandler = new TileTransferHandler();
      }
 
-     async onPlacementTriggered(selectedCluster: TileCluster) {
-          await this.handlePlacement(selectedCluster);
+     async onPlacementTriggered(selectedTile: SelectableTiles) {
+          await this.handlePlacement(selectedTile);
      }
 
-     async handlePlacement(selectedCluster: TileCluster) {
-          const placementSuccess = await this.tilePlacementHandler?.place(selectedCluster);
+     async handlePlacement(selectedTile: SelectableTiles) {
+          const placementSuccess = await this.tilePlacementHandler?.place(selectedTile);
           if (placementSuccess) {
+               return;
                const grid = this.gridManager.getGrid();
-               const matches = this.neighborChecker.findAllMatches(grid, selectedCluster.attachedGround);
+               const matches = this.neighborChecker.findAllMatches(grid, selectedTile.attachedGround);
                if (matches) {
                     for (const matchGround of matches) {
-                         await this.tileTransferHandler.transferClusterToTarget(matchGround.lastAttachedCluster, selectedCluster.attachedGround);
+                         await this.tileTransferHandler.transferClusterToTarget(
+                              matchGround.lastAttachedCluster,
+                              selectedTile.attachedGround
+                         );
                          this.processedGrounds.push(matchGround);
                     }
                     this.processAfterTransfers();
@@ -57,7 +61,6 @@ export class GameManager extends Component {
 
      processAfterTransfers() {
           const grid = this.gridManager.getGrid();
-
           for (const ground of this.processedGrounds) {
                console.log(`Processed GroundTile at (${ground.gridPosition.row}, ${ground.gridPosition.col})`);
 
@@ -71,10 +74,6 @@ export class GameManager extends Component {
                     }
                }
           }
-
-          // İşlem tamamlandıktan sonra dizi temizlenir
           this.processedGrounds = [];
      }
 }
-
-
