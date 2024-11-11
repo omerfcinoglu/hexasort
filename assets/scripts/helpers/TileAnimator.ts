@@ -8,7 +8,10 @@ export class TileAnimator {
     static async animateClusterTransfer(cluster: TileCluster, targetGround: GroundTile): Promise<void> {
         const tiles = cluster.getTiles();
         const baseTargetPosition = targetGround.node.worldPosition.clone();
-        let cumulativeHeight = (targetGround.getAllTileCount() + 1) * 0.2;
+        const tileCount = targetGround.getAllTileCount()
+        console.log(tileCount);
+        
+        let cumulativeHeight = (tileCount + 1) * 0.2;
 
         for (let i = tiles.length - 1; i >= 0; i--) {
             const tile = tiles[i];

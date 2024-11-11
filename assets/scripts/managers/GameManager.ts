@@ -62,14 +62,10 @@ export class GameManager extends Component {
 
                // Tüm eşleşen komşular için transfer işlemini sırayla yap
                for (const matchGround of matches) {
-                    console.log(selectedCluster.getTiles().length);
-                    
                     await this.tileTransferHandler.transferClusterToTarget(matchGround.lastAttachedCluster, selectedCluster.attachedGround);
 
                     // İşlenen ground tile'ları işaretle
                     this.processedGrounds.push(matchGround);
-                    console.log(selectedCluster.getTiles().length);
-
                }
 
                // Transfer işlemlerinden sonra `processedGrounds` dizisi üzerinde işlemler

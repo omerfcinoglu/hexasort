@@ -80,6 +80,7 @@ export class GroundTile extends Component {
     }
 
     getAllTileCount(): number {
-        return this.attachedClusters.reduce((total, cluster) => total + cluster.tileCount, 0);
+        return this.attachedClusters.reduce((count, cluster) => count + cluster.getTiles().length, 0);
     }
+    
 }
