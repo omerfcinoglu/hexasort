@@ -15,6 +15,8 @@ export class GroundTile extends Component {
     public isDragging: boolean = false;
     private touchOffset: Vec3 = new Vec3();
     public originalPosition: Vec3 = new Vec3();
+    public attachedGround: GroundTile | null = null;
+
 
     private defaultColor: Color = null;
     private highlightColor: Color = null;

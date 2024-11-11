@@ -43,6 +43,7 @@ export class GameManager extends Component {
      async handlePlacement(selectedCluster: TileCluster) {
           const placementSuccess = await this.tilePlacementHandler?.place(selectedCluster);
           if (placementSuccess) {
+               return;
                const grid = this.gridManager.getGrid();
                const matches = this.neighborChecker.findAllMatches(grid, selectedCluster.attachedGround);
 
