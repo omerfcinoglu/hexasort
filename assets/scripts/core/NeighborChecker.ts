@@ -10,10 +10,14 @@ export class NeighborChecker {
         const { row, col } = groundTile.gridPosition;
 
         const directions = [
-            { dRow: -1, dCol: 0 }, // üst
-            { dRow: 1, dCol: 0 },  // alt
-            { dRow: 0, dCol: -1 }, // sol
-            { dRow: 0, dCol: 1 }   // sağ
+            { dRow: -1, dCol: 0 },   // üst
+            { dRow: 1, dCol: 0 },    // alt
+            { dRow: 0, dCol: -1 },   // sol
+            { dRow: 0, dCol: 1 },    // sağ
+            { dRow: -1, dCol: -1 },  // sol üst
+            { dRow: -1, dCol: 1 },   // sağ üst
+            { dRow: 1, dCol: -1 },   // sol alt
+            { dRow: 1, dCol: 1 }     // sağ alt
         ];
 
         for (const { dRow, dCol } of directions) {

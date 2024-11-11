@@ -1,4 +1,4 @@
-import { _decorator, Color, Component, Node } from "cc";
+import { _decorator, Color, Component, Node ,} from "cc";
 import { GridManager } from "./GridManager";
 import { NeighborChecker } from "../core/NeighborChecker";
 import { TileSelectionHandler } from "../handlers/TileSelectionHandler";
@@ -16,7 +16,6 @@ export class GameManager extends Component {
 
      @property(TilePlacementHandler)
      tilePlacementHandler: TilePlacementHandler | null = null;
-
 
      private matchStackCount: number = 5;
      private neighborChecker: NeighborChecker;
@@ -60,24 +59,32 @@ export class GameManager extends Component {
                const grid = this.gridManager.getGrid();
                const matches = this.neighborChecker.findAllMatches(grid, selectedCluster.attachedGround);
 
-               // Tüm eşleşen komşular için transfer işlemini sırayla yap
                for (const matchGround of matches) {
                     await this.tileTransferHandler.transferClusterToTarget(matchGround.lastAttachedCluster, selectedCluster.attachedGround);
-
-                    // İşlenen ground tile'ları işaretle
                     this.processedGrounds.push(matchGround);
                }
-
-               // Transfer işlemlerinden sonra `processedGrounds` dizisi üzerinde işlemler
                this.processAfterTransfers();
           }
      }
 
-     // İşlem yapılmış ground tile'lar üzerinde işlem yapılır
      processAfterTransfers() {
+          const grid = this.gridManager.getGrid();
+          
           for (const ground of this.processedGrounds) {
                console.log(`Processed GroundTile at (${ground.gridPosition.row}, ${ground.gridPosition.col})`);
-               // Burada gerekli işlemleri yapabilirsiniz
+
+               // İşlenmiş her bir GroundTile'ın komşularını kontrol et
+               const neighbors = this.neighborChecker.findNeighbors(grid, ground);
+               for (const neighbor of neighbors) {
+                    // `some` metoduyla kontrol
+                    if (!this.processedGrounds.some(g => g === neighbor)) { 
+                         const tileCount = neighbor.getAllTileCount();
+                         if (tileCount >= this.matchStackCount) {
+                              console.log(`Neighbor GroundTile at (${neighbor.gridPosition.row}, ${neighbor.gridPosition.col}) matches stack count with ${tileCount} tiles.`);
+                              // Burada istediğiniz işlemi gerçekleştirebilirsiniz (örneğin, eşleşen komşuyu birleştirme, puan ekleme veya animasyon tetikleme)
+                         }
+                    }
+               }
           }
 
           // İşlem tamamlandıktan sonra dizi temizlenir

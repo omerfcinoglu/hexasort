@@ -33,7 +33,7 @@ export class TileCluster extends Component {
         for (let i = 0; i < tileCount; i++) {
             const tileNode = instantiate(this.tilePrefab);
             tileNode.parent = this.node;
-            tileNode.setPosition(new Vec3(0, i * 0.2, -i * 0.01));
+            tileNode.setPosition(new Vec3(0, i * 0.2,  -(i+1) * 0.02));
             const tileComp = tileNode.getComponent(Tile);
             if (tileComp) {
                 tileComp.init(this.type);
