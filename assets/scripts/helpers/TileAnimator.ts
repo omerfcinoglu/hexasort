@@ -13,19 +13,19 @@ export class TileAnimator {
         for (let i = tiles.length - 1; i >= 0; i--) {
             const tile = tiles[i];
             const targetPosition = new Vec3(baseTargetPosition.x, cumulativeHeight, baseTargetPosition.z - ( -(i+1) * 0.01));
-            const liftedPosition = new Vec3(tile.node.position.x, cumulativeHeight + 0.5, tile.node.position.y);
+            const liftedPosition = new Vec3(tile.node.position.x, cumulativeHeight + 0.1, tile.node.position.y);
             const targetRotation = new Quat();
             Quat.fromEuler(targetRotation, 0, 0, -180);
 
             await new Promise<void>((resolve) => {
                 tween(tile.node)
                     .parallel(
-                        tween().to(0.2, { position: liftedPosition } , {easing:'cubicOut'}),   
-                        tween().to(0.2, { rotation: targetRotation })  
+                        tween().to(0.125, { position: liftedPosition } , {easing:'cubicOut'}),   
+                        tween().to(0.125, { rotation: targetRotation } , {easing:'quadOut'})
                     )
                     .call(() => {
                         tween(tile.node)
-                            .to(0.1, { worldPosition: targetPosition })
+                            .to(0.125, { worldPosition: targetPosition })
                             .call(resolve)
                             .start();
                     })

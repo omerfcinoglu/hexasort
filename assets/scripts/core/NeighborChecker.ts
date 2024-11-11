@@ -41,6 +41,19 @@ export class NeighborChecker {
         return null;
     }
 
+    public findAllMatches(grid: GroundTile[][], targetGround: GroundTile): GroundTile[] {
+        const neighbors = this.findNeighbors(grid, targetGround);
+        const matchingNeighbors: GroundTile[] = [];
+
+        for (const neighbor of neighbors) {
+            if (neighbor.lastAttachedCluster?.type === targetGround.lastAttachedCluster?.type) {
+                matchingNeighbors.push(neighbor);
+            }
+        }
+
+        return matchingNeighbors;
+    }
+
     private getGroundTile(grid: GroundTile[][],  row: number, col: number): GroundTile | null {
         if (grid[row] && grid[row][col]) {
             return grid[row][col];

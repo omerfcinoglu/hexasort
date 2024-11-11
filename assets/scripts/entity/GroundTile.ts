@@ -32,9 +32,12 @@ export class GroundTile extends Component {
     }
 
     async transferTiles(cluster: TileCluster) {
+        console.log("ABDSS");
+        
         this.lastAttachedCluster.transferTiles(cluster.getTiles());
         const isMatch = await this.lastAttachedCluster.isMatch();
         if(isMatch){
+            this.attachedClusters = [];
             this.setActiveCollider(true);
         }
     }
