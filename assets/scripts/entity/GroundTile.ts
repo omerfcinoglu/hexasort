@@ -11,22 +11,19 @@ export class GroundTile extends Component {
     public attachedClusters: TileCluster[] = [];
     public lastAttachedCluster: TileCluster = null;
 
-    public isSelectable : boolean = false;
-    public isDragging: boolean = false;
-    private touchOffset: Vec3 = new Vec3();
-    public originalPosition: Vec3 = new Vec3();
-    public attachedGround: GroundTile | null = null;
-
-
     private defaultColor: Color = null;
     private highlightColor: Color = null;
 
     onLoad() {
-        this.originalPosition = this.node.getPosition().clone();
 
         this.highlightColor = ColorProvider.getInstance().getColor(7);
         this.defaultColor = ColorProvider.getInstance().getColor(6);
         this.highlight(false);
+    }
+
+    addTileCluster(tileCluster: TileCluster) {
+        this.attachedClusters.push(tileCluster); // TileCluster'ı listeye ekler
+        tileCluster.node.parent = this.node; // TileCluster'ın parent'ını GroundTile yapar
     }
 
     public setActiveCollider(value: boolean) {
@@ -67,28 +64,5 @@ export class GroundTile extends Component {
     }
     
 
-    public select(touchWorldPos: Vec3) {
-        if (!this.isSelectable) return;
-        this.isDragging = true;
-        this.touchOffset = this.node.getWorldPosition().subtract(touchWorldPos);
-    }
 
-    public move(touchWorldPos: Vec3) {
-        if (!this.isDragging) return;
-        const newPosition = touchWorldPos.add(this.touchOffset);
-        newPosition.y += 0.2; // Y ekseninde yukarı konumlandırma için
-        this.node.setWorldPosition(newPosition);
-    }
-
-    public deselect() {
-        if (!this.isDragging) return;
-        this.isDragging = false;
-        this.resetPosition();
-    }
-
-    public resetPosition() {
-        tween(this.node)
-            .to(0.3, { position: this.originalPosition })
-            .start();
-    }
 }

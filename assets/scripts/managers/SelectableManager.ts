@@ -1,61 +1,68 @@
 import { _decorator, Component, Node, Prefab, Vec3, instantiate, tween } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
+import { TileCluster } from '../core/TileCluster';
+import { SelectableTiles } from '../entity/SelectableTiles';
+
 const { ccclass, property } = _decorator;
 
 @ccclass("SelectableManager")
 export class SelectableManager extends Component {
 
     @property(Prefab)
-    groundTilePrefab: Prefab = null!;
-
+    selectableTilesPrefab: Prefab = null!; // SelectableTiles prefab'ına erişim
+    @property(Prefab)
+    tileClusterPrefab: Prefab = null!; // SelectableTiles prefab'ına erişim
     @property(Node)
     public selectableArea: Node = null!;
 
     @property
-    tileCount: number = 3; // Seçilebilir GroundTile sayısı
-
-    private groundTiles: GroundTile[] = [];
+    tilesCount: number = 3; // Kaç tane SelectableTiles nesnesi oluşturulacak
 
     onLoad() {
-        this.createSelectableGroundTiles();
+        this.createSelectableTiles();
     }
 
-    createSelectableGroundTiles() {
-        const startX = - (this.tileCount - 1) * 1.5; // X ekseninde başlangıç pozisyonu ayarı
+    createSelectableTiles() {
+        const startX = - (this.tilesCount - 1) * 1.5; // X ekseninde başlangıç pozisyonu ayarı
 
-        for (let i = 0; i < this.tileCount; i++) {
-            const position = new Vec3(startX + i * 3, 0, 0); // Her bir tile'ın pozisyonu
-            const groundTileNode = instantiate(this.groundTilePrefab);
-            groundTileNode.parent = this.selectableArea;
-            groundTileNode.setPosition(position.clone().add3f(10, 0, 0)); // Animasyon için başlangıç pozisyonu
+        for (let i = 0; i < this.tilesCount; i++) {
+            // Her bir SelectableTiles için pozisyon belirle
+            const position = new Vec3(startX + i * 3, 0, 0);
+            const selectableTileNode = instantiate(this.selectableTilesPrefab);
+            selectableTileNode.parent = this.selectableArea;
+            selectableTileNode.setPosition(position.clone().add3f(10, 0, 0)); // Animasyon için başlangıç pozisyonu
 
-            const groundTile = groundTileNode.getComponent(GroundTile);
-            groundTile.isSelectable=true;
-            if (groundTile) {
-                this.groundTiles.push(groundTile);
+            const selectableTile = selectableTileNode.getComponent(SelectableTiles);
+            if (selectableTile) {
+                this.addRandomClusters(selectableTile);
 
-                // Animasyon ile hedef pozisyona taşır
-                tween(groundTileNode)
+                // Animasyon ile hedef pozisyona taşı
+                tween(selectableTileNode)
                     .to(0.5, { position: position })
                     .start();
             }
         }
     }
 
-    // Belirli bir GroundTile seçildiğinde çağrılabilir
-    removeGroundTile(groundTile: GroundTile) {
-        const index = this.groundTiles.indexOf(groundTile);
-        if (index !== -1) {
-            this.groundTiles.splice(index, 1);
-            groundTile.node.destroy();
-            this.checkAndRefillGroundTiles();
-        }
-    }
+    // Her SelectableTile nesnesine rastgele TileCluster'lar ekler
+    addRandomClusters(selectableTile: SelectableTiles) {
+        const clusterCount = Math.floor(Math.random() * 4); // 0-3 arasında rastgele cluster sayısı
 
-    // Seçilebilir GroundTile sayısı azaldığında yenilerini oluşturur
-    checkAndRefillGroundTiles() {
-        if (this.groundTiles.length < this.tileCount) {
-            this.createSelectableGroundTiles();
+        for (let i = 0; i < clusterCount; i++) {
+            const tileClusterNode = instantiate(this.tileClusterPrefab);
+            tileClusterNode.parent = selectableTile.node;
+
+            const cluster = tileClusterNode.getComponent(TileCluster);
+            if (cluster) {
+                const tileType = Math.floor(Math.random() * 4); // 0-3 arasında rastgele tile tipi
+                const tileCount = Math.floor(Math.random() * 4); // 0-3 arasında rastgele tile sayısı
+                cluster.initCluster(tileType, tileCount);
+
+                // Yüksekliği cluster sayısına göre ayarla
+                const clusterPosition = new Vec3(0, i * 1.2, 0);
+                tileClusterNode.setPosition(clusterPosition);
+                selectableTile.tileClusters.push(cluster);
+            }
         }
     }
 }

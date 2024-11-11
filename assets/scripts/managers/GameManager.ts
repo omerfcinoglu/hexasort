@@ -1,4 +1,4 @@
-import { _decorator, Color, Component, Node ,} from "cc";
+import { _decorator, Color, Component, Node, } from "cc";
 import { GridManager } from "./GridManager";
 import { NeighborChecker } from "../core/NeighborChecker";
 import { TileSelectionHandler } from "../handlers/TileSelectionHandler";
@@ -43,27 +43,27 @@ export class GameManager extends Component {
      async handlePlacement(selectedCluster: TileCluster) {
           const placementSuccess = await this.tilePlacementHandler?.place(selectedCluster);
           if (placementSuccess) {
-               return;
                const grid = this.gridManager.getGrid();
                const matches = this.neighborChecker.findAllMatches(grid, selectedCluster.attachedGround);
-
-               for (const matchGround of matches) {
-                    await this.tileTransferHandler.transferClusterToTarget(matchGround.lastAttachedCluster, selectedCluster.attachedGround);
-                    this.processedGrounds.push(matchGround);
+               if (matches) {
+                    for (const matchGround of matches) {
+                         await this.tileTransferHandler.transferClusterToTarget(matchGround.lastAttachedCluster, selectedCluster.attachedGround);
+                         this.processedGrounds.push(matchGround);
+                    }
+                    this.processAfterTransfers();
                }
-               this.processAfterTransfers();
           }
      }
 
      processAfterTransfers() {
           const grid = this.gridManager.getGrid();
-          
+
           for (const ground of this.processedGrounds) {
                console.log(`Processed GroundTile at (${ground.gridPosition.row}, ${ground.gridPosition.col})`);
 
                const neighbors = this.neighborChecker.findNeighbors(grid, ground);
                for (const neighbor of neighbors) {
-                    if (!this.processedGrounds.some(g => g === neighbor)) { 
+                    if (!this.processedGrounds.some(g => g === neighbor)) {
                          const tileCount = neighbor.getAllTileCount();
                          if (tileCount >= this.matchStackCount) {
                               console.log(`Neighbor GroundTile at (${neighbor.gridPosition.row}, ${neighbor.gridPosition.col}) matches stack count with ${tileCount} tiles.`);

@@ -1,7 +1,7 @@
-import { _decorator, Component, EventTouch, Vec3, Node, geometry, Game, EventTarget } from 'cc';
-import { TileCluster } from '../core/TileCluster';
+import { _decorator, Component, EventTouch, Vec3, Node, geometry, EventTarget } from 'cc';
 import { InputProvider } from '../input/InputProvider';
-import { GroundTile } from '../entity/GroundTile';
+import { SelectableTiles } from '../entity/SelectableTiles';
+
 const { ccclass, property } = _decorator;
 
 @ccclass('TileSelectionHandler')
@@ -9,7 +9,7 @@ export class TileSelectionHandler extends Component {
     @property(InputProvider)
     inputProvider: InputProvider | null = null;
 
-    public selectedGroundTile: GroundTile | null = null;
+    public selectedTile: SelectableTiles | null = null;
     public static placementEvent = new EventTarget();
 
     onLoad() {
@@ -23,52 +23,47 @@ export class TileSelectionHandler extends Component {
         this.inputProvider.onTouchEnd = this.handleTouchEnd.bind(this);
     }
 
-    onTileSelected(selectedCluster: TileCluster, targetGround: GroundTile) {
-        if (selectedCluster && targetGround) {
-        }
-    }
     private handleTouchStart(event: EventTouch) {
         const touchPos = event.getLocation();
         const touchPos3D = new Vec3(touchPos.x, touchPos.y, 0);
         const hitNode = this.performRaycast(touchPos3D);
 
         if (hitNode) {
-            const groundTile = this.getTileClusterFromNode(hitNode);
-            if (groundTile && groundTile.isSelectable) {
+            const selectableTile = this.getSelectableTileFromNode(hitNode);
+            if (selectableTile && selectableTile.isSelectable) {
                 const touchWorldPos = this.getTouchWorldPosition(event);
-                groundTile.select(touchWorldPos);
-                this.selectedGroundTile = groundTile;
+                selectableTile.select(touchWorldPos);
+                this.selectedTile = selectableTile;
             }
         }
     }
 
     private handleTouchMove(event: EventTouch) {
-        if (this.selectedGroundTile) {
+        if (this.selectedTile) {
             const touchWorldPos = this.getTouchWorldPosition(event);
-            this.selectedGroundTile.move(touchWorldPos);
+            this.selectedTile.move(touchWorldPos);
         }
     }
 
     private handleTouchEnd(event: EventTouch) {
-        if (this.selectedGroundTile) {
-            const placingGroundTile = this.selectedGroundTile;
-            if (placingGroundTile) {
-                // selection done trigger Event.
-                TileSelectionHandler.placementEvent.emit('placement', this.selectedGroundTile);
+        if (this.selectedTile) {
+            const placingTile = this.selectedTile;
+            if (placingTile) {
+                // Selection done, trigger placement event.
+                TileSelectionHandler.placementEvent.emit('placement', this.selectedTile);
+            } else {
+                this.selectedTile.deselect();
             }
-            else {
-                this.selectedGroundTile.deselect();
-            }
-            this.selectedGroundTile = null;
+            this.selectedTile = null;
         }
     }
 
-    private getTileClusterFromNode(node: Node): GroundTile | null {
+    private getSelectableTileFromNode(node: Node): SelectableTiles | null {
         let currentNode: Node | null = node;
         while (currentNode) {
-            const selectableGroundTile = currentNode.getComponent(GroundTile);
-            if (selectableGroundTile) {
-                return selectableGroundTile;
+            const selectableTile = currentNode.getComponent(SelectableTiles);
+            if (selectableTile) {
+                return selectableTile;
             }
             currentNode = currentNode.parent;
         }

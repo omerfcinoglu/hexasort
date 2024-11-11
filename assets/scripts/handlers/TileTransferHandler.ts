@@ -21,7 +21,6 @@ export class TileTransferHandler {
 
 
         // await targetGround.transferTiles(cluster);
-        cluster.isSelectable = false; 
     }
 
     private calculateDirection(preGround: GroundTile, targetGround: GroundTile): string {

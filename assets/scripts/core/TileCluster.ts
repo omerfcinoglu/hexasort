@@ -14,14 +14,9 @@ export class TileCluster extends Component {
     public tileCount: number = 0;
 
     private tiles: Tile[] = [];
-    private touchOffset: Vec3 = new Vec3();
     public type: number = null;
-    public isSelectable: boolean = true;
-    public isDragging: boolean = false;
-    public originalPosition: Vec3 = new Vec3();
     public attachedGround: GroundTile | null = null;
     onLoad() {
-        this.originalPosition = this.node.getPosition().clone();
     }
 
     public initCluster(type: number, tileCount: number) {
@@ -56,7 +51,6 @@ export class TileCluster extends Component {
     public setActiveCollider(value: boolean) {
         this.node.getComponent(Collider).enabled = value;
     }
-    //rename this shit
     async isMatch() : Promise<boolean>  {
         if(this.tiles.length === 5){
             await TileAnimator.animateTilesToZeroScale(this.tiles);
@@ -73,30 +67,5 @@ export class TileCluster extends Component {
 
     public getTiles(): Tile[] {
         return this.tiles;
-    }
-
-    public select(touchWorldPos: Vec3) {
-        if (!this.isSelectable) return;
-        this.isDragging = true;
-        this.touchOffset = this.node.getWorldPosition().subtract(touchWorldPos);
-    }
-
-    public move(touchWorldPos: Vec3) {
-        if (!this.isDragging) return;
-        const newPosition = touchWorldPos.add(this.touchOffset);
-        newPosition.y += 0.2; // Y ekseninde yukarı konumlandırma için
-        this.node.setWorldPosition(newPosition);
-    }
-
-    public deselect() {
-        if (!this.isDragging) return;
-        this.isDragging = false;
-        this.resetPosition();
-    }
-
-    public resetPosition() {
-        tween(this.node)
-            .to(0.3, { position: this.originalPosition })
-            .start();
     }
 }
