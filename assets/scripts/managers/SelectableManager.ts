@@ -33,7 +33,7 @@ export class SelectableManager extends Component {
 
             const cluster = clusterNode.getComponent(TileCluster);
             if (cluster) {
-                cluster.initCluster(1 , 3);
+                cluster.initCluster(2 , 3);
                 cluster.originalPosition = position.clone();
                 cluster.isSelectable = true;
                 this.clusters.push(cluster);

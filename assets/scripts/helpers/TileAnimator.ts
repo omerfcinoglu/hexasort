@@ -17,13 +17,13 @@ export class TileAnimator {
             const targetPosition = new Vec3(baseTargetPosition.x, cumulativeHeight + 0.1, baseTargetPosition.z + (i*0.02));
             console.log(targetPosition);
             
-            const liftedPosition = new Vec3(tile.node.position.x, cumulativeHeight + 1.5, tile.node.position.y);
+            const liftedPosition = new Vec3(tile.node.position.x, cumulativeHeight + 1, tile.node.position.y);
             const targetRotation = TileAnimator.getRotationForDirection('left');
 
             await new Promise<void>((resolve) => {
                 tween(tile.node)
                     .parallel(
-                        tween().to(0.125, { position: liftedPosition }, { easing: 'cubicOut' }),
+                        tween().to(0.1, { position: liftedPosition }, { easing: 'cubicOut' }),
                         tween().to(0.125, { rotation: targetRotation }, { easing: 'quadOut' })
                     )
                     .call(() => {
