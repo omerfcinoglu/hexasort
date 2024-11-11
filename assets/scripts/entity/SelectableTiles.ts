@@ -18,7 +18,6 @@ export class SelectableTiles extends Component {
     public attachedGround: GroundTile | null = null;
 
     protected onLoad(): void {
-        this.originalPosition = this.node.getPosition().clone();
     }
     public select(touchWorldPos: Vec3) {
         if (!this.isSelectable) return;
