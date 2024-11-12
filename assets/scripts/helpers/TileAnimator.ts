@@ -5,7 +5,7 @@ import { GroundTile } from '../entity/GroundTile';
 
 export class TileAnimator {
 
-    static async animateClusterTransfer(cluster: TileCluster, targetGround: GroundTile, direction: string): Promise<void> {
+    static async animateClusterTransfer(cluster: TileCluster, targetGround: GroundTile): Promise<void> {
         const tiles = cluster.getTiles();
         const baseTargetPosition = targetGround.node.worldPosition.clone();
         const tileCount = targetGround.getAllTileCount();
@@ -15,10 +15,8 @@ export class TileAnimator {
         for (let i = tiles.length - 1; i >= 0; i--) {
             const tile = tiles[i];
             const targetPosition = new Vec3(baseTargetPosition.x, cumulativeHeight + 0.1, baseTargetPosition.z + (i*0.02));
-            console.log(targetPosition);
-            
             const liftedPosition = new Vec3(tile.node.position.x, cumulativeHeight + 1, tile.node.position.y);
-            const targetRotation = TileAnimator.getRotationForDirection('left');
+            const targetRotation = Quat.fromEuler(new Quat(), 0, 0, -180);
 
             await new Promise<void>((resolve) => {
                 tween(tile.node)
@@ -37,27 +35,6 @@ export class TileAnimator {
 
             cumulativeHeight += 0.2;
         }
-    }
-
-    private static getRotationForDirection(direction: string): Quat {
-        const targetRotation = new Quat();
-        switch (direction) {
-            case 'up':
-                Quat.fromEuler(targetRotation, 0, 180, 0);
-                break;
-            case 'down':
-                Quat.fromEuler(targetRotation, 0, -180, 0);
-                break;
-            case 'left':
-                Quat.fromEuler(targetRotation, 0, 0, -180);
-                break;
-            case 'right':
-                Quat.fromEuler(targetRotation, 0, 0, 180);
-                break;
-            default:
-                Quat.fromEuler(targetRotation, 0, 0, 0); // varsayılan rotasyon
-        }
-        return targetRotation;
     }
 
     static async animateTilesToZeroScale(tiles: Tile[]): Promise<void> {

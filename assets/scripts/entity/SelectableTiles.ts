@@ -55,8 +55,6 @@ export class SelectableTiles extends Component {
      * Resets the tile to its original position with animation.
      */
     public resetPosition() {
-        console.log(this.originalPosition);
-        
         tween(this.node)
             .to(0.3, { worldPosition: this.originalPosition })
             .start();

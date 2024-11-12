@@ -1,8 +1,7 @@
 // TilePlacementHandler.ts
 import { _decorator, Component, Vec3 } from "cc";
-import { TileCluster } from "../core/TileCluster";
-import { GroundTile } from "../entity/GroundTile";
 import { SelectableTiles } from "../entity/SelectableTiles";
+import { SelectableManager } from "../managers/SelectableManager";
 
 const { ccclass, property } = _decorator;
 
@@ -13,7 +12,7 @@ export class TilePlacementHandler extends Component {
      * @param selectedTile The selected SelectableTiles instance to be placed.
      * @returns A promise resolving to true if placement is successful, otherwise false.
      */
-    async place(selectedTile: SelectableTiles): Promise<boolean> {
+    async place(selectedTile: SelectableTiles , selectableManager : SelectableManager): Promise<boolean> {
         const targetGround = selectedTile.attachedGround;
         if (!targetGround || !selectedTile) return false;
 
@@ -35,6 +34,7 @@ export class TilePlacementHandler extends Component {
 
         selectedTile.attachedGround = targetGround;
 
+        selectableManager.remove(selectedTile);
         return true;
     }
 }

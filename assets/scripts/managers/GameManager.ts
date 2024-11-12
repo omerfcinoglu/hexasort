@@ -7,6 +7,7 @@ import { TilePlacementHandler } from "../handlers/TilePlacementHandler";
 import { TileTransferHandler } from "../handlers/TileTransferHandler";
 import { GroundTile } from "../entity/GroundTile";
 import { SelectableTiles } from "../entity/SelectableTiles";
+import { SelectableManager } from "./SelectableManager";
 
 const { ccclass, property } = _decorator;
 
@@ -18,6 +19,9 @@ export class GameManager extends Component {
      @property(TilePlacementHandler)
      tilePlacementHandler: TilePlacementHandler | null = null;
 
+     @property(SelectableManager)
+     private selectableManager : SelectableManager | null = null;
+
      private matchStackCount: number = 7; // The maximum stack count required to form a match
      private neighborChecker: NeighborChecker | null = null;
      private tileTransferHandler: TileTransferHandler | null = null;
@@ -27,7 +31,7 @@ export class GameManager extends Component {
           // Initialize instances of `NeighborChecker` and `TileTransferHandler`
           this.neighborChecker = new NeighborChecker();
           this.tileTransferHandler = new TileTransferHandler();
-
+          if(this.selectableManager) this.selectableManager.init();
           // Listen for selection events through `TileSelectionHandler`
           TileSelectionHandler.placementEvent.on('placement', this.onPlacementTriggered, this);
      }
@@ -50,16 +54,13 @@ export class GameManager extends Component {
       * @param selectedTile The `SelectableTiles` object being placed
       */
      async handlePlacement(selectedTile: SelectableTiles) {
-          const placementSuccess = await this.tilePlacementHandler?.place(selectedTile);
+          const placementSuccess = await this.tilePlacementHandler?.place(selectedTile , this.selectableManager);
           if (placementSuccess) {
                const grid = this.gridManager!.getGrid();
                const typeMatches = this.neighborChecker?.findAllMatches(grid, selectedTile) || [];
-               console.log(typeMatches);
                
                if (typeMatches.length > 0) {
                     for (const matchGround of typeMatches) {
-                         console.log(matchGround.lastAttachedCluster);
-                         
                          await this.tileTransferHandler?.transferClusterToTarget(
                               matchGround.lastAttachedCluster,
                               selectedTile.attachedGround!
@@ -76,10 +77,7 @@ export class GameManager extends Component {
       */
      private processAfterTransfers() {
           const grid = this.gridManager!.getGrid();
-
           for (const ground of this.processedGrounds) {
-               console.log(`Processed GroundTile at (${ground.gridPosition.row}, ${ground.gridPosition.col})`);
-
                const neighbors = this.neighborChecker?.findNeighbors(grid, ground) || [];
                for (const neighbor of neighbors) {
                     if (!this.processedGrounds.some(g => g === neighbor)) {
