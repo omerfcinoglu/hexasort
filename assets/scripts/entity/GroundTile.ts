@@ -63,6 +63,7 @@ export class GroundTile extends Component {
             this.lastAttachedCluster = null;
             this.setActiveCollider(true);
         }
+
     }
 
     public highlight(flag: boolean) {

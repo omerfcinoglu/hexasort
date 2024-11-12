@@ -66,12 +66,12 @@ export class TileAnimator {
     
         // Define two target positions for the last tile
         const position1 = new Vec3(0,  2, 2); // Replace with the desired first position
-        const position2 = new Vec3(-2.5, 5.7, 2); // Replace with the desired second position
+        const position2 = new Vec3(-2.5, 5, 2); // Replace with the desired second position
     
         // Move the last tile to the first position
         await new Promise<void>((resolve) => {
             tween(lastTile.node)
-                .to(0.3, { position: position1 } , {easing:"cubicOut"})
+                .to(0.3, { worldPosition: position1 } , {easing:"cubicOut"})
                 .call(resolve)
                 .start();
         });
@@ -79,10 +79,10 @@ export class TileAnimator {
         // Move the last tile to the second position
         await new Promise<void>((resolve) => {
             tween(lastTile.node)
-                .to(0.3, { position: position2 } , {easing:"expoIn"})
+                .to(0.3, { worldPosition: position2 } , {easing:"expoIn"})
                 .call(() => {
                     ScoreManager.getInstance().addScore(10);
-                    resolve
+                    resolve()
                 })
                 .start();
         });

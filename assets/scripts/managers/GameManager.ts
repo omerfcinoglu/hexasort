@@ -9,6 +9,7 @@ import { GroundTile } from "../entity/GroundTile";
 import { SelectableTiles } from "../entity/SelectableTiles";
 import { SelectableManager } from "./SelectableManager";
 import { TileAnimator } from "../helpers/TileAnimator";
+import { TileCluster } from "../core/TileCluster";
 
 const { ccclass, property } = _decorator;
 
@@ -26,7 +27,6 @@ export class GameManager extends Component {
      private matchStackCount: number = 7; // The maximum stack count required to form a match
      private neighborChecker: NeighborChecker | null = null;
      private tileTransferHandler: TileTransferHandler | null = null;
-     private processedGrounds: GroundTile[] = []; // Stores processed GroundTile objects
 
      onLoad(): void {
           // Initialize instances of `NeighborChecker` and `TileTransferHandler`
@@ -61,15 +61,15 @@ export class GameManager extends Component {
                const typeMatches = this.neighborChecker?.findAllMatches(grid, selectedTile) || [];
                const selectedTileGround = selectedTile.attachedGround;
                if (typeMatches.length > 0) {
-                    console.log(typeMatches);
+                    const processedGrounds : GroundTile[] = [];
                     for (const matchGround of typeMatches) {
                          await this.tileTransferHandler?.transferClusterToTarget(
                               matchGround.lastAttachedCluster,
                               selectedTileGround!
                          );
-                         this.processedGrounds.push(matchGround);
+                         processedGrounds.push(matchGround)
                     }
-                    await this.processAfterTransfers();
+                    await this.processAfterTransfers(processedGrounds);
                }
           }
      }
@@ -77,23 +77,20 @@ export class GameManager extends Component {
      /**
       * After transfers are processed, this function checks `processedGrounds` for additional matches.
       */
-     private async processAfterTransfers() {
+     private async processAfterTransfers(processedGrounds : GroundTile[] ) {
           const grid = this.gridManager!.getGrid();
-          for (const ground of this.processedGrounds) {
+          for (const ground of processedGrounds) {
                const neighbors = this.neighborChecker?.findNeighbors(grid, ground) || [];
                for (const neighbor of neighbors) {
-                    if (!this.processedGrounds.some(g => g === neighbor)) {
+                    if (!processedGrounds.some(g => g === neighbor)) {
                          const tileCount = neighbor.getAllTileCount();
                          if (tileCount >= this.matchStackCount) {
-                              console.log(`Neighbor GroundTile at (${neighbor.gridPosition.row}, ${neighbor.gridPosition.col}) matches stack count with ${tileCount} tiles.`);
                               for (const cluster of neighbor.attachedClusters) {
                                    await TileAnimator.animateTilesToZeroScale(cluster.getTiles());
                               }
-
                          }
                     }
                }
           }
-          this.processedGrounds = [];
      }
 }

@@ -18,6 +18,8 @@ export class TilePlacementHandler extends Component {
 
         // Calculate cumulative height based on existing clusters on the ground tile
         const cumulativeHeight = targetGround.getAllTileCount() * 0.2;
+        console.log(targetGround.getAllTileCount());
+        
 
         // Remove the selected tile from its parent and attach it to the target ground tile’s parent node
         selectedTile.node.removeFromParent();

@@ -37,8 +37,7 @@ export class CollisionHandler extends Component {
                 selectableTiles.attachedGround = this.collidedGroundTile;
             }
 
-            // GroundTile'ı vurgula
-            this.collidedGroundTile.highlight(true);
+            // this.collidedGroundTile.highlight(true);
         }
     }
 
@@ -48,7 +47,7 @@ export class CollisionHandler extends Component {
 
         if (groundTile && this.collidedGroundTile === groundTile) {
             // Vurguyu kaldır
-            this.collidedGroundTile.highlight(false);
+            // this.collidedGroundTile.highlight(false);
             this.collidedGroundTile = null;
         }
     }
