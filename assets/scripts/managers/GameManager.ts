@@ -61,7 +61,7 @@ export class GameManager extends Component {
                const typeMatches = this.neighborChecker?.findAllMatches(grid, selectedTile) || [];
                const selectedTileGround = selectedTile.attachedGround;
                if (typeMatches.length > 0) {
-                    const processedGrounds : GroundTile[] = [];
+                    const processedGrounds: GroundTile[] = [];
                     for (const matchGround of typeMatches) {
                          await this.tileTransferHandler?.transferClusterToTarget(
                               matchGround.lastAttachedCluster,
@@ -77,18 +77,27 @@ export class GameManager extends Component {
      /**
       * After transfers are processed, this function checks `processedGrounds` for additional matches.
       */
-     private async processAfterTransfers(processedGrounds : GroundTile[] ) {
+     async processAfterTransfers(initialProcessedGrounds: GroundTile[]) {
           const grid = this.gridManager!.getGrid();
-          for (const ground of processedGrounds) {
-               const neighbors = this.neighborChecker?.findNeighbors(grid, ground) || [];
+          const queue: GroundTile[] = [...initialProcessedGrounds]; // Initialize with the first processed grounds
+
+          while (queue.length > 0) {
+               const currentGround = queue.shift();
+               const neighbors = this.neighborChecker?.findNeighbors(grid, currentGround) || [];
+
                for (const neighbor of neighbors) {
-                    if (!processedGrounds.some(g => g === neighbor)) {
-                         const tileCount = neighbor.getAllTileCount();
-                         if (tileCount >= this.matchStackCount) {
-                              for (const cluster of neighbor.attachedClusters) {
-                                   await TileAnimator.animateTilesToZeroScale(cluster.getTiles());
-                              }
+                    // Use `find` to check if the neighbor is already in the queue or initialProcessedGrounds
+                    if (queue.find(g => g === neighbor) || initialProcessedGrounds.find(g => g === neighbor)) continue;
+
+                    const tileCount = neighbor.getAllTileCount();
+                    if (tileCount >= this.matchStackCount) {
+                         for (const cluster of neighbor.attachedClusters) {
+                              // Animate tiles to zero scale, indicating a match removal
+                              await TileAnimator.animateTilesToZeroScale(cluster.getTiles());
+                              // Remove the tile clusters after animation
+                              neighbor.removeTileCluster(cluster);
                          }
+                         queue.push(neighbor); // Add neighbor to queue to process its neighbors in next iterations
                     }
                }
           }
