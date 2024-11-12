@@ -22,9 +22,6 @@ export class SelectableManager extends Component {
 
     onLoad() {
         this.createSelectableTiles();
-        this.selectableTiles.forEach((entry, index) => {
-            console.log(`Type of entry at index ${index}:`, entry);
-        });
     }
 
     createSelectableTiles() {
@@ -40,6 +37,8 @@ export class SelectableManager extends Component {
 
             const selectableTile = selectableTileNode.getComponent(SelectableTiles);
             if (selectableTile) {
+                const pos = selectableTileNode.getWorldPosition().clone();
+                selectableTile.originalPosition = pos;
                 this.addRandomClusters(selectableTile);
                 this.selectableTiles.push(selectableTile);
             }
@@ -48,18 +47,17 @@ export class SelectableManager extends Component {
 
     // Her SelectableTile nesnesine rastgele TileCluster'lar ekler
     addRandomClusters(selectableTile: SelectableTiles) {
-        const clusterCount = Math.floor(Math.random() * 4)+1; // 0-3 arasında rastgele cluster sayısı
+        const clusterCount = Math.floor(Math.random() * 4) + 1; // 0-3 arasında rastgele cluster sayısı
 
         for (let i = 0; i < clusterCount; i++) {
+            const tileType = Math.floor(Math.random() * 4) + 1; // 1-4 arasında rastgele tile tipi
+            const tileCount = Math.floor(Math.random() * 4) + 2; // 1-4 arasında rastgele tile sayısı
             const tileClusterNode = instantiate(this.tileClusterPrefab);
             tileClusterNode.parent = selectableTile.node;
 
             const cluster = tileClusterNode.getComponent(TileCluster);
             if (cluster) {
-                const tileType = Math.floor(Math.random() * 4) + 1; // 1-4 arasında rastgele tile tipi
-                const tileCount = Math.floor(Math.random() * 4) + 1; // 1-4 arasında rastgele tile sayısı
                 cluster.initCluster(tileType, tileCount);
-
                 selectableTile.tileClusters.push(cluster);
             }
         }

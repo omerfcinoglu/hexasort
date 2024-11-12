@@ -1,5 +1,5 @@
 // GameManager.ts
-import { _decorator, Component, Node, Color } from "cc";
+import { _decorator, Component, Node, Color, CylinderCollider } from "cc";
 import { GridManager } from "./GridManager";
 import { NeighborChecker } from "../core/NeighborChecker";
 import { TileSelectionHandler } from "../handlers/TileSelectionHandler";
@@ -18,39 +18,51 @@ export class GameManager extends Component {
      @property(TilePlacementHandler)
      tilePlacementHandler: TilePlacementHandler | null = null;
 
-     private matchStackCount: number = 7;
-     private neighborChecker: NeighborChecker;
-     private tileTransferHandler: TileTransferHandler;
-     private processedGrounds: GroundTile[] = [];
+     private matchStackCount: number = 7; // The maximum stack count required to form a match
+     private neighborChecker: NeighborChecker | null = null;
+     private tileTransferHandler: TileTransferHandler | null = null;
+     private processedGrounds: GroundTile[] = []; // Stores processed GroundTile objects
 
      onLoad(): void {
+          // Initialize instances of `NeighborChecker` and `TileTransferHandler`
+          this.neighborChecker = new NeighborChecker();
+          this.tileTransferHandler = new TileTransferHandler();
+
+          // Listen for selection events through `TileSelectionHandler`
           TileSelectionHandler.placementEvent.on('placement', this.onPlacementTriggered, this);
      }
 
      onDestroy() {
+          // Remove event listener to prevent memory leaks
           TileSelectionHandler.placementEvent.off('placement', this.onPlacementTriggered, this);
      }
 
-     start(): void {
-          this.neighborChecker = new NeighborChecker();
-          this.tileTransferHandler = new TileTransferHandler();
-     }
-
+     /**
+      * Called when a `SelectableTiles` object is triggered, initiating placement handling.
+      * @param selectedTile The selected `SelectableTiles` object
+      */
      async onPlacementTriggered(selectedTile: SelectableTiles) {
           await this.handlePlacement(selectedTile);
      }
 
+     /**
+      * Handles the placement process and checks neighbor tiles for potential matches.
+      * @param selectedTile The `SelectableTiles` object being placed
+      */
      async handlePlacement(selectedTile: SelectableTiles) {
           const placementSuccess = await this.tilePlacementHandler?.place(selectedTile);
           if (placementSuccess) {
-               return;
-               const grid = this.gridManager.getGrid();
-               const matches = this.neighborChecker.findAllMatches(grid, selectedTile.attachedGround);
-               if (matches) {
-                    for (const matchGround of matches) {
-                         await this.tileTransferHandler.transferClusterToTarget(
+               const grid = this.gridManager!.getGrid();
+               const typeMatches = this.neighborChecker?.findAllMatches(grid, selectedTile) || [];
+               console.log(typeMatches);
+               
+               if (typeMatches.length > 0) {
+                    for (const matchGround of typeMatches) {
+                         console.log(matchGround.lastAttachedCluster);
+                         
+                         await this.tileTransferHandler?.transferClusterToTarget(
                               matchGround.lastAttachedCluster,
-                              selectedTile.attachedGround
+                              selectedTile.attachedGround!
                          );
                          this.processedGrounds.push(matchGround);
                     }
@@ -59,12 +71,16 @@ export class GameManager extends Component {
           }
      }
 
-     processAfterTransfers() {
-          const grid = this.gridManager.getGrid();
+     /**
+      * After transfers are processed, this function checks `processedGrounds` for additional matches.
+      */
+     private processAfterTransfers() {
+          const grid = this.gridManager!.getGrid();
+
           for (const ground of this.processedGrounds) {
                console.log(`Processed GroundTile at (${ground.gridPosition.row}, ${ground.gridPosition.col})`);
 
-               const neighbors = this.neighborChecker.findNeighbors(grid, ground);
+               const neighbors = this.neighborChecker?.findNeighbors(grid, ground) || [];
                for (const neighbor of neighbors) {
                     if (!this.processedGrounds.some(g => g === neighbor)) {
                          const tileCount = neighbor.getAllTileCount();
@@ -74,6 +90,7 @@ export class GameManager extends Component {
                     }
                }
           }
+
           this.processedGrounds = [];
      }
 }
