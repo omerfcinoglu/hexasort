@@ -9,6 +9,7 @@ const { ccclass } = _decorator;
 export class TileTransferHandler {
 
     async transferClusterToTarget(cluster: TileCluster, targetGround: GroundTile): Promise<void> {
+        if (!cluster || !targetGround) return;
         const preGround = cluster.attachedGround;
         
         if (preGround) {
