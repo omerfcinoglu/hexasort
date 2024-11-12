@@ -31,7 +31,6 @@ export class SelectableManager extends Component {
             const selectableTileNode = instantiate(this.selectableTilesPrefab);
             selectableTileNode.parent = this.selectableArea;
 
-            // Yanyana dizmek için her bir nesneyi X ekseninde konumlandırıyoruz
             const position = new Vec3(startX + i * 2, 0, 0); // X ekseninde her nesneyi 3 birim aralıkla yerleştir
             selectableTileNode.setPosition(position);
             

@@ -29,11 +29,9 @@ export class GameManager extends Component {
      private tileTransferHandler: TileTransferHandler | null = null;
 
      onLoad(): void {
-          // Initialize instances of `NeighborChecker` and `TileTransferHandler`
           this.neighborChecker = new NeighborChecker();
           this.tileTransferHandler = new TileTransferHandler();
           if (this.selectableManager) this.selectableManager.init();
-          // Listen for selection events through `TileSelectionHandler`
           TileSelectionHandler.placementEvent.on('placement', this.onPlacementTriggered, this);
      }
 
@@ -78,6 +76,7 @@ export class GameManager extends Component {
           }
      }
 
+     // ! todo placemnet olduktan sonra aktarılan yerlerde komşuluk kontrolü yapıp transfer tekrarı yapmamız gerekiyor
      /**
       * After transfers are processed, this function checks `processedGrounds` for additional matches.
       */
