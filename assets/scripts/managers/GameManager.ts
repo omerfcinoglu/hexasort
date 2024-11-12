@@ -63,6 +63,10 @@ export class GameManager extends Component {
                if (typeMatches.length > 0) {
                     const processedGrounds: GroundTile[] = [];
                     for (const matchGround of typeMatches) {
+
+                         //transfer kuralları
+                         //aynı tipler ve başka clusterları yok. az olan çok olana doğru hareket etmeli
+                         //az olan çoğa doğru hareket etmeli.
                          await this.tileTransferHandler?.transferClusterToTarget(
                               matchGround.lastAttachedCluster,
                               selectedTileGround!

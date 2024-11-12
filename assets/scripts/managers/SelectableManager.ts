@@ -20,39 +20,36 @@ export class SelectableManager extends Component {
 
     private selectableTiles: SelectableTiles[] = [];
 
-    init() {
-        this.createSelectableTiles();
+    async init() {
+        await this.createSelectableTiles();
     }
 
-    createSelectableTiles() {
-        const startX = -((this.tilesCount - 1) * 1.5); // İlk nesnenin X pozisyonu
+    async createSelectableTiles() {
+        const startX = -(this.tilesCount - 1); // İlk nesnenin X pozisyonu
         const startXOffset = 10
         for (let i = 0; i < this.tilesCount; i++) {
             const selectableTileNode = instantiate(this.selectableTilesPrefab);
             selectableTileNode.parent = this.selectableArea;
 
             // Yanyana dizmek için her bir nesneyi X ekseninde konumlandırıyoruz
-            const position = new Vec3(startX + i * 3, 0, 0); // X ekseninde her nesneyi 3 birim aralıkla yerleştir
+            const position = new Vec3(startX + i * 2, 0, 0); // X ekseninde her nesneyi 3 birim aralıkla yerleştir
             selectableTileNode.setPosition(position);
             
             const selectableTile = selectableTileNode.getComponent(SelectableTiles);
             if (selectableTile) {
                 const pos = selectableTileNode.getWorldPosition().clone();
                 selectableTile.originalPosition = pos;
-                selectableTileNode.setPosition(selectableTileNode.getPosition().clone().add3f(startXOffset,0,0))
+                selectableTileNode.setPosition(selectableTileNode.getPosition().clone().add3f(startXOffset - position.x,0,0))
                 this.addRandomClusters(selectableTile);
                 this.selectableTiles.push(selectableTile);
-
-                tween(selectableTileNode)
-                .to(0.3 , {position :position})
-                .start()
+                await this.enterTheSceneAnimation(selectableTileNode,position);
             }
         }
     }
 
-    // Her SelectableTile nesnesine rastgele TileCluster'lar ekler
+    // ! todo farklı tipler içeren birden fazla clusterlı selectablelar üretmek
     addRandomClusters(selectableTile: SelectableTiles) {
-        const clusterCount =  1; // 0-3 arasında rastgele cluster sayısı
+        const clusterCount = 1// Math.floor(Math.random() * 3) + 1;; // 0-3 arasında rastgele cluster sayısı
 
         for (let i = 0; i < clusterCount; i++) {
             const tileType =  Math.floor(Math.random() * 4) + 1; // 1-4 arasında rastgele tile tipi
@@ -78,5 +75,23 @@ export class SelectableManager extends Component {
         if(this.selectableTiles.length === 0){
             this.createSelectableTiles();
         }
+    }
+
+    async enterTheSceneAnimation(selectableTileNode: Node, position: Vec3): Promise<void> {
+        await new Promise<void>((resolve) => {
+            tween(selectableTileNode)
+                .to(0.5, { position: position } , {easing:'expoInOut'})  // Move to target position
+                .call(resolve)  // Resolve the promise when the position animation completes
+                .start();
+        });
+    
+        // After reaching the position, start the scale animation
+        await new Promise<void>((resolve) => {
+            tween(selectableTileNode)
+                .to(0.1, { scale: new Vec3(1.2, 1.2, 1.2) })  // Scale up
+                .to(0.1, { scale: new Vec3(1, 1, 1) })  // Scale back to normal
+                .call(resolve)  // Resolve when scale animation completes
+                .start();
+        });
     }
 }

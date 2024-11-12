@@ -16,13 +16,13 @@ export class TileAnimator {
         for (let i = tiles.length - 1; i >= 0; i--) {
             const tile = tiles[i];
             const targetPosition = new Vec3(baseTargetPosition.x, cumulativeHeight + 0.1, baseTargetPosition.z + (i*0.02));
-            const liftedPosition = new Vec3(tile.node.position.x, cumulativeHeight + 1, tile.node.position.y);
+            const liftedPosition = new Vec3(tile.node.position.x, 3, tile.node.position.y);
             const targetRotation = Quat.fromEuler(new Quat(), 0, 0, -180);
 
             await new Promise<void>((resolve) => {
                 tween(tile.node)
                     .parallel(
-                        tween().to(0.1, { position: liftedPosition }, { easing: 'cubicOut' }),
+                        tween().to(0.1, { position: liftedPosition }, { easing: 'cubicInOut' }),
                         tween().to(0.125, { rotation: targetRotation }, { easing: 'quadOut' })
                     )
                     .call(() => {
@@ -64,9 +64,10 @@ export class TileAnimator {
                 .start();
         });
     
+        //this must be dynamic !todo
         // Define two target positions for the last tile
         const position1 = new Vec3(0,  2, 2); // Replace with the desired first position
-        const position2 = new Vec3(-2.5, 5, 2); // Replace with the desired second position
+        const position2 = new Vec3(-2.3, 7.2, 2); // Replace with the desired second position
     
         // Move the last tile to the first position
         await new Promise<void>((resolve) => {
