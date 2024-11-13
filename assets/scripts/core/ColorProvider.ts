@@ -61,10 +61,9 @@ export class ColorProvider extends Component {
         }
     }
 
-    public static ChangeColor(color: Color , body : Node){
-        const meshRenderer = body.getComponent(MeshRenderer);
-        if (meshRenderer) {
-            const material = meshRenderer.material;
+    public static ChangeColor(color: Color , body : MeshRenderer){
+        if (body) {
+            const material = body.material;
             if (material) {
                 material.setProperty('albedo', color);
             } else {

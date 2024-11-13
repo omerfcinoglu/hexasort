@@ -137,7 +137,7 @@
       "a": 255
     },
     "_useColorTemperature": false,
-    "_colorTemperature": 1000,
+    "_colorTemperature": 6715,
     "_staticSettings": {
       "__id__": 4
     },
@@ -880,7 +880,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 320,
-      "y": 480,
+      "y": 480.00000000000006,
       "z": 0
     },
     "_lrot": {
@@ -1038,8 +1038,8 @@
     "_target": null,
     "_left": 0,
     "_right": 0,
-    "_top": 0,
-    "_bottom": 0,
+    "_top": 5.684341886080802e-14,
+    "_bottom": 5.684341886080802e-14,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
     "_isAbsLeft": true,

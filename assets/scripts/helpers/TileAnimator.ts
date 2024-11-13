@@ -5,29 +5,30 @@ import { GroundTile } from '../entity/GroundTile';
 import { ScoreManager } from '../managers/ScoreManager';
 
 export class TileAnimator {
-
     static async animateClusterTransfer(cluster: TileCluster, targetGround: GroundTile): Promise<void> {
         const tiles = cluster.getTiles();
         const baseTargetPosition = targetGround.node.worldPosition.clone();
         const tileCount = targetGround.getAllTileCount();
-        
+
         let cumulativeHeight = (tileCount + 1) * 0.2;
 
         for (let i = tiles.length - 1; i >= 0; i--) {
             const tile = tiles[i];
-            const targetPosition = new Vec3(baseTargetPosition.x, cumulativeHeight + 0.1, baseTargetPosition.z + (i*0.02));
+            const targetPosition = new Vec3(baseTargetPosition.x, cumulativeHeight + 0.1, baseTargetPosition.z + (i * 0.02));
             const liftedPosition = new Vec3(tile.node.position.x, 3, tile.node.position.y);
-            const targetRotation = Quat.fromEuler(new Quat(), 0, 0, -180);
+
+            const initialRotation = tile.node.rotation.clone(); // Store the initial rotation
+            const halfFlipRotation = Quat.fromEuler(new Quat(), 0, 0, 180); // 180-degree rotation
 
             await new Promise<void>((resolve) => {
                 tween(tile.node)
                     .parallel(
                         tween().to(0.1, { position: liftedPosition }, { easing: 'cubicInOut' }),
-                        tween().to(0.125, { rotation: targetRotation }, { easing: 'quadOut' })
+                        tween().to(0.125, { rotation: halfFlipRotation }, { easing: 'quadOut' }) // Rotate halfway
                     )
                     .call(() => {
                         tween(tile.node)
-                            .to(0.125, { worldPosition: targetPosition }, { easing: 'quadOut' })
+                            .to(0.125, { worldPosition: targetPosition, rotation: initialRotation }, { easing: 'quadOut' }) // Flip back to initial
                             .call(resolve)
                             .start();
                     })
@@ -37,15 +38,14 @@ export class TileAnimator {
             cumulativeHeight += 0.2;
         }
     }
-
     static async animateTilesToZeroScale(tiles: Tile[]): Promise<void> {
         const reversedTiles = [...tiles].reverse();
-        const lastTile = reversedTiles[reversedTiles.length-1]
-    
+        const lastTile = reversedTiles[reversedTiles.length - 1]
+
         // Scale all tiles except the last one to (0, 0, 0)
         for (let i = 0; i < reversedTiles.length; i++) {
             const tile = reversedTiles[i];
-            if(i===reversedTiles.length-1){
+            if (i === reversedTiles.length - 1) {
                 break;
             }
             await new Promise<void>((resolve) => {
@@ -55,7 +55,7 @@ export class TileAnimator {
                     .start();
             });
         }
-    
+
         // Scale the last tile to (0.231, 0.231, 0.231)
         await new Promise<void>((resolve) => {
             tween(lastTile.node)
@@ -63,24 +63,24 @@ export class TileAnimator {
                 .call(resolve)
                 .start();
         });
-    
+
         //this must be dynamic !todo
         // Define two target positions for the last tile
-        const position1 = new Vec3(0,  2, 2); // Replace with the desired first position
+        const position1 = new Vec3(0, 2, 2); // Replace with the desired first position
         const position2 = new Vec3(-2.3, 7.2, 2); // Replace with the desired second position
-    
+
         // Move the last tile to the first position
         await new Promise<void>((resolve) => {
             tween(lastTile.node)
-                .to(0.3, { worldPosition: position1 } , {easing:"cubicOut"})
+                .to(0.3, { worldPosition: position1 }, { easing: "cubicOut" })
                 .call(resolve)
                 .start();
         });
-    
+
         // Move the last tile to the second position
         await new Promise<void>((resolve) => {
             tween(lastTile.node)
-                .to(0.3, { worldPosition: position2 } , {easing:"expoIn"})
+                .to(0.3, { worldPosition: position2 }, { easing: "expoIn" })
                 .call(() => {
                     ScoreManager.getInstance().addScore(10);
                     resolve()
@@ -88,5 +88,5 @@ export class TileAnimator {
                 .start();
         });
     }
-    
+
 }

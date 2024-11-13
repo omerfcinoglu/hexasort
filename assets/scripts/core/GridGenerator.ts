@@ -17,22 +17,38 @@ export class GridGenerator {
         this.tileClusterPrefab = tileClusterPrefab;
         this.tileSize = tileSize
     }
-
     public generateGrid(levelMatrix: number[][], gridArea: Node): GroundTile[][] {
         const grid: GroundTile[][] = [];
         const numRows = levelMatrix.length;
         const numCols = levelMatrix[0].length;
-        const offsetX = (numCols - 1) * this.tileSize * 0.5;
-        const offsetZ = (numRows - 1) * this.tileSize * 0.5;
-
+    
+        // Define spacing adjustments
+        const tileSpacingX = 0.025; // X-axis spacing adjustment for closer columns
+        const tileSpacingZ = 0.15; // Z-axis spacing adjustment for row spacing
+        const staggerOffset = -0.6; // Lowering offset for every even column
+    
+        // Calculate effective tile sizes with spacing adjustments
+        const adjustedTileSizeX = this.tileSize + tileSpacingX;
+        const adjustedTileSizeZ = this.tileSize + tileSpacingZ;
+    
+        // Calculating offsets to center the grid
+        const offsetX = (numCols - 1) * adjustedTileSizeX * 0.5;
+        const offsetZ = (numRows - 1) * adjustedTileSizeZ * 0.5;
+    
         for (let row = 0; row < numRows; row++) {
             grid[row] = [];
             for (let col = 0; col < numCols; col++) {
                 const tileType = levelMatrix[row][col];
-                const position = new Vec3(col * this.tileSize - offsetX, 0, -(row * this.tileSize - offsetZ));
+    
+                // Apply both row and column spacing adjustments with stagger effect
+                const adjustedX = col * adjustedTileSizeX - offsetX;
+                const adjustedZ = -(row * adjustedTileSizeZ - offsetZ) + (col % 2 === 0 ? staggerOffset : 0);
+    
+                const position = new Vec3(adjustedX, 0, adjustedZ);
+    
                 const groundTileNode = this.createGroundTile(position, gridArea);
                 const groundTileComp = groundTileNode.getComponent(GroundTile);
-
+    
                 if (groundTileComp) {
                     groundTileComp.gridPosition = { row, col };
                     grid[row][col] = groundTileComp;
@@ -42,10 +58,11 @@ export class GridGenerator {
                 }
             }
         }
-        // this.test(grid);
         return grid;
     }
-
+    
+    
+    
     private createGroundTile(position: Vec3, gridArea: Node): Node {
         const groundTileNode = instantiate(this.groundTilePrefab);
         groundTileNode.parent = gridArea;
@@ -58,7 +75,7 @@ export class GridGenerator {
         const tileCluster = clusterNode.getComponent(TileCluster);
         if (tileCluster) {
             tileCluster.initCluster(tileType,2); 
-            tileCluster.node.setPosition(new Vec3(groundTileNode.position.x, 0.2 ,groundTileNode.position.z))
+            tileCluster.node.setPosition(new Vec3(groundTileNode.position.x, 0.1 ,groundTileNode.position.z))
             tileCluster.node.setParent(groundTileNode.parent);
             tileCluster.attachedGround = groundTileComp;
 
@@ -69,12 +86,5 @@ export class GridGenerator {
             // groundTileComp.addTileCluster(tileCluster);
         }
     }
-    test(grid : GroundTile[][]){
-        if(grid[0][0]){
-            ColorProvider.ChangeColor(
-                ColorProvider.getInstance().getColor(4),
-                grid[0][0].node
-            )
-        }
-    }
+
 }

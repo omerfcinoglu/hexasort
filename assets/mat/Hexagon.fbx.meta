@@ -1,0 +1,80 @@
+{
+  "ver": "2.3.0",
+  "importer": "fbx",
+  "imported": true,
+  "uuid": "c976c60d-d397-4981-8f01-d5a91c6f8789",
+  "files": [],
+  "subMetas": {
+    "08c68": {
+      "importer": "gltf-mesh",
+      "uuid": "c976c60d-d397-4981-8f01-d5a91c6f8789@08c68",
+      "displayName": "",
+      "id": "08c68",
+      "name": "Plane.mesh",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.1.0",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f1271": {
+      "importer": "gltf-material",
+      "uuid": "c976c60d-d397-4981-8f01-d5a91c6f8789@f1271",
+      "displayName": "",
+      "id": "f1271",
+      "name": "Floor.material",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "5ec6a": {
+      "importer": "gltf-scene",
+      "uuid": "c976c60d-d397-4981-8f01-d5a91c6f8789@5ec6a",
+      "displayName": "",
+      "id": "5ec6a",
+      "name": "Hexagon.prefab",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "imageMetas": [],
+    "legacyFbxImporter": false,
+    "allowMeshDataAccess": true,
+    "fbx": {
+      "smartMaterialEnabled": true
+    },
+    "redirect": "c976c60d-d397-4981-8f01-d5a91c6f8789@5ec6a",
+    "assetFinder": {
+      "meshes": [
+        "c976c60d-d397-4981-8f01-d5a91c6f8789@08c68"
+      ],
+      "skeletons": [],
+      "textures": [],
+      "materials": [
+        "c976c60d-d397-4981-8f01-d5a91c6f8789@f1271"
+      ],
+      "scenes": [
+        "c976c60d-d397-4981-8f01-d5a91c6f8789@5ec6a"
+      ]
+    }
+  }
+}

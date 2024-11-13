@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Collider, Color, Vec3 } from 'cc';
+import { _decorator, Component, Node, Collider, Color, Vec3, MeshRenderer, Mesh } from 'cc';
 import { TileCluster } from '../core/TileCluster';
 import { SelectableTiles } from '../entity/SelectableTiles';
 import { ColorProvider } from '../core/ColorProvider';
@@ -12,10 +12,13 @@ export class GroundTile extends Component {
     public attachedClusters: TileCluster[] = [];
     public lastAttachedCluster: TileCluster = null;
 
+    private mesh : MeshRenderer;
+
     private defaultColor: Color = null;
     private highlightColor: Color = null;
 
     onLoad() {
+        this.mesh = this.node.getComponentInChildren(MeshRenderer);
         this.highlightColor = ColorProvider.getInstance().getColor(7);
         this.defaultColor = ColorProvider.getInstance().getColor(6);
         this.highlight(false);
@@ -68,8 +71,8 @@ export class GroundTile extends Component {
 
     public highlight(flag: boolean) {
         flag
-            ? ColorProvider.ChangeColor(this.highlightColor, this.node)
-            : ColorProvider.ChangeColor(this.defaultColor, this.node);
+            ? ColorProvider.ChangeColor(this.highlightColor, this.mesh)
+            : ColorProvider.ChangeColor(this.defaultColor, this.mesh);
     }
 
     getAllTileCount(): number {
