@@ -49,11 +49,9 @@ export class NeighborChecker {
             // Access GroundTile from GridManager
             const neighborGround = GridManager.getInstance().getGroundTile(neighborRow, neighborCol);
 
-            if (neighborGround && neighborGround.lastAttachedCluster) {
+            if (neighborGround && !neighborGround.isProcessing && neighborGround.getLastCluster()) {
                 console.log(`Found neighbor at row ${neighborRow}, col ${neighborCol}`);
                 neighborGrounds.push(neighborGround);
-                neighborGround.highlight(true); // Visual highlight to track on screen
-                await this.sleep(500); // Delay to allow observation
             }
         }
         return neighborGrounds;
@@ -65,17 +63,16 @@ export class NeighborChecker {
      * @returns An array of neighboring GroundTiles with matching cluster types.
      */
     public async findAllMatches(placedGround: GroundTile): Promise<GroundTile[]> {
-        const lastCluster = placedGround.lastAttachedCluster;
+        const lastCluster = placedGround.getLastCluster();
         if (!lastCluster) return []; // Return empty if no last cluster exists
 
         const neighbors = await this.findNeighbors(placedGround);
         const matchingNeighbors: GroundTile[] = [];
 
         for (const neighbor of neighbors) {
-            if (neighbor.lastAttachedCluster?.type === lastCluster.type) {
+            if (neighbor.getLastCluster()?.type === lastCluster.type) {
                 console.log(`Match found with neighbor at row ${neighbor.gridPosition.row}, col ${neighbor.gridPosition.col}`);
                 matchingNeighbors.push(neighbor);
-                await this.sleep(500); // Delay to allow observation
             } else {
                 console.log(`No match at neighbor row ${neighbor.gridPosition.row}, col ${neighbor.gridPosition.col}`);
             }

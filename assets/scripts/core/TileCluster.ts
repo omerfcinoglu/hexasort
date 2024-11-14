@@ -90,6 +90,15 @@ export class TileCluster extends Component {
         return this.tiles;
     }
 
+
+        /**
+     * Retrieves all tiles in this cluster.
+     * @returns A number of Tile count.
+     */
+        public getLength(): number {
+            return this.tiles.length;
+        }
+    
     /**
      * Selects the cluster and prepares it for dragging by calculating the touch offset.
      * @param touchWorldPos - World position where the touch event occurred.

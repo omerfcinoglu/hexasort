@@ -80,7 +80,6 @@ export class GridGenerator {
             tileCluster.attachedGround = groundTileComp;
 
             groundTileComp.attachedClusters.push(tileCluster);
-            groundTileComp.lastAttachedCluster = tileCluster;
             groundTileComp.setActiveCollider(false);
             
             // groundTileComp.addTileCluster(tileCluster);

@@ -7,61 +7,59 @@ import { ScoreManager } from '../managers/ScoreManager';
 export class TileAnimator {
 
 
-    static  applyLookAt(tile: Node, targetPosition: Vec3): void {
+    static applyLookAt(tile: Node, targetPosition: Vec3): void {
         const direction = new Vec3();
         Vec3.subtract(direction, targetPosition, tile.worldPosition);
         direction.normalize();
-    
+
         const lookAtRotation = new Quat();
         Quat.fromViewUp(lookAtRotation, direction);
         tile.setRotation(lookAtRotation); // İlk olarak hedefe bakacak şekilde tile'ı döndürüyoruz
     }
 
-    //! todo geldiğimiz tarafa göre rotasyon olmalıyız.
     static async animateClusterTransfer(cluster: TileCluster, targetGround: GroundTile): Promise<void> {
         const tiles = cluster.getTiles();
         const baseTargetPosition = targetGround.node.worldPosition.clone();
         const tileCount = targetGround.getAllTileCount();
-        
-        let cumulativeHeight = (tileCount + 1) * 0.2;
+
+        let cumulativeHeight = (tileCount + 1) * 0.1;
         const animationPromises = [];
-    
-        // Tüm tile'lar için animasyonları sırayla ayarla
+
         for (let i = tiles.length - 1; i >= 0; i--) {
             const reverseIndex = (tiles.length - 1) - i + 1;
             const tile = tiles[i];
-            
-            const targetPosition = new Vec3(baseTargetPosition.x, cumulativeHeight + 0.1, baseTargetPosition.z + (i * 0.02));
-            
-            const initialRotation = tile.node.rotation.clone(); // İlk rotasyonu sakla
-            const halfFlipRotation = Quat.fromEuler(new Quat(), 0, 0, 0); // 180 derece flip rotasyonu
-            const liftedPosition = new Vec3(tile.node.position.x, 0, tile.node.position.y);
-    
-            
+            const targetPosition = new Vec3(baseTargetPosition.x, cumulativeHeight, baseTargetPosition.z);
+
+            // Y yönünde bir pozisyona kaldırma
+            const liftedPosition = new Vec3(tile.node.position.x, 1, tile.node.position.z);
+
+            // Rotasyonu hedefe göre ayarlayalım
+            const direction = targetPosition.clone().subtract(tile.node.worldPosition).normalize(); // Hedef yönünü hesapla
+
+            const initialRotation = tile.node.rotation.clone();
+            const halfFlipRotation = Quat.fromEuler(new Quat(), 0, 0, -180); // Komşuya göre çevrilen açı
             const animationPromise = new Promise<void>((resolve) => {
                 tween(tile.node)
-                    .to(0.1 * reverseIndex, { position: liftedPosition }, { easing: 'cubicInOut' })
+                    .to(0.1 * reverseIndex, { position: liftedPosition }, { easing: 'cubicInOut' }) // Yukarı doğru kalkma hareketi
                     .call(() => {
                         tween(tile.node)
                             .parallel(
                                 tween().to(0.125 * reverseIndex, { rotation: halfFlipRotation }, { easing: 'quadOut' }),
-                                tween().to(0.125 * reverseIndex, { worldPosition: targetPosition }, { easing: 'cubicIn' })
+                                tween().to(0.125 * reverseIndex, { worldPosition: targetPosition }, { easing: 'cubicIn' }) // Hedefe doğru hareket
                             )
                             .call(resolve)
                             .start();
                     })
                     .start();
             });
-            
-            // Bir sonrakine geçmeden önce biraz gecikme ekleyelim
+
             animationPromises.push(animationPromise);
-            cumulativeHeight += 0.2;
+            cumulativeHeight += 0.1;
         }
-    
-        // Tüm animasyonların tamamlanmasını bekleyin
-        await Promise.all(animationPromises);
+
+        await Promise.all(animationPromises); // Tüm animasyonların tamamlanmasını bekle
     }
-    
+
     static async animateTilesToZeroScale(tiles: Tile[]): Promise<void> {
         const reversedTiles = [...tiles].reverse();
         const lastTile = reversedTiles[reversedTiles.length - 1]

@@ -11,8 +11,7 @@ export class GroundTile extends Component {
 
     public gridPosition: { row: number; col: number } = { row: 0, col: 0 };
     public attachedClusters: TileCluster[] = [];
-    public lastAttachedCluster: TileCluster = null;
-
+    public isProcessing : boolean = false;
     private mesh : MeshRenderer;
 
     private defaultColor: Color = null;
@@ -26,10 +25,8 @@ export class GroundTile extends Component {
     }
 
     addTileCluster(tileCluster: TileCluster) {
+        this.isProcessing = true;
         this.attachedClusters.push(tileCluster);
-
-        this.lastAttachedCluster = null;
-        this.lastAttachedCluster = tileCluster;
 
         const currentWorldPos = tileCluster.node.worldPosition.clone();
         tileCluster.node.parent = this.node.parent;
@@ -38,42 +35,31 @@ export class GroundTile extends Component {
             currentWorldPos.y,
             this.node.position.z
         ));
+        this.isProcessing = false;
     }
 
     public setActiveCollider(value: boolean) {
         this.node.getComponent(Collider).enabled = value;
     }
 
+    public getLastCluster(): TileCluster | null {
+        if (this.attachedClusters.length === 0) return null;
+        return this.attachedClusters[this.attachedClusters.length - 1];
+    }
 
     public placeSelectableTile(selectableTile: SelectableTiles, targetGround: GroundTile) {
         for (const tileCluster of selectableTile.tileClusters) {
             this.addTileCluster(tileCluster);
             tileCluster.place(this);
         }
-        this.lastAttachedCluster = selectableTile.getLastCluster();
         selectableTile.node.removeFromParent();
     }
 
-    public removeTileCluster(tileCluster: TileCluster) {
-        console.log(this.lastAttachedCluster.type);
-        console.log("removing last cluster" , this.attachedClusters.length);
-        
-        const index = this.attachedClusters.indexOf(tileCluster);
-        if (index !== -1) {
-            this.attachedClusters.splice(index, 1);
-        }
-
-        console.log("removed" , this.attachedClusters.length);
-
-        if (this.attachedClusters.length > 0) {
-            this.lastAttachedCluster = this.attachedClusters[this.attachedClusters.length - 1];
-            console.log(this.lastAttachedCluster.type);
-            
-        } else {
-            this.lastAttachedCluster = null;
+    public popTileCluster() {
+        const lastCluster = this.attachedClusters.pop();
+        if (this.attachedClusters.length === 0) {
             this.setActiveCollider(true);
         }
-
     }
 
     public highlight(flag: boolean) {
