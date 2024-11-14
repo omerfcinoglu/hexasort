@@ -1,10 +1,9 @@
-import { _decorator, Component, tween, Vec3, Collider, ITriggerEvent } from 'cc';
+import { _decorator, Component, tween, Vec3, Collider, ITriggerEvent, Quat } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('test')
 export class test extends Component {
     start() {
-        this.moveRight();
         this.setupTriggerListener();
     }
 
@@ -23,5 +22,12 @@ export class test extends Component {
 
     private onTriggerEnter(event: ITriggerEvent) {
         console.log('Collision detected with:', event.otherCollider.node.name);
+    }
+
+    rotate() {
+        tween(this.node)
+            .by(2, { rotation: Quat.fromEuler(new Quat(), 0, 180, 0) }, { easing: 'linear' }) // Y ekseninde sürekli 360 derece döndürme
+            .repeatForever()
+            .start();
     }
 }

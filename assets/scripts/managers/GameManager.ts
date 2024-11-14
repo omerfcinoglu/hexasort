@@ -75,7 +75,6 @@ export class GameManager extends Component {
                }
           }
      }
-
      // ! todo placemnet olduktan sonra aktarılan yerlerde komşuluk kontrolü yapıp transfer tekrarı yapmamız gerekiyor
      /**
       * After transfers are processed, this function checks `processedGrounds` for additional matches.

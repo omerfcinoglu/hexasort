@@ -88,17 +88,17 @@
       "__id__": 2
     },
     "asset": {
-      "__uuid__": "ad273d5d-81b4-48e8-9f0e-cf2ab4e75a34",
+      "__uuid__": "68ee8975-a252-4357-a058-c803208f1e1b",
       "__expectedType__": "cc.Prefab"
     },
-    "fileId": "e3n/CxlRNBy567qVOY2c7H",
+    "fileId": "97O+YzAAxI1JlHXRljW4Uh",
     "instance": {
       "__id__": 4
     }
   },
   {
     "__type__": "cc.PrefabInstance",
-    "fileId": "9db6FWLyVKBrbYoCvE50Np",
+    "fileId": "56FIajMVtN84Z84m7SAD+d",
     "prefabRootNode": {
       "__id__": 1
     },
@@ -136,7 +136,7 @@
   {
     "__type__": "cc.TargetInfo",
     "localID": [
-      "e3n/CxlRNBy567qVOY2c7H"
+      "97O+YzAAxI1JlHXRljW4Uh"
     ]
   },
   {

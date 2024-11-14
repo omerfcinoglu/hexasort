@@ -20,6 +20,7 @@ export class SelectableTiles extends Component {
      * Initializes the selectable tile and stores its original position.
      */
     protected onLoad(): void {
+        this.tileClusters = [];
     }
 
     /**
@@ -58,18 +59,6 @@ export class SelectableTiles extends Component {
         tween(this.node)
             .to(0.3, { worldPosition: this.originalPosition })
             .start();
-    }
-
-    /**
-     * Places all TileClusters contained in this SelectableTile onto a specified GroundTile.
-     * @param targetGround - The GroundTile on which the clusters will be placed.
-     */
-    public placeAllClustersOnGround(targetGround: GroundTile) {
-        for (const cluster of this.tileClusters) {
-            targetGround.addTileCluster(cluster); // Adds each cluster to the target ground tile
-            cluster.node.setWorldPosition(targetGround.node.getWorldPosition()); // Keeps the cluster's position relative to the ground tile
-        }
-        this.tileClusters = []; // Clears clusters after placing them
     }
 
     /**

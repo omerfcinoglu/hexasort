@@ -1,4 +1,4 @@
-import { _decorator, Component, MeshRenderer, Color } from 'cc';
+import { _decorator, Component, MeshRenderer, Color, Mesh } from 'cc';
 import { ColorProvider } from '../core/ColorProvider';
 const { ccclass, property } = _decorator;
 
@@ -9,12 +9,18 @@ export class Tile extends Component {
     public type: number = 0;
 
     private color : Color = null;
-    private mesh : MeshRenderer;
+    private meshes : MeshRenderer[];
+
+    private temp_other_mesh : MeshRenderer;
 
     init(type){
         this.type = type;
-        this.mesh = this.node.getComponentInChildren(MeshRenderer);
+        this.meshes = this.node.getComponentsInChildren(MeshRenderer)
+
         this.color = ColorProvider.getInstance().getColor(this.type);
-        ColorProvider.ChangeColor(this.color , this.mesh);
+        for (const mesh of this.meshes) {
+            ColorProvider.ChangeColor(this.color , mesh);
+        }
+
     }
 }

@@ -45,10 +45,6 @@ export class GridManager extends Component {
         return null;
     }
 
-    async handlePlacementSuccess(targetGround: GroundTile) {
-        await targetGround.checkChildTypes();
-    }
-
     public resetGrid(): void {
         this.grid.forEach(row => {
             row.forEach(groundTile => {

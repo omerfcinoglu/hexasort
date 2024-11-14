@@ -19,7 +19,7 @@ export class TileTransferHandler {
 
 
         await TileAnimator.animateClusterTransfer(cluster, targetGround);
-
+        
         // Null check before calling transferTiles to prevent errors
         if (targetGround.lastAttachedCluster) {
             await targetGround.lastAttachedCluster.transferTiles(cluster.getTiles());

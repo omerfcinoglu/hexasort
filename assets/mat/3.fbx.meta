@@ -2,15 +2,15 @@
   "ver": "2.3.0",
   "importer": "fbx",
   "imported": true,
-  "uuid": "463773d9-48e2-4ea9-b230-fda0d889e126",
+  "uuid": "18daf101-3c9b-48b2-8a24-5b30d3c8a079",
   "files": [],
   "subMetas": {
-    "a5f8b": {
+    "08c68": {
       "importer": "gltf-mesh",
-      "uuid": "463773d9-48e2-4ea9-b230-fda0d889e126@a5f8b",
+      "uuid": "18daf101-3c9b-48b2-8a24-5b30d3c8a079@08c68",
       "displayName": "",
-      "id": "a5f8b",
-      "name": "Plane.001.mesh",
+      "id": "08c68",
+      "name": "Plane.mesh",
       "userData": {
         "gltfIndex": 0
       },
@@ -22,12 +22,12 @@
       ],
       "subMetas": {}
     },
-    "89ec2": {
+    "f1271": {
       "importer": "gltf-material",
-      "uuid": "463773d9-48e2-4ea9-b230-fda0d889e126@89ec2",
+      "uuid": "18daf101-3c9b-48b2-8a24-5b30d3c8a079@f1271",
       "displayName": "",
-      "id": "89ec2",
-      "name": "Floor.001.material",
+      "id": "f1271",
+      "name": "Floor.material",
       "userData": {
         "gltfIndex": 0
       },
@@ -38,12 +38,12 @@
       ],
       "subMetas": {}
     },
-    "5ec6a": {
+    "e1752": {
       "importer": "gltf-scene",
-      "uuid": "463773d9-48e2-4ea9-b230-fda0d889e126@5ec6a",
+      "uuid": "18daf101-3c9b-48b2-8a24-5b30d3c8a079@e1752",
       "displayName": "",
-      "id": "5ec6a",
-      "name": "Hexagon.prefab",
+      "id": "e1752",
+      "name": "3.prefab",
       "userData": {
         "gltfIndex": 0
       },
@@ -62,18 +62,18 @@
     "fbx": {
       "smartMaterialEnabled": true
     },
-    "redirect": "463773d9-48e2-4ea9-b230-fda0d889e126@5ec6a",
+    "redirect": "18daf101-3c9b-48b2-8a24-5b30d3c8a079@e1752",
     "assetFinder": {
       "meshes": [
-        "463773d9-48e2-4ea9-b230-fda0d889e126@a5f8b"
+        "18daf101-3c9b-48b2-8a24-5b30d3c8a079@08c68"
       ],
       "skeletons": [],
       "textures": [],
       "materials": [
-        "463773d9-48e2-4ea9-b230-fda0d889e126@89ec2"
+        "18daf101-3c9b-48b2-8a24-5b30d3c8a079@f1271"
       ],
       "scenes": [
-        "463773d9-48e2-4ea9-b230-fda0d889e126@5ec6a"
+        "18daf101-3c9b-48b2-8a24-5b30d3c8a079@e1752"
       ]
     }
   }

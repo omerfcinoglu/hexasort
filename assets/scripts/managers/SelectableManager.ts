@@ -2,6 +2,7 @@ import { _decorator, Component, Node, Prefab, Vec3, instantiate, tween } from 'c
 import { GroundTile } from '../entity/GroundTile';
 import { TileCluster } from '../core/TileCluster';
 import { SelectableTiles } from '../entity/SelectableTiles';
+import { sleep } from '../helpers/Promises';
 
 const { ccclass, property } = _decorator;
 
@@ -39,30 +40,47 @@ export class SelectableManager extends Component {
                 const pos = selectableTileNode.getWorldPosition().clone();
                 selectableTile.originalPosition = pos;
                 selectableTileNode.setPosition(selectableTileNode.getPosition().clone().add3f(startXOffset - position.x,0,0))
-                this.addRandomClusters(selectableTile);
+                await this.addRandomClusters(selectableTile);
                 this.selectableTiles.push(selectableTile);
                 await this.enterTheSceneAnimation(selectableTileNode,position);
             }
         }
     }
 
-    // ! todo farklı tipler içeren birden fazla clusterlı selectablelar üretmek
-    addRandomClusters(selectableTile: SelectableTiles) {
-        const clusterCount = 1// Math.floor(Math.random() * 3) + 1;; // 0-3 arasında rastgele cluster sayısı
-
+    async addRandomClusters(selectableTile: SelectableTiles) {
+        const clusterCount = 3 //Math.floor(Math.random() * 2) + 1;
+        const availableTypes = [1, 2, 3, 4, 5]; // Başlangıç tipi listesi
+        console.log("Cluster count is: " + clusterCount);
+        
+        let lastClusterTileCount = 0;
+    
         for (let i = 0; i < clusterCount; i++) {
-            const tileType =  Math.floor(Math.random() * 4) + 1; // 1-4 arasında rastgele tile tipi
-            const tileCount = Math.floor(Math.random() * 4) + 2; // 1-4 arasında rastgele tile sayısı
+            // Rastgele bir tip seç ve seçilen tipi `availableTypes`'dan çıkar
+            const randomIndex = Math.floor(Math.random() * availableTypes.length);
+            const tileType = availableTypes.splice(randomIndex, 1)[0];
+    
+            const tileCount = Math.floor(Math.random() * 4) + 2;
             const tileClusterNode = instantiate(this.tileClusterPrefab);
             tileClusterNode.parent = selectableTile.node;
-
+    
             const cluster = tileClusterNode.getComponent(TileCluster);
             if (cluster) {
                 cluster.initCluster(tileType, tileCount);
                 selectableTile.tileClusters.push(cluster);
+                cluster.node.setPosition(0, i * 1.3, 0);
             }
+    
+            console.log(`TileType ${tileType}\nTileCount ${tileCount}`);
+            await sleep(1000);
+    
+            // Kullanılan tip tekrar kullanılabilir hale gelmesi için availableTypes'a geri eklenir
+            availableTypes.push(tileType);
+            lastClusterTileCount += tileCount;
+            console.log(`Selectable tile clusters: ${selectableTile.tileClusters.length}`);
         }
     }
+    
+    
 
     remove(selected: SelectableTiles) {
         const index = this.selectableTiles.indexOf(selected);
