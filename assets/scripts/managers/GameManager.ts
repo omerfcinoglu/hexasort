@@ -10,6 +10,7 @@ import { SelectableTiles } from "../entity/SelectableTiles";
 import { SelectableManager } from "./SelectableManager";
 import { TileAnimator } from "../helpers/TileAnimator";
 import { TileCluster } from "../core/TileCluster";
+import { sleep } from "../helpers/Promises";
 
 const { ccclass, property } = _decorator;
 
@@ -53,10 +54,18 @@ export class GameManager extends Component {
       * @param selectedTile The `SelectableTiles` object being placed
       */
      async handlePlacement(selectedTile: SelectableTiles) {
-          const placementSuccess = await this.tilePlacementHandler?.place(selectedTile, this.selectableManager);
-          if (placementSuccess) {
-               const grid = this.gridManager!.getGrid();
-               const typeMatches = this.neighborChecker?.findAllMatches(grid, selectedTile) || [];
+          const targetGround = await this.tilePlacementHandler?.place(selectedTile, this.selectableManager);
+          if (targetGround) {
+               await sleep(500);
+               console.log(`neighbor checking started`);
+               
+               const typeMatches = this.neighborChecker?.findAllMatches(targetGround) || [];
+               await sleep(500);
+               console.log(`neighbor checking ended`);
+
+               await sleep(500);
+
+
                const selectedTileGround = selectedTile.attachedGround;
                if (typeMatches.length > 0) {
                     const processedGrounds: GroundTile[] = [];
@@ -85,7 +94,7 @@ export class GameManager extends Component {
 
           while (queue.length > 0) {
                const currentGround = queue.shift();
-               const neighbors = this.neighborChecker?.findNeighbors(grid, currentGround) || [];
+               const neighbors = this.neighborChecker?.findNeighbors( currentGround) || [];
 
                for (const neighbor of neighbors) {
                     // Use `find` to check if the neighbor is already in the queue or initialProcessedGrounds

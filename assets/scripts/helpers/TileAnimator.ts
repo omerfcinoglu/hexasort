@@ -30,7 +30,6 @@ export class TileAnimator {
         for (let i = tiles.length - 1; i >= 0; i--) {
             const reverseIndex = (tiles.length - 1) - i + 1;
             const tile = tiles[i];
-            console.log(cumulativeHeight);
             
             const targetPosition = new Vec3(baseTargetPosition.x, cumulativeHeight + 0.1, baseTargetPosition.z + (i * 0.02));
             
@@ -38,10 +37,7 @@ export class TileAnimator {
             const halfFlipRotation = Quat.fromEuler(new Quat(), 0, 0, 0); // 180 derece flip rotasyonu
             const liftedPosition = new Vec3(tile.node.position.x, 0, tile.node.position.y);
     
-            // `lookAt` rotasyonunu uygulayalım
-            console.log(reverseIndex);
             
-            // Her tile için bir animasyon promise'i oluştur
             const animationPromise = new Promise<void>((resolve) => {
                 tween(tile.node)
                     .to(0.1 * reverseIndex, { position: liftedPosition }, { easing: 'cubicInOut' })

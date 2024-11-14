@@ -3,40 +3,40 @@ import { _decorator } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
 import { SelectableTiles } from '../entity/SelectableTiles';
 import { TileCluster } from './TileCluster';
+import { GridManager } from '../managers/GridManager';
 
 const { ccclass, property } = _decorator;
 
 @ccclass('NeighborChecker')
 export class NeighborChecker {
 
+    private directions = [
+        { dRow: -1, dCol: 0 },   // top
+        { dRow: 1, dCol: 0 },    // bottom
+        { dRow: 0, dCol: -1 },   // left
+        { dRow: 0, dCol: 1 },    // right
+        // { dRow: -1, dCol: -1 },  // top-left diagonal
+        // { dRow: -1, dCol: 1 },   // top-right diagonal
+        { dRow: 1, dCol: -1 },   // bottom-left diagonal
+        { dRow: 1, dCol: 1 }     // bottom-right diagonal
+    ];
     /**
      * Finds neighboring GroundTiles surrounding a given GroundTile within a grid.
      * @param grid The 2D array of GroundTiles representing the game grid.
      * @param groundTile The GroundTile for which neighbors are being identified.
      * @returns An array of neighboring GroundTiles.
      */
-    public findNeighbors(grid: GroundTile[][], groundTile: GroundTile): GroundTile[] {
+    public findNeighbors( groundTile: GroundTile): GroundTile[] {
+        // const grid = GridManager.get
         const neighbors: GroundTile[] = [];
         const { row, col } = groundTile.gridPosition;
 
-        // Define all possible neighboring directions, including diagonals
-        const directions = [
-            { dRow: -1, dCol: 0 },   // top
-            { dRow: 1, dCol: 0 },    // bottom
-            { dRow: 0, dCol: -1 },   // left
-            { dRow: 0, dCol: 1 },    // right
-            { dRow: -1, dCol: -1 },  // top-left diagonal
-            { dRow: -1, dCol: 1 },   // top-right diagonal
-            { dRow: 1, dCol: -1 },   // bottom-left diagonal
-            { dRow: 1, dCol: 1 }     // bottom-right diagonal
-        ];
-
-        // Iterate over each direction to locate valid neighboring tiles
-        for (const { dRow, dCol } of directions) {
+        for (const { dRow, dCol } of this.directions) {
             const neighborRow = row + dRow;
             const neighborCol = col + dCol;
-            const neighbor = this.getGroundTile(grid, neighborRow, neighborCol);
+            // gridden doğru bir şekilde row ve colm'ları al.
 
+            const neighbor = null;
             if (neighbor) {
                 neighbors.push(neighbor);
             }
@@ -47,17 +47,15 @@ export class NeighborChecker {
 
     /**
      * Finds all neighboring GroundTiles that have the same type as the last TileCluster of the target SelectableTiles.
-     * @param grid The 2D array of GroundTiles.
-     * @param targetTile The SelectableTiles whose last TileCluster's type is used for matching.
+     * @param ground The SelectableTiles whose last TileCluster's type is used for matching.
      * @returns An array of neighboring GroundTiles with matching cluster types.
      */
-    public findAllMatches(grid: GroundTile[][], targetTile: SelectableTiles): GroundTile[] {
+    public findAllMatches(ground: GroundTile): GroundTile[] {
         // Get the last cluster from the target tile for type matching
-        const lastCluster = targetTile.getLastCluster();
-        
+        const lastCluster = ground.lastAttachedCluster;
         if (!lastCluster) return []; // Return empty if no last cluster exists
 
-        const neighbors = this.findNeighbors(grid, targetTile.attachedGround);
+        const neighbors = this.findNeighbors(ground);
         const matchingNeighbors: GroundTile[] = [];
 
         // Check each neighboring GroundTile for a matching lastAttachedCluster type
@@ -69,18 +67,5 @@ export class NeighborChecker {
 
         return matchingNeighbors;
     }
-
-    /**
-     * Safely retrieves a GroundTile at the specified position in the grid.
-     * @param grid The 2D array of GroundTiles.
-     * @param row The row index of the desired GroundTile.
-     * @param col The column index of the desired GroundTile.
-     * @returns The GroundTile if it exists; otherwise, null.
-     */
-    private getGroundTile(grid: GroundTile[][], row: number, col: number): GroundTile | null {
-        if (grid[row] && grid[row][col]) {
-            return grid[row][col];
-        }
-        return null;
-    }
 }
+

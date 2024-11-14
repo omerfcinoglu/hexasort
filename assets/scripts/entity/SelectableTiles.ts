@@ -8,20 +8,13 @@ const { ccclass, property } = _decorator;
 @ccclass('SelectableTiles')
 export class SelectableTiles extends Component {
     
-    public tileClusters: TileCluster[] = []; // Holds all TileClusters on this SelectableTile
-    public isSelected: boolean = false; // Tracks if this tile is currently selected
-    public isSelectable: boolean = true; // Determines if the tile can be selected
-    public isDragging: boolean = false; // Tracks if the tile is currently being dragged
-    private touchOffset: Vec3 = new Vec3(); // Offset for touch position adjustments
-    public originalPosition: Vec3 = new Vec3(); // Stores the tile's initial position
-    public attachedGround: GroundTile | null = null; // Reference to the ground tile it is attached to
-
-    /**
-     * Initializes the selectable tile and stores its original position.
-     */
-    protected onLoad(): void {
-        this.tileClusters = [];
-    }
+    public tileClusters: TileCluster[] = []; 
+    public isSelected: boolean = false; 
+    public isSelectable: boolean = true; 
+    public isDragging: boolean = false; 
+    private touchOffset: Vec3 = new Vec3(); 
+    public originalPosition: Vec3 = new Vec3(); 
+    public attachedGround: GroundTile | null = null;
 
     /**
      * Selects this tile and initiates dragging by setting the touch offset.

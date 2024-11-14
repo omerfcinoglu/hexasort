@@ -14,24 +14,17 @@ export class TilePlacementHandler extends Component {
      * @param selectedTile The selected SelectableTiles instance to be placed.
      * @returns A promise resolving to true if placement is successful, otherwise false.
      */
-    async place(selectedTile: SelectableTiles, selectableManager: SelectableManager): Promise<boolean> {
+    async place(selectedTile: SelectableTiles,
+         selectableManager: SelectableManager): Promise<GroundTile> {
         const targetGround = selectedTile.attachedGround;
-        if (!targetGround || !selectedTile) return false;
+        if (!targetGround || !selectedTile) return null;
 
-        // Calculate cumulative height based on existing clusters on the ground tile
 
-        
-        // Add each TileCluster from selectedTile to targetGround
         for (const cluster of selectedTile.tileClusters) {
-            console.log(cluster.type);
             targetGround.addTileCluster(cluster);
         }
 
-
-        // Update the last attached cluster to the last item in the array
-
-        // Remove the selectedTile from the SelectableManager
         selectableManager.remove(selectedTile);
-        return true;
+        return targetGround;
     }
 }

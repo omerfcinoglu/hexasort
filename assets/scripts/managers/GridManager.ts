@@ -1,10 +1,11 @@
 import { _decorator, Component, Node, Prefab, instantiate, Vec3 } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
 import { GridGenerator } from '../core/GridGenerator';
+import { SingletonComponent } from '../helpers/SingletonComponent';
 const { ccclass, property } = _decorator;
 
 @ccclass("GridManager")
-export class GridManager extends Component {
+export class GridManager extends SingletonComponent<GridManager> {
     @property({ type: Prefab })
     public groundTilePrefab: Prefab = null!;
 
@@ -22,6 +23,7 @@ export class GridManager extends Component {
     private gridGenerator: GridGenerator = null;
 
     onLoad(): void {
+        super.onLoad();
         this.gridGenerator = new GridGenerator(
             this.groundTilePrefab,
             this.tileClusterPrefab,

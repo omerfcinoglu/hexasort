@@ -2,6 +2,7 @@ import { _decorator, Component, Node, Collider, Color, Vec3, MeshRenderer, Mesh 
 import { TileCluster } from '../core/TileCluster';
 import { SelectableTiles } from '../entity/SelectableTiles';
 import { ColorProvider } from '../core/ColorProvider';
+import { sleep } from '../helpers/Promises';
 
 const { ccclass, property } = _decorator;
 
@@ -27,7 +28,7 @@ export class GroundTile extends Component {
     addTileCluster(tileCluster: TileCluster) {
         this.attachedClusters.push(tileCluster);
 
-        // Update lastAttachedCluster with the newly added cluster
+        this.lastAttachedCluster = null;
         this.lastAttachedCluster = tileCluster;
 
         const currentWorldPos = tileCluster.node.worldPosition.clone();
@@ -54,14 +55,20 @@ export class GroundTile extends Component {
     }
 
     public removeTileCluster(tileCluster: TileCluster) {
+        console.log(this.lastAttachedCluster.type);
+        console.log("removing last cluster" , this.attachedClusters.length);
+        
         const index = this.attachedClusters.indexOf(tileCluster);
         if (index !== -1) {
             this.attachedClusters.splice(index, 1);
         }
 
-        // Update lastAttachedCluster or reset if no clusters remain
+        console.log("removed" , this.attachedClusters.length);
+
         if (this.attachedClusters.length > 0) {
             this.lastAttachedCluster = this.attachedClusters[this.attachedClusters.length - 1];
+            console.log(this.lastAttachedCluster.type);
+            
         } else {
             this.lastAttachedCluster = null;
             this.setActiveCollider(true);

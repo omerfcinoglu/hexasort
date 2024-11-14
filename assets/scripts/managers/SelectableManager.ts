@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Prefab, Vec3, instantiate, tween } from 'cc';
+import { _decorator, Component, Node, Prefab, Vec3, instantiate, tween, random } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
 import { TileCluster } from '../core/TileCluster';
 import { SelectableTiles } from '../entity/SelectableTiles';
@@ -48,17 +48,16 @@ export class SelectableManager extends Component {
     }
 
     async addRandomClusters(selectableTile: SelectableTiles) {
-        const clusterCount = 3 //Math.floor(Math.random() * 2) + 1;
+        const clusterCount = 3 // Math.floor(Math.random() * 3) + 1;
         const availableTypes = [1, 2, 3, 4, 5]; // Başlangıç tipi listesi
-        console.log("Cluster count is: " + clusterCount);
+        // console.log("Cluster count is: " + clusterCount);
         
         let lastClusterTileCount = 0;
     
         for (let i = 0; i < clusterCount; i++) {
             // Rastgele bir tip seç ve seçilen tipi `availableTypes`'dan çıkar
-            const randomIndex = Math.floor(Math.random() * availableTypes.length);
-            const tileType = availableTypes.splice(randomIndex, 1)[0];
-    
+            const randomIndex = i+1//Math.floor(Math.random() * availableTypes.length);
+            const tileType = randomIndex//availableTypes.splice(randomIndex, 1)[0];
             const tileCount = Math.floor(Math.random() * 4) + 2;
             const tileClusterNode = instantiate(this.tileClusterPrefab);
             tileClusterNode.parent = selectableTile.node;
@@ -67,15 +66,13 @@ export class SelectableManager extends Component {
             if (cluster) {
                 cluster.initCluster(tileType, tileCount);
                 selectableTile.tileClusters.push(cluster);
-                cluster.node.setPosition(0, lastClusterTileCount * 0.1, 0);
+                cluster.node.setPosition(0, lastClusterTileCount * 0.3, 0);
             }
     
-            console.log(`TileType ${tileType}\nTileCount ${tileCount}`);
-            await sleep(1000);
-    
+            // console.log(`TileType ${tileType}\nTileCount ${tileCount}`);
             // Kullanılan tip tekrar kullanılabilir hale gelmesi için availableTypes'a geri eklenir
             lastClusterTileCount += tileCount;
-            console.log(`Selectable tile clusters: ${selectableTile.tileClusters.length}`);
+            // console.log(`Selectable tile clusters: ${selectableTile.tileClusters.length}`);
         }
     }
     
