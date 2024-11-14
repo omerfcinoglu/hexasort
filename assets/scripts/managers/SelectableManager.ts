@@ -48,7 +48,7 @@ export class SelectableManager extends Component {
     }
 
     async addRandomClusters(selectableTile: SelectableTiles) {
-        const clusterCount = 3 // Math.floor(Math.random() * 3) + 1;
+        const clusterCount = 2 // Math.floor(Math.random() * 3) + 1;
         const availableTypes = [1, 2, 3, 4, 5]; // Başlangıç tipi listesi
         // console.log("Cluster count is: " + clusterCount);
         
@@ -66,7 +66,7 @@ export class SelectableManager extends Component {
             if (cluster) {
                 cluster.initCluster(tileType, tileCount);
                 selectableTile.tileClusters.push(cluster);
-                cluster.node.setPosition(0, lastClusterTileCount * 0.3, 0);
+                cluster.node.setPosition(0, lastClusterTileCount * 0.1, 0);
             }
     
             // console.log(`TileType ${tileType}\nTileCount ${tileCount}`);

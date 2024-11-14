@@ -82,40 +82,6 @@ export class TileCluster extends Component {
     public setActiveCollider(value: boolean) {
         this.node.getComponent(Collider).enabled = value;
     }
-
-    /**
-     * Checks if the cluster meets a specific match condition, such as containing 5 tiles.
-     * @returns A promise resolving to true if the cluster meets the match condition, false otherwise.
-     */
-    async isMatch(): Promise<boolean> {
-        if (this.tiles.length === 5) {
-            await this.animateTilesToZeroScale(this.tiles);
-            this.node.setPosition(10, 10, 10); // Temporarily move out of view for reuse
-            this.setActiveCollider(false);
-            return true;
-        }
-        if (this.tiles.length === 0) {
-            this.node.active = false;
-        }
-        return false;
-    }
-
-    /**
-     * Animates the tiles in the cluster to scale down to zero.
-     * @param tiles - Array of tiles to animate.
-     */
-    private async animateTilesToZeroScale(tiles: Tile[]): Promise<void> {
-        const reversedTiles = [...tiles].reverse();
-        for (const tile of reversedTiles) {
-            await new Promise<void>((resolve) => {
-                tween(tile.node)
-                    .to(0.2, { scale: new Vec3(0, 0, 0) })
-                    .call(resolve)
-                    .start();
-            });
-        }
-    }
-
     /**
      * Retrieves all tiles in this cluster.
      * @returns An array of Tile instances.

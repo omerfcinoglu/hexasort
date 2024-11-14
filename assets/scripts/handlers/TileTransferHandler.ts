@@ -17,7 +17,6 @@ export class TileTransferHandler {
             cluster.setActiveCollider(false);
         }
 
-
         await TileAnimator.animateClusterTransfer(cluster, targetGround);
         
         // Null check before calling transferTiles to prevent errors
