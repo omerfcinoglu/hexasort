@@ -67,14 +67,13 @@ export class SelectableManager extends Component {
             if (cluster) {
                 cluster.initCluster(tileType, tileCount);
                 selectableTile.tileClusters.push(cluster);
-                cluster.node.setPosition(0, i * 1.3, 0);
+                cluster.node.setPosition(0, lastClusterTileCount * 0.1, 0);
             }
     
             console.log(`TileType ${tileType}\nTileCount ${tileCount}`);
             await sleep(1000);
     
             // Kullanılan tip tekrar kullanılabilir hale gelmesi için availableTypes'a geri eklenir
-            availableTypes.push(tileType);
             lastClusterTileCount += tileCount;
             console.log(`Selectable tile clusters: ${selectableTile.tileClusters.length}`);
         }
