@@ -15,7 +15,7 @@ export class TilePlacementHandler extends Component {
      * @returns A promise resolving to true if placement is successful, otherwise false.
      */
     async place(selectedTile: SelectableTiles,
-         selectableManager: SelectableManager): Promise<GroundTile> {
+        selectableManager: SelectableManager): Promise<GroundTile> {
         const targetGround = selectedTile.attachedGround;
         if (!targetGround || !selectedTile) return null;
 

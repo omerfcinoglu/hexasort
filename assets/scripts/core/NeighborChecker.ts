@@ -50,7 +50,6 @@ export class NeighborChecker {
             const neighborGround = GridManager.getInstance().getGroundTile(neighborRow, neighborCol);
 
             if (neighborGround && !neighborGround.isProcessing && neighborGround.getLastCluster()) {
-                console.log(`Found neighbor at row ${neighborRow}, col ${neighborCol}`);
                 neighborGrounds.push(neighborGround);
             }
         }
@@ -71,10 +70,9 @@ export class NeighborChecker {
 
         for (const neighbor of neighbors) {
             if (neighbor.getLastCluster()?.type === lastCluster.type) {
-                console.log(`Match found with neighbor at row ${neighbor.gridPosition.row}, col ${neighbor.gridPosition.col}`);
                 matchingNeighbors.push(neighbor);
             } else {
-                console.log(`No match at neighbor row ${neighbor.gridPosition.row}, col ${neighbor.gridPosition.col}`);
+                //no match
             }
         }
         return matchingNeighbors;
