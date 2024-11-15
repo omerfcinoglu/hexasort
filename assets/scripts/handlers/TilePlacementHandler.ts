@@ -8,7 +8,7 @@ import { GroundTile } from "../entity/GroundTile";
 const { ccclass, property } = _decorator;
 
 @ccclass("TilePlacementHandler")
-export class TilePlacementHandler extends Component {
+export class TilePlacementHandler {
     /**
      * Places the selected SelectableTiles on the target ground tile.
      * @param selectedTile The selected SelectableTiles instance to be placed.

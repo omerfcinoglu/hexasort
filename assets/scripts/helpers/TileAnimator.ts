@@ -31,13 +31,13 @@ export class TileAnimator {
             const targetPosition = new Vec3(baseTargetPosition.x, cumulativeHeight, baseTargetPosition.z);
 
             // Y yönünde bir pozisyona kaldırma
-            const liftedPosition = new Vec3(tile.node.position.x, 1, tile.node.position.z);
+            const liftedPosition = new Vec3(tile.node.position.x, 1.5, tile.node.position.z);
 
             // Rotasyonu hedefe göre ayarlayalım
             const direction = targetPosition.clone().subtract(tile.node.worldPosition).normalize(); // Hedef yönünü hesapla
 
             const initialRotation = tile.node.rotation.clone();
-            const halfFlipRotation = Quat.fromEuler(new Quat(), 0, 0, -180); // Komşuya göre çevrilen açı
+            const halfFlipRotation = Quat.fromEuler(new Quat(), 0, 0, 0); // Komşuya göre çevrilen açı
             const animationPromise = new Promise<void>((resolve) => {
                 tween(tile.node)
                     .to(0.1 * reverseIndex, { position: liftedPosition }, { easing: 'cubicInOut' }) // Yukarı doğru kalkma hareketi

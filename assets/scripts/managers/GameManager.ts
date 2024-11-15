@@ -10,6 +10,8 @@ import { SelectableTiles } from "../entity/SelectableTiles";
 import { SelectableManager } from "./SelectableManager";
 import { sleep } from "../helpers/Promises";
 import { TileAnimator } from "../helpers/TileAnimator";
+import { NeighborHandler } from "../handlers/NeighborHandler";
+import { StackHandler } from "../handlers/StackHandler";
 
 const { ccclass, property } = _decorator;
 
@@ -18,26 +20,19 @@ export class GameManager extends Component {
      @property(GridManager)
      gridManager: GridManager | null = null;
 
-     @property(TilePlacementHandler)
-     tilePlacementHandler: TilePlacementHandler | null = null;
-
      @property(SelectableManager)
-     private selectableManager: SelectableManager | null = null;
+     selectableManager: SelectableManager | null = null;
+     
+     private MATCH_STACK_COUNT : number = 8;
 
-     private matchStackCount: number = 12;
-     private neighborChecker: NeighborChecker | null = null;
-     private tileTransferHandler: TileTransferHandler | null = null;
+     tilePlacementHandler: TilePlacementHandler | null = null;
+     neighborHandler: NeighborHandler | null = null;
+     stackHandler: StackHandler | null = null;
 
-     // @property(PlacementHandler) placementHandler: PlacementHandler | null = null;
-     // @property(NeighborProcessor) neighborProcessor: NeighborProcessor | null = null;
-     // @property(TransferHandler) transferHandler: TransferHandler | null = null;
-     // @property(StackManager) stackManager: StackManager | null = null;
-
-
-     private transferedGrounds: GroundTile[] = [];
      onLoad(): void {
-          this.neighborChecker = new NeighborChecker();
-          this.tileTransferHandler = new TileTransferHandler();
+          this.neighborHandler = new NeighborHandler();
+          this.tilePlacementHandler = new TilePlacementHandler();
+          this.stackHandler = new StackHandler(this.MATCH_STACK_COUNT)
           if (this.selectableManager) this.selectableManager.init();
           TileSelectionHandler.placementEvent.on('placement', this.onPlacementTriggered, this);
      }
@@ -49,8 +44,8 @@ export class GameManager extends Component {
      async onPlacementTriggered(selectedTile: SelectableTiles) {
           const placedGround = await this.tilePlacementHandler?.place(selectedTile, this.selectableManager);
           if (placedGround) {
-               // const transferedGrounds = await this.neighborProcessor?.processNeighbors(placedGround);
-               // await this.stackManager?.processStacks(transferedGrounds);
+               const transferedGrounds = await this.neighborHandler?.processNeighbors(placedGround);
+               await this.stackHandler?.processStacks(transferedGrounds);
           }
      }
 }
