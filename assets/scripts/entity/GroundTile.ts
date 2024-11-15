@@ -3,11 +3,12 @@ import { TileCluster } from '../core/TileCluster';
 import { SelectableTiles } from '../entity/SelectableTiles';
 import { ColorProvider } from '../core/ColorProvider';
 import { sleep } from '../helpers/Promises';
+import { LockableComponent } from '../helpers/LockableComponent';
 
 const { ccclass, property } = _decorator;
 
 @ccclass('GroundTile')
-export class GroundTile extends Component {
+export class GroundTile extends LockableComponent {
 
     public gridPosition: { row: number; col: number } = { row: 0, col: 0 };
     public attachedClusters: TileCluster[] = [];

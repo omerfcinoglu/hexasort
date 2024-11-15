@@ -24,6 +24,9 @@ export class TilePlacementHandler {
             targetGround.addTileCluster(cluster);
         }
 
+    
+        targetGround.setActiveCollider(false);
+
         selectableManager.remove(selectedTile);
         return targetGround;
     }
