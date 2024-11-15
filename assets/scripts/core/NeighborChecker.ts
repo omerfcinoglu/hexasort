@@ -1,4 +1,3 @@
-// NeighborChecker.ts
 import { _decorator } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
 import { GridManager } from '../managers/GridManager';
@@ -26,13 +25,9 @@ export class NeighborChecker {
         { dRow: -1, dCol: 1 }    // top-right diagonal
     ];
 
-    private async sleep(ms: number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
     /**
      * Finds neighboring GroundTiles surrounding a given GroundTile within a grid.
-     * @param groundTile The GroundTile for which neighbors are being identified.
+     * @param placedGround The GroundTile for which neighbors are being identified.
      * @returns An array of neighboring GroundTiles.
      */
     public async findNeighbors(placedGround: GroundTile): Promise<GroundTile[]> {
@@ -45,11 +40,12 @@ export class NeighborChecker {
         for (const { dRow, dCol } of directions) {
             const neighborRow = row + dRow;
             const neighborCol = col + dCol;
-            
+
             // Access GroundTile from GridManager
             const neighborGround = GridManager.getInstance().getGroundTile(neighborRow, neighborCol);
 
-            if (neighborGround && !neighborGround.isProcessing && neighborGround.getLastCluster()) {
+            // Only consider neighbors that are not locked
+            if (neighborGround && !neighborGround.isLocked && neighborGround.getLastCluster()) {
                 neighborGrounds.push(neighborGround);
             }
         }
@@ -58,7 +54,7 @@ export class NeighborChecker {
 
     /**
      * Finds all neighboring GroundTiles that have the same type as the last TileCluster of the target GroundTile.
-     * @param ground The GroundTile whose last TileCluster's type is used for matching.
+     * @param placedGround The GroundTile whose last TileCluster's type is used for matching.
      * @returns An array of neighboring GroundTiles with matching cluster types.
      */
     public async findAllMatches(placedGround: GroundTile): Promise<GroundTile[]> {
@@ -71,8 +67,6 @@ export class NeighborChecker {
         for (const neighbor of neighbors) {
             if (neighbor.getLastCluster()?.type === lastCluster.type) {
                 matchingNeighbors.push(neighbor);
-            } else {
-                //no match
             }
         }
         return matchingNeighbors;

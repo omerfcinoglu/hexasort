@@ -2,11 +2,12 @@
 import { _decorator, Component, Node, Prefab, Vec3, instantiate, tween, Collider } from 'cc';
 import { Tile } from '../entity/Tile';
 import { GroundTile } from '../entity/GroundTile';
+import { LockableComponent } from '../helpers/LockableComponent';
 
 const { ccclass, property } = _decorator;
 
 @ccclass('TileCluster')
-export class TileCluster extends Component {
+export class TileCluster extends LockableComponent {
     
     @property({ type: Prefab })
     public tilePrefab: Prefab = null!; // Prefab for creating individual tiles within the cluster

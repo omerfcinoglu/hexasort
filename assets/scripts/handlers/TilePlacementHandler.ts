@@ -23,7 +23,6 @@ export class TilePlacementHandler {
         for (const cluster of selectedTile.tileClusters) {
             targetGround.addTileCluster(cluster);
         }
-
     
         targetGround.setActiveCollider(false);
 

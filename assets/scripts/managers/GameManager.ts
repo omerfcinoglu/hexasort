@@ -23,7 +23,7 @@ export class GameManager extends Component {
      @property(SelectableManager)
      selectableManager: SelectableManager | null = null;
 
-     private MATCH_STACK_COUNT: number = 8;
+     private MATCH_STACK_COUNT: number = 5;
 
      tilePlacementHandler: TilePlacementHandler | null = null;
      neighborHandler: NeighborHandler | null = null;
