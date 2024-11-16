@@ -12,9 +12,10 @@ export class GroundTile extends LockableComponent {
 
     public gridPosition: { row: number; col: number } = { row: 0, col: 0 };
     public attachedClusters: TileCluster[] = [];
-    public isProcessing : boolean = false;
     private mesh : MeshRenderer;
 
+    public isPlacedGround: boolean = false;
+    
     private defaultColor: Color = null;
     private highlightColor: Color = null;
 
@@ -26,7 +27,6 @@ export class GroundTile extends LockableComponent {
     }
 
     addTileCluster(tileCluster: TileCluster) {
-        this.isProcessing = true;
         this.attachedClusters.push(tileCluster);
 
         const currentWorldPos = tileCluster.node.worldPosition.clone();
@@ -36,7 +36,6 @@ export class GroundTile extends LockableComponent {
             currentWorldPos.y,
             this.node.position.z
         ));
-        this.isProcessing = false;
     }
 
     public setActiveCollider(value: boolean) {

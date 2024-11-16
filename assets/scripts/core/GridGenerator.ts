@@ -74,14 +74,14 @@ export class GridGenerator {
         const clusterNode = instantiate(this.tileClusterPrefab);
         const tileCluster = clusterNode.getComponent(TileCluster);
         if (tileCluster) {
-            tileCluster.initCluster(tileType,5); 
+            tileCluster.initCluster(tileType,3); 
             tileCluster.node.setPosition(new Vec3(groundTileNode.position.x, 0.1 ,groundTileNode.position.z))
             tileCluster.node.setParent(groundTileNode.parent);
             tileCluster.attachedGround = groundTileComp;
 
             groundTileComp.attachedClusters.push(tileCluster);
             groundTileComp.setActiveCollider(false);
-            
+            groundTileComp.isPlacedGround = true;
             // groundTileComp.addTileCluster(tileCluster);
         }
     }

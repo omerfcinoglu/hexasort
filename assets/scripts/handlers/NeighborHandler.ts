@@ -17,31 +17,50 @@ export class NeighborHandler {
 
     async processNeighbors(currentGround: GroundTile): Promise<GroundTile[]> {
         console.log(`Processing neighbors for (${currentGround.gridPosition.row}, ${currentGround.gridPosition.col})`);
-        const transferedGrounds : GroundTile[] = [];
+
+        const transferedGrounds: GroundTile[] = [];
         const typeMatches = await this.neighborChecker?.findAllMatches(currentGround) || [];
 
-        for (const match of typeMatches) {
-            const { source, target } = this.determineTransferTarget(currentGround, match);
+        if (typeMatches.length > 0) {
+            const transfers = this.determineTransferTargets(currentGround, typeMatches);
+            const { source, target } = transfers
 
-            if (source && target) {
-                transferedGrounds.push(target);
-                await this.transferHandler?.transferClusterToTarget(source, target);
-                await this.processNeighbors(source);
-            }
+            console.log(
+                `Transferring from (${source.gridPosition.row}, ${source.gridPosition.col}) to (${target.gridPosition.row}, ${target.gridPosition.col})`
+            );
+
+            transferedGrounds.push(target);
+            await this.transferHandler?.transferClusterToTarget(source, target);
+
+            // Transfer sonrası kaynak (source) tekrar kontrol edilsin
+            await this.processNeighbors(source);
+            
         }
+
         return transferedGrounds;
     }
 
-    private determineTransferTarget(ground1: GroundTile, ground2: GroundTile): { source: GroundTile, target: GroundTile } {
-        const clusterCount1 = ground1.attachedClusters.length;
-        const clusterCount2 = ground2.attachedClusters.length;
+    private determineTransferTargets(currentGround: GroundTile, matches: GroundTile[]): { source: GroundTile, target: GroundTile } {
 
-        if (clusterCount1 === 1 && clusterCount2 > 1) return { source: ground2, target: ground1 };
-        if (clusterCount2 === 1 && clusterCount1 > 1) return { source: ground1, target: ground2 };
+        if (matches.length > 1) {
+            for (const match of matches) {
+                return { source: match, target: currentGround };
+            }
+        }
+        else {
+            const ground1 = currentGround;
+            const ground2 = matches[0]
+            const clusterCount1 = ground1.attachedClusters.length;
+            const clusterCount2 = ground2.attachedClusters.length;
 
-        if (clusterCount1 < clusterCount2) return { source: ground2, target: ground1 };
-        if (clusterCount2 < clusterCount1) return { source: ground1, target: ground2 };
+            if (clusterCount1 === 1 && clusterCount2 > 1) return { source: ground2, target: ground1 };
+            if (clusterCount2 === 1 && clusterCount1 > 1) return { source: ground1, target: ground2 };
 
-        return { source: ground2, target: ground1 };
+            if (clusterCount1 < clusterCount2) return { source: ground2, target: ground1 };
+            if (clusterCount2 < clusterCount1) return { source: ground1, target: ground2 };
+
+            return { source: ground2, target: ground1 };
+        }
+
     }
 }

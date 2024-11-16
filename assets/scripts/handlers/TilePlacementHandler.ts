@@ -25,7 +25,7 @@ export class TilePlacementHandler {
         }
     
         targetGround.setActiveCollider(false);
-
+        targetGround.isPlacedGround = true;
         selectableManager.remove(selectedTile);
         return targetGround;
     }

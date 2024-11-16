@@ -37,15 +37,15 @@ export class TileAnimator {
             const direction = targetPosition.clone().subtract(tile.node.worldPosition).normalize(); // Hedef yönünü hesapla
 
             const initialRotation = tile.node.rotation.clone();
-            const halfFlipRotation = Quat.fromEuler(new Quat(), 0, 0, 0); // Komşuya göre çevrilen açı
+            const halfFlipRotation = Quat.fromEuler(new Quat(), 0, 0, -180); // Komşuya göre çevrilen açı
             const animationPromise = new Promise<void>((resolve) => {
                 tween(tile.node)
-                    .to(0.05 * reverseIndex, { position: liftedPosition }, { easing: 'cubicInOut' }) // Yukarı doğru kalkma hareketi
+                    .to(0.1 * reverseIndex, { position: liftedPosition }, { easing: 'cubicInOut' }) // Yukarı doğru kalkma hareketi
                     .call(() => {
                         tween(tile.node)
                             .parallel(
-                                tween().to(0.05 * reverseIndex, { rotation: halfFlipRotation }, { easing: 'quadOut' }),
-                                tween().to(0.05 * reverseIndex, { worldPosition: targetPosition }, { easing: 'cubicIn' }) // Hedefe doğru hareket
+                                tween().to(0.1 * reverseIndex, { rotation: halfFlipRotation }, { easing: 'quadOut' }),
+                                tween().to(0.1 * reverseIndex, { worldPosition: targetPosition }, { easing: 'cubicIn' }) // Hedefe doğru hareket
                             )
                             .call(resolve)
                             .start();
@@ -72,7 +72,7 @@ export class TileAnimator {
             }
             await new Promise<void>((resolve) => {
                 tween(tile.node)
-                    .to(0.2, { scale: new Vec3(0, 0, 0) })
+                    .to(0.1, { scale: new Vec3(0, 0, 0) })
                     .call(resolve)
                     .start();
             });
@@ -81,7 +81,7 @@ export class TileAnimator {
         // Scale the last tile to (0.231, 0.231, 0.231)
         await new Promise<void>((resolve) => {
             tween(lastTile.node)
-                .to(0.03, { scale: new Vec3(0.231, lastTile.node.scale.y * 0.5, 0.231) })
+                .to(0.1, { scale: new Vec3(0.231, lastTile.node.scale.y * 0.5, 0.231) })
                 .call(resolve)
                 .start();
         });
@@ -94,7 +94,7 @@ export class TileAnimator {
         // Move the last tile to the first position
         await new Promise<void>((resolve) => {
             tween(lastTile.node)
-                .to(0.3, { worldPosition: position1 }, { easing: "cubicOut" })
+                .to(0.1, { worldPosition: position1 }, { easing: "cubicOut" })
                 .call(resolve)
                 .start();
         });
@@ -102,7 +102,7 @@ export class TileAnimator {
         // Move the last tile to the second position
         await new Promise<void>((resolve) => {
             tween(lastTile.node)
-                .to(0.09, { worldPosition: position2 }, { easing: "expoIn" })
+                .to(0.1, { worldPosition: position2 }, { easing: "expoIn" })
                 .call(() => {
                     ScoreManager.getInstance().addScore(10);
                     resolve()
