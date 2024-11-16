@@ -46,7 +46,6 @@ export class NeighborChecker {
 
             // Only consider neighbors that are not locked
             if (neighborGround && !neighborGround.isLocked && neighborGround.getLastCluster()) {
-                neighborGround.highlight(true);
                 neighborGrounds.push(neighborGround);
             }
         }

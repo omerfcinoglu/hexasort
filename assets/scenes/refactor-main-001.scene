@@ -48,7 +48,7 @@
         "__id__": 40
       },
       {
-        "__id__": 42
+        "__id__": 54
       },
       {
         "__id__": 56
@@ -57,10 +57,7 @@
         "__id__": 58
       },
       {
-        "__id__": 60
-      },
-      {
-        "__id__": 45
+        "__id__": 43
       },
       {
         "__id__": 24
@@ -69,11 +66,11 @@
     "_active": true,
     "_components": [],
     "_prefab": {
-      "__id__": 62
+      "__id__": 60
     },
     "autoReleaseAssets": false,
     "_globals": {
-      "__id__": 63
+      "__id__": 61
     },
     "_id": "5a1e6e26-7c77-424d-a0b7-96433b538ca3"
   },
@@ -1366,7 +1363,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "TilePlacementHandler",
+    "_name": "GridManager",
     "_objFlags": 0,
     "_parent": {
       "__id__": 1
@@ -1405,60 +1402,6 @@
       "y": 0,
       "z": 0
     },
-    "_id": "21K8yU2yFJXbuXiHvV1XLe"
-  },
-  {
-    "__type__": "1e150QBfjhPH6aezsWhPuVZ",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 40
-    },
-    "_enabled": true,
-    "__prefab": null,
-    "_id": "f7jR9Jk+1DlKqk3ocJKe2M"
-  },
-  {
-    "__type__": "cc.Node",
-    "_name": "GridManager",
-    "_objFlags": 0,
-    "_parent": {
-      "__id__": 1
-    },
-    "_children": [],
-    "_active": true,
-    "_components": [
-      {
-        "__id__": 43
-      }
-    ],
-    "_prefab": null,
-    "_lpos": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "_lrot": {
-      "__type__": "cc.Quat",
-      "x": 0,
-      "y": 0,
-      "z": 0,
-      "w": 1
-    },
-    "_lscale": {
-      "__type__": "cc.Vec3",
-      "x": 1,
-      "y": 1,
-      "z": 1
-    },
-    "_layer": 1073741824,
-    "_euler": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
     "_id": "7e61PU1fpNEo+70SFooJy5"
   },
   {
@@ -1466,7 +1409,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 42
+      "__id__": 40
     },
     "_enabled": true,
     "__prefab": null,
@@ -1479,7 +1422,7 @@
       "__expectedType__": "cc.Prefab"
     },
     "gridArea": {
-      "__id__": 44
+      "__id__": 42
     },
     "tileSize": 1,
     "_id": "46N+JJgSxInIy5bSfG9XXc"
@@ -1489,11 +1432,11 @@
     "_name": "Grid Area",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 45
+      "__id__": 43
     },
     "_children": [
       {
-        "__id__": 52
+        "__id__": 50
       }
     ],
     "_active": true,
@@ -1536,10 +1479,10 @@
     },
     "_children": [
       {
-        "__id__": 44
+        "__id__": 42
       },
       {
-        "__id__": 46
+        "__id__": 44
       }
     ],
     "_active": true,
@@ -1578,14 +1521,14 @@
     "_name": "Selectable Area",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 45
+      "__id__": 43
     },
     "_children": [
       {
-        "__id__": 47
+        "__id__": 45
       },
       {
-        "__id__": 51
+        "__id__": 49
       }
     ],
     "_active": true,
@@ -1624,16 +1567,16 @@
     "_name": "AreaBackground",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 46
+      "__id__": 44
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 48
+        "__id__": 46
       },
       {
-        "__id__": 50
+        "__id__": 48
       }
     ],
     "_prefab": null,
@@ -1670,7 +1613,7 @@
     "_name": "Plane<ModelComponent>",
     "_objFlags": 0,
     "node": {
-      "__id__": 47
+      "__id__": 45
     },
     "_enabled": true,
     "__prefab": null,
@@ -1682,7 +1625,7 @@
     ],
     "_visFlags": 0,
     "lightmapSettings": {
-      "__id__": 49
+      "__id__": 47
     },
     "_mesh": {
       "__uuid__": "1263d74c-8167-4928-91a6-4e2672411f47@2e76e",
@@ -1716,7 +1659,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 47
+      "__id__": 45
     },
     "_enabled": true,
     "__prefab": null,
@@ -1727,7 +1670,7 @@
     "_name": "TilesInitalPoint",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 46
+      "__id__": 44
     },
     "_children": [],
     "_active": true,
@@ -1766,16 +1709,16 @@
     "_name": "AreaBackground",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 44
+      "__id__": 42
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 53
+        "__id__": 51
       },
       {
-        "__id__": 55
+        "__id__": 53
       }
     ],
     "_prefab": null,
@@ -1812,7 +1755,7 @@
     "_name": "Plane<ModelComponent>",
     "_objFlags": 0,
     "node": {
-      "__id__": 52
+      "__id__": 50
     },
     "_enabled": true,
     "__prefab": null,
@@ -1824,7 +1767,7 @@
     ],
     "_visFlags": 0,
     "lightmapSettings": {
-      "__id__": 54
+      "__id__": 52
     },
     "_mesh": {
       "__uuid__": "1263d74c-8167-4928-91a6-4e2672411f47@2e76e",
@@ -1858,7 +1801,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 52
+      "__id__": 50
     },
     "_enabled": true,
     "__prefab": null,
@@ -1867,6 +1810,72 @@
   {
     "__type__": "cc.Node",
     "_name": "SelectableManager",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 1
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 55
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_layer": 1073741824,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "cejFIPitxEZ7IdM/YTJZGb"
+  },
+  {
+    "__type__": "57701WxVB1At5p9WMflyLji",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 54
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "selectableTilesPrefab": {
+      "__uuid__": "b3830b53-7c2e-4d49-ae6e-ca820a32a9b4",
+      "__expectedType__": "cc.Prefab"
+    },
+    "tileClusterPrefab": {
+      "__uuid__": "76c7c975-b2be-4359-ac5c-f98b097aff6b",
+      "__expectedType__": "cc.Prefab"
+    },
+    "selectableArea": {
+      "__id__": 44
+    },
+    "tilesCount": 3,
+    "_id": "51dz1EGnJElorfPxk+faMT"
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "LevelManager",
     "_objFlags": 0,
     "_parent": {
       "__id__": 1
@@ -1905,10 +1914,10 @@
       "y": 0,
       "z": 0
     },
-    "_id": "cejFIPitxEZ7IdM/YTJZGb"
+    "_id": "76I30rxiNAIorxsErCBbXE"
   },
   {
-    "__type__": "57701WxVB1At5p9WMflyLji",
+    "__type__": "f8055cWfd1J3YumOJBvwbOV",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -1916,23 +1925,14 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "selectableTilesPrefab": {
-      "__uuid__": "b3830b53-7c2e-4d49-ae6e-ca820a32a9b4",
-      "__expectedType__": "cc.Prefab"
+    "gridManager": {
+      "__id__": 41
     },
-    "tileClusterPrefab": {
-      "__uuid__": "76c7c975-b2be-4359-ac5c-f98b097aff6b",
-      "__expectedType__": "cc.Prefab"
-    },
-    "selectableArea": {
-      "__id__": 46
-    },
-    "tilesCount": 3,
-    "_id": "51dz1EGnJElorfPxk+faMT"
+    "_id": "56ZAJR4WhL6ZqbTIgFP94+"
   },
   {
     "__type__": "cc.Node",
-    "_name": "LevelManager",
+    "_name": "GameManager",
     "_objFlags": 0,
     "_parent": {
       "__id__": 1
@@ -1971,10 +1971,10 @@
       "y": 0,
       "z": 0
     },
-    "_id": "76I30rxiNAIorxsErCBbXE"
+    "_id": "2cC6JUz15LF7qsg0cwxx8J"
   },
   {
-    "__type__": "f8055cWfd1J3YumOJBvwbOV",
+    "__type__": "b58ffCmt59Jj52WP/DfJFRl",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -1983,70 +1983,10 @@
     "_enabled": true,
     "__prefab": null,
     "gridManager": {
-      "__id__": 43
-    },
-    "_id": "56ZAJR4WhL6ZqbTIgFP94+"
-  },
-  {
-    "__type__": "cc.Node",
-    "_name": "GameManager",
-    "_objFlags": 0,
-    "_parent": {
-      "__id__": 1
-    },
-    "_children": [],
-    "_active": true,
-    "_components": [
-      {
-        "__id__": 61
-      }
-    ],
-    "_prefab": null,
-    "_lpos": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "_lrot": {
-      "__type__": "cc.Quat",
-      "x": 0,
-      "y": 0,
-      "z": 0,
-      "w": 1
-    },
-    "_lscale": {
-      "__type__": "cc.Vec3",
-      "x": 1,
-      "y": 1,
-      "z": 1
-    },
-    "_layer": 1073741824,
-    "_euler": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "_id": "2cC6JUz15LF7qsg0cwxx8J"
-  },
-  {
-    "__type__": "b58ffCmt59Jj52WP/DfJFRl",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 60
-    },
-    "_enabled": true,
-    "__prefab": null,
-    "gridManager": {
-      "__id__": 43
-    },
-    "tilePlacementHandler": {
       "__id__": 41
     },
     "selectableManager": {
-      "__id__": 57
+      "__id__": 55
     },
     "_id": "56/4DhjGxMrYLwjZ8vznu+"
   },
@@ -2057,19 +1997,19 @@
   {
     "__type__": "cc.SceneGlobals",
     "ambient": {
-      "__id__": 64
+      "__id__": 62
     },
     "shadows": {
-      "__id__": 65
+      "__id__": 63
     },
     "_skybox": {
-      "__id__": 66
+      "__id__": 64
     },
     "fog": {
-      "__id__": 67
+      "__id__": 65
     },
     "octree": {
-      "__id__": 68
+      "__id__": 66
     }
   },
   {
