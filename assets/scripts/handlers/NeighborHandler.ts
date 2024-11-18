@@ -16,34 +16,28 @@ export class NeighborHandler {
     }
 
     async processNeighbors(currentGround: GroundTile): Promise<GroundTile[]> {
-        console.log(`Processing neighbors for (${currentGround.gridPosition.row}, ${currentGround.gridPosition.col})`);
 
         const transferedGrounds: GroundTile[] = [];
         const typeMatches = await this.neighborChecker?.findAllMatches(currentGround) || [];
 
         if (typeMatches.length > 0) {
             if (typeMatches.length > 1) {
-                // Eğer birden fazla eşleşme varsa, tüm match'leri currentGround'a taşı
                 for (const match of typeMatches) {
-                    console.log(
-                        `Transferring from (${match.gridPosition.row}, ${match.gridPosition.col}) to (${currentGround.gridPosition.row}, ${currentGround.gridPosition.col})`
-                    );
-                    transferedGrounds.push(currentGround);
+                    transferedGrounds.push(match);
                     await this.transferHandler?.transferClusterToTarget(match, currentGround);
                 }
+                transferedGrounds.push(currentGround);
             } else {
-                // Tek eşleşme varsa, transfer kuralını uygula
                 const { source, target } = this.determineTransferTargets(currentGround, typeMatches[0]);
-                console.log(
-                    `Transferring from (${source.gridPosition.row}, ${source.gridPosition.col}) to (${target.gridPosition.row}, ${target.gridPosition.col})`
-                );
                 transferedGrounds.push(target);
                 await this.transferHandler?.transferClusterToTarget(source, target);
             }
 
-            // Transfer sonrası tekrar komşuları kontrol et
             for (const ground of transferedGrounds) {
                 await this.processNeighbors(ground);
+                console.log(
+                    `proccessing (${ground.gridPosition.row}, ${ground.gridPosition.col})`
+                );
             }
         }
 

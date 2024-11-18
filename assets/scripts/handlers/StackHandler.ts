@@ -24,13 +24,13 @@ export class StackHandler {
                 const lastCluster = ground.getLastCluster();
                 if (lastCluster) {
                     if (!lastCluster.tryLock()) {
-                        console.warn(`TileCluster on GroundTile (${ground.gridPosition.row}, ${ground.gridPosition.col}) is already locked. Skipping.`);
+                        // console.warn(`TileCluster on GroundTile (${ground.gridPosition.row}, ${ground.gridPosition.col}) is already locked. Skipping.`);
                         continue;
                     }
 
                     try {
                         if (lastCluster.getLength() >= this.matchStackCount) {
-                            console.log(`Clearing stack on GroundTile (${ground.gridPosition.row}, ${ground.gridPosition.col}).`);
+                            // console.log(`Clearing stack on GroundTile (${ground.gridPosition.row}, ${ground.gridPosition.col}).`);
                             await TileAnimator.animateTilesToZeroScale(lastCluster.getTiles());
                             ground.popTileCluster();
                             if (!processedGrounds.includes(ground)) {
