@@ -29,6 +29,7 @@ export class NeighborHandler {
                 transferedGrounds.push(currentGround);
             } else {
                 const { source, target } = this.determineTransferTargets(currentGround, typeMatches[0]);
+                transferedGrounds.push(source);
                 transferedGrounds.push(target);
                 await this.transferHandler?.transferClusterToTarget(source, target);
             }

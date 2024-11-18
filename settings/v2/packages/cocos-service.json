@@ -16,7 +16,13 @@
       "config_id": "ba0755",
       "config_name": "Default",
       "config_remarks": "",
-      "services": []
+      "services": [
+        {
+          "service_id": "550",
+          "enable": false,
+          "param": {}
+        }
+      ]
     }
   ]
 }

@@ -104,6 +104,7 @@ export class TileAnimator {
             tween(lastTile.node)
                 .to(0.1, { worldPosition: position2 }, { easing: "expoIn" })
                 .call(() => {
+                    lastTile.node.active = false;
                     ScoreManager.getInstance().addScore(10);
                     resolve()
                 })

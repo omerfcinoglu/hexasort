@@ -44,6 +44,7 @@ export class GameManager extends Component {
      async onPlacementTriggered(selectedTile: SelectableTiles) {
           const placedGround = await this.tilePlacementHandler?.place(selectedTile, this.selectableManager);
           if (placedGround) {
+               placedGround.highlight(false);
                await this.processPlacement(placedGround);
           }
      }
