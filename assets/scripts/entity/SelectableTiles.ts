@@ -1,5 +1,5 @@
 // SelectableTiles.ts
-import { _decorator, Component, Vec3, tween } from "cc";
+import { _decorator, Component, Vec3, tween, Node, BoxCollider } from "cc";
 import { TileCluster } from "../core/TileCluster";
 import { GroundTile } from "../entity/GroundTile";
 
@@ -16,12 +16,30 @@ export class SelectableTiles extends Component {
     public originalPosition: Vec3 = new Vec3(); 
     public attachedGround: GroundTile | null = null;
 
+    private idleColliderSize : Vec3 = new Vec3(1,5,1);
+    private selectedColliderSize : Vec3 = new Vec3(0.1,5,0.1);
+
+    start() {
+        this.setColliderSize(false);
+    }
+
+    /**
+     * Changing collider size when player click 
+     * @param isSelected 
+     */
+    setColliderSize(isSelected : boolean){
+        isSelected 
+        ? this.node.getComponent(BoxCollider).size = this.selectedColliderSize
+        : this.node.getComponent(BoxCollider).size = this.idleColliderSize
+    }
+
     /**
      * Selects this tile and initiates dragging by setting the touch offset.
      * @param touchWorldPos - The initial world position where the touch event began.
      */
     public select(touchWorldPos: Vec3) {
         if (!this.isSelectable) return;
+        this.setColliderSize(true);
         this.isDragging = true;
         this.touchOffset = this.node.getWorldPosition().subtract(touchWorldPos);
     }
@@ -41,6 +59,7 @@ export class SelectableTiles extends Component {
      * Deselects the tile, stops dragging, and resets its position.
      */
     public deselect() {
+        this.setColliderSize(false);
         this.isDragging = false;
         this.resetPosition();
     }

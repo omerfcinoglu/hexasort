@@ -2,6 +2,7 @@
 import { _decorator, Component, EventTouch, Vec3, Node, geometry, EventTarget } from 'cc';
 import { InputProvider } from '../input/InputProvider';
 import { SelectableTiles } from '../entity/SelectableTiles';
+import { test } from '../../test';
 
 const { ccclass, property } = _decorator;
 
