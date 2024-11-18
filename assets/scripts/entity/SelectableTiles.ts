@@ -35,6 +35,10 @@ export class SelectableTiles extends Component {
         this.testCollider(isSelected);
     }
 
+    enableCollider(isActive : boolean){
+        this.node.getComponent(BoxCollider).enabled = isActive;
+    }
+
     testCollider(isSelected : boolean){
         const testNode = this.node.getChildByName("Test");
         isSelected 
@@ -78,8 +82,10 @@ export class SelectableTiles extends Component {
      * Resets the tile to its original position with animation.
      */
     public resetPosition() {
+        this.enableCollider(false);
         tween(this.node)
             .to(0.3, { worldPosition: this.originalPosition })
+            .call(()=>this.enableCollider(true))
             .start();
     }
 

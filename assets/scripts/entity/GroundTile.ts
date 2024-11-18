@@ -2,7 +2,6 @@ import { _decorator, Component, Node, Collider, Color, Vec3, MeshRenderer, Mesh 
 import { TileCluster } from '../core/TileCluster';
 import { SelectableTiles } from '../entity/SelectableTiles';
 import { ColorProvider } from '../core/ColorProvider';
-import { sleep } from '../helpers/Promises';
 import { LockableComponent } from '../helpers/LockableComponent';
 
 const { ccclass, property } = _decorator;
