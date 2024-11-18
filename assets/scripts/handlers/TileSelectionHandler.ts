@@ -40,6 +40,8 @@ export class TileSelectionHandler extends Component {
         const hitNode = this.performRaycast(touchPos3D);
 
         if (hitNode) {
+            console.log(hitNode);
+            
             const selectableTile = this.getSelectableTileFromNode(hitNode);
             if (selectableTile && selectableTile.isSelectable) {
                 const touchWorldPos = this.getTouchWorldPosition(event);

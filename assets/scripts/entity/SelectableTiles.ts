@@ -16,7 +16,7 @@ export class SelectableTiles extends Component {
     public originalPosition: Vec3 = new Vec3(); 
     public attachedGround: GroundTile | null = null;
 
-    private idleColliderSize : Vec3 = new Vec3(1,5,1);
+    private idleColliderSize : Vec3 = new Vec3(1.5,5,1.5);
     private selectedColliderSize : Vec3 = new Vec3(0.1,5,0.1);
 
     start() {
@@ -31,7 +31,17 @@ export class SelectableTiles extends Component {
         isSelected 
         ? this.node.getComponent(BoxCollider).size = this.selectedColliderSize
         : this.node.getComponent(BoxCollider).size = this.idleColliderSize
+
+        this.testCollider(isSelected);
     }
+
+    testCollider(isSelected : boolean){
+        const testNode = this.node.getChildByName("Test");
+        isSelected 
+        ? testNode.scale = this.selectedColliderSize
+        : testNode.scale = this.idleColliderSize        
+    }
+        
 
     /**
      * Selects this tile and initiates dragging by setting the touch offset.
