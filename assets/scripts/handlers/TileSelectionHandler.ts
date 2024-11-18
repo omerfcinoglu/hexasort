@@ -3,6 +3,7 @@ import { _decorator, Component, EventTouch, Vec3, Node, geometry, EventTarget } 
 import { InputProvider } from '../input/InputProvider';
 import { SelectableTiles } from '../entity/SelectableTiles';
 import { test } from '../../test';
+import { GroundTile } from '../entity/GroundTile';
 
 const { ccclass, property } = _decorator;
 
@@ -54,6 +55,8 @@ export class TileSelectionHandler extends Component {
      * @param event The touch move event.
      */
     private handleTouchMove(event: EventTouch) {
+
+        
         if (this.selectedTile) {
             const touchWorldPos = this.getTouchWorldPosition(event);
             this.selectedTile.move(touchWorldPos);
@@ -118,7 +121,6 @@ export class TileSelectionHandler extends Component {
         const ray = new geometry.Ray();
         camera.screenPointToRay(touchLocation.x, touchLocation.y, ray);
 
-        // Calculate world position by finding the intersection of the ray with the ground plane (Y = 0)
         const groundY = 0;
         const distance = (groundY - ray.o.y) / ray.d.y;
         const worldPos = new Vec3(
