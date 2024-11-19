@@ -44,8 +44,7 @@ export class TileAnimator {
             // Hedef yönünü hesapla ve rotasyonları al
             const direction = this.calculateDirection(tile.node.worldPosition, targetPosition);
             const { midRotation, endRotation } = this.getRotationByDirection(direction);
-            console.log(direction );
-            
+
             const animationPromise = new Promise<void>((resolve) => {
                 tween(tile.node)
                     .sequence(
@@ -84,7 +83,6 @@ export class TileAnimator {
     private static calculateDirection(sourcePosition: Vec3, targetPosition: Vec3): string {
         const deltaX = Math.floor(targetPosition.x - sourcePosition.x);
         const deltaZ = Math.floor(targetPosition.z - sourcePosition.z);
-        console.log(deltaX , deltaZ);
         
         if (deltaX > 0 && deltaZ === 0) return 'LeftUp'; 
         if (deltaX < 0 && deltaZ === 0) return 'RightUp'; 

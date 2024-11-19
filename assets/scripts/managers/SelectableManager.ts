@@ -27,7 +27,7 @@ export class SelectableManager extends Component {
 
     async createSelectableTiles() {
         const startX = -(this.tilesCount - 1); // İlk nesnenin X pozisyonu
-        const startXOffset = 10
+        const startXOffset = 15
         for (let i = 0; i < this.tilesCount; i++) {
             const selectableTileNode = instantiate(this.selectableTilesPrefab);
             selectableTileNode.parent = this.selectableArea;
