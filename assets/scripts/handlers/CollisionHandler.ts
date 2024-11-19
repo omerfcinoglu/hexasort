@@ -1,6 +1,7 @@
 import { _decorator, Component, Collider, ICollisionEvent } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
 import { SelectableTiles } from '../entity/SelectableTiles';
+import { GridManager } from '../managers/GridManager';
 
 const { ccclass } = _decorator;
 
@@ -34,6 +35,8 @@ export class CollisionHandler extends Component {
             const selectableTiles = this.node.getComponent(SelectableTiles);
             
             if (selectableTiles) {
+                GridManager.getInstance().resetHighlight();
+                this.collidedGroundTile.highlight(true);
                 selectableTiles.attachedGround = this.collidedGroundTile;
             }
         }
@@ -45,11 +48,14 @@ export class CollisionHandler extends Component {
 
         if (groundTile && this.collidedGroundTile === groundTile) {
             const selectableTiles = this.node.getComponent(SelectableTiles);
+            GridManager.getInstance().resetHighlight();
+
             this.collidedGroundTile = null;
             
             if (selectableTiles) {
                 selectableTiles.attachedGround = this.collidedGroundTile;
             }
+            
         }
     }
 }

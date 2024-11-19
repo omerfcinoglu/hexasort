@@ -1,4 +1,3 @@
-// SelectableTiles.ts
 import { _decorator, Component, Vec3, tween, Node, BoxCollider } from "cc";
 import { TileCluster } from "../core/TileCluster";
 import { GroundTile } from "../entity/GroundTile";
@@ -17,10 +16,13 @@ export class SelectableTiles extends Component {
     public attachedGround: GroundTile | null = null;
 
     private idleColliderSize : Vec3 = new Vec3(1.5,5,1.5);
-    private selectedColliderSize : Vec3 = new Vec3(0.1,5,0.1);
+    private selectedColliderSize : Vec3 = new Vec3(0.1,20,0.1);
+
+    private liftedYOffset: number = 1; // Görsel olarak kaldırma için Y ekseninde eklenen yükseklik
 
     start() {
         this.setColliderSize(false);
+        // this.originalPosition = this.node.getWorldPosition();
     }
 
     /**
@@ -39,23 +41,33 @@ export class SelectableTiles extends Component {
         this.node.getComponent(BoxCollider).enabled = isActive;
     }
 
+    /**
+     * Selects this tile and initiates dragging by setting the touch offset.
+     * Lifts the tile visually without changing its logical position.
+     * @param touchWorldPos - The initial world position where the touch event began.
+     */
+    public select(touchWorldPos: Vec3) {
+        this.originalPosition = this.node.getWorldPosition();
+        console.log(this.originalPosition);
+        
+        if (!this.isSelectable) return;
+        this.setColliderSize(true);
+        this.isDragging = true;
+        this.touchOffset = this.node.getWorldPosition().subtract(touchWorldPos);
+
+        // Görsel olarak Y ekseninde kaldır
+        const liftedPosition = this.node.getWorldPosition().clone();
+        liftedPosition.y += this.liftedYOffset;
+        tween(this.node)
+            .to(0.2, { worldPosition: liftedPosition })
+            .start();
+    }
+
     testCollider(isSelected : boolean){
         const testNode = this.node.getChildByName("Test");
         isSelected 
         ? testNode.scale = this.selectedColliderSize
         : testNode.scale = this.idleColliderSize        
-    }
-        
-
-    /**
-     * Selects this tile and initiates dragging by setting the touch offset.
-     * @param touchWorldPos - The initial world position where the touch event began.
-     */
-    public select(touchWorldPos: Vec3) {
-        if (!this.isSelectable) return;
-        this.setColliderSize(true);
-        this.isDragging = true;
-        this.touchOffset = this.node.getWorldPosition().subtract(touchWorldPos);
     }
 
     /**
@@ -65,17 +77,21 @@ export class SelectableTiles extends Component {
     public move(touchWorldPos: Vec3) {
         if (!this.isDragging) return;
         const newPosition = touchWorldPos.add(this.touchOffset);
-        newPosition.y += 0.2; // Slight height adjustment for visual clarity
+        newPosition.y += this.liftedYOffset; // Görsel olarak kaldırma
         this.node.setWorldPosition(newPosition);
     }
 
     /**
-     * Deselects the tile, stops dragging, and resets its position.
+     * Deselects the tile, stops dragging, and resets its position visually.
      */
     public deselect() {
         this.setColliderSize(false);
         this.isDragging = false;
-        this.resetPosition();
+
+        // Y eksenindeki kaldırmayı sıfırla
+        tween(this.node)
+            .to(0.2, { worldPosition: this.originalPosition })
+            .start();
     }
 
     /**
@@ -85,8 +101,18 @@ export class SelectableTiles extends Component {
         this.enableCollider(false);
         tween(this.node)
             .to(0.3, { worldPosition: this.originalPosition })
-            .call(()=>this.enableCollider(true))
+            .call(() => this.enableCollider(true))
             .start();
+    }
+
+    public grounded(){
+        this.node.setWorldPosition(
+            new Vec3(
+                this.node.worldPosition.x,
+                0.1,
+                this.node.worldPosition.z - 0.1,
+            )
+        )
     }
 
     /**

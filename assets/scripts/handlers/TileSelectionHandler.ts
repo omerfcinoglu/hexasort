@@ -55,8 +55,6 @@ export class TileSelectionHandler extends Component {
      * @param event The touch move event.
      */
     private handleTouchMove(event: EventTouch) {
-
-        
         if (this.selectedTile) {
             const touchWorldPos = this.getTouchWorldPosition(event);
             this.selectedTile.move(touchWorldPos);
