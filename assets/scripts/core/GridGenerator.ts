@@ -39,8 +39,9 @@ export class GridGenerator {
             grid[row] = [];
             for (let col = 0; col < numCols; col++) {
                 const tileType = levelMatrix[row][col];
-    
-                // Apply both row and column spacing adjustments with stagger effect
+                
+                if(tileType === -1) continue;
+
                 const adjustedX = col * adjustedTileSizeX - offsetX;
                 const adjustedZ = -(row * adjustedTileSizeZ - offsetZ) + (col % 2 === 0 ? staggerOffset : 0);
     

@@ -14,5 +14,15 @@
       "3": 31,
       "4": 29
     }
-  }
+  },
+  "layer": [
+    {
+      "name": "GroundTile",
+      "value": 1
+    },
+    {
+      "name": "SelectableTile",
+      "value": 2
+    }
+  ]
 }

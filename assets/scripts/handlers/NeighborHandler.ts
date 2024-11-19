@@ -36,9 +36,9 @@ export class NeighborHandler {
 
             for (const ground of transferedGrounds) {
                 await this.processNeighbors(ground);
-                console.log(
-                    `proccessing (${ground.gridPosition.row}, ${ground.gridPosition.col})`
-                );
+                // console.log(
+                //     `proccessing (${ground.gridPosition.row}, ${ground.gridPosition.col})`
+                // );
             }
         }
 
