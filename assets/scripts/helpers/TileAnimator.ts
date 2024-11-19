@@ -38,7 +38,7 @@ export class TileAnimator {
 
             const targetPosition = new Vec3(baseTargetPosition.x, cumulativeHeight, baseTargetPosition.z);
 
-            const liftPosition = new Vec3(baseTargetPosition.x, cumulativeHeight+1, baseTargetPosition.z);
+            const liftPosition = new Vec3(baseTargetPosition.x, cumulativeHeight+0.2, baseTargetPosition.z);
             
 
             // Hedef yönünü hesapla ve rotasyonları al
@@ -51,16 +51,16 @@ export class TileAnimator {
                         tween(tile.node)
                             .parallel(
                                 // tween(tile.node).to(duration * reverseIndex, { worldPosition: liftPosition }, { easing: 'cubicInOut' }),
-                                tween(tile.node).to(duration * reverseIndex, { rotation: midRotation }, { easing: 'cubicInOut' }),
-                                tween(tile.node).to(duration * reverseIndex, { worldPosition: liftPosition }, { easing: 'cubicInOut' }),
+                                tween(tile.node).to(duration * reverseIndex , { rotation: midRotation }, { easing: 'cubicInOut' }),
+                                tween(tile.node).to(duration, { worldPosition: liftPosition }, { easing: 'cubicInOut' }),
 
                             ),
 
                         tween(tile.node)
                         // .to(duration * reverseIndex, { rotation: endRotation }, { easing: 'cubicInOut' })
                             .parallel(
-                                tween(tile.node).to(duration * reverseIndex, { worldPosition: targetPosition }, { easing: 'cubicInOut' }),
-                                tween(tile.node).to(duration * reverseIndex, { rotation: endRotation }, { easing: 'cubicInOut' })
+                                tween(tile.node).to(duration , { worldPosition: targetPosition }, { easing: 'cubicInOut' }),
+                                tween(tile.node).to(duration , { rotation: endRotation }, { easing: 'cubicInOut' })
                             )
                     )
                     .call(resolve)

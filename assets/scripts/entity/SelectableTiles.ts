@@ -16,9 +16,9 @@ export class SelectableTiles extends Component {
     public attachedGround: GroundTile | null = null;
 
     private idleColliderSize : Vec3 = new Vec3(1.5,5,1.5);
-    private selectedColliderSize : Vec3 = new Vec3(0.1,20,0.1);
+    private selectedColliderSize : Vec3 = new Vec3(0.5,20,0.5);
 
-    private liftedYOffset: number = 1; // Görsel olarak kaldırma için Y ekseninde eklenen yükseklik
+    private liftedYOffset: number = 0.5; // Görsel olarak kaldırma için Y ekseninde eklenen yükseklik
 
     start() {
         this.setColliderSize(false);
@@ -59,7 +59,7 @@ export class SelectableTiles extends Component {
         const liftedPosition = this.node.getWorldPosition().clone();
         liftedPosition.y += this.liftedYOffset;
         tween(this.node)
-            .to(0.2, { worldPosition: liftedPosition })
+            .to(0.05, { worldPosition: liftedPosition })
             .start();
     }
 
@@ -90,7 +90,7 @@ export class SelectableTiles extends Component {
 
         // Y eksenindeki kaldırmayı sıfırla
         tween(this.node)
-            .to(0.2, { worldPosition: this.originalPosition })
+            .to(0.05, { worldPosition: this.originalPosition })
             .start();
     }
 
@@ -100,7 +100,7 @@ export class SelectableTiles extends Component {
     public resetPosition() {
         this.enableCollider(false);
         tween(this.node)
-            .to(0.3, { worldPosition: this.originalPosition })
+            .to(0.1, { worldPosition: this.originalPosition })
             .call(() => this.enableCollider(true))
             .start();
     }
