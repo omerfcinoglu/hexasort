@@ -58,9 +58,6 @@ export class GridManager extends SingletonComponent<GridManager> {
         this.grid = [];
     }
 
-    public Highlight(groundTile : GroundTile){
-        groundTile.highlight(true);
-    }
 
     public resetHighlight(): void{
         this.grid.forEach(row => {
