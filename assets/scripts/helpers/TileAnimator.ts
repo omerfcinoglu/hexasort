@@ -7,181 +7,179 @@ import { ScoreManager } from '../managers/ScoreManager';
 export class TileAnimator {
 
 
-    static applyLookAt(tile: Node, targetPosition: Vec3): void {
-        const direction = new Vec3();
-        Vec3.subtract(direction, targetPosition, tile.worldPosition);
-        direction.normalize();
+	static applyLookAt(tile: Node, targetPosition: Vec3): void {
+		const direction = new Vec3();
+		Vec3.subtract(direction, targetPosition, tile.worldPosition);
+		direction.normalize();
 
-        const lookAtRotation = new Quat();
-        Quat.fromViewUp(lookAtRotation, direction);
-        tile.setRotation(lookAtRotation); // İlk olarak hedefe bakacak şekilde tile'ı döndürüyoruz
-    }
+		const lookAtRotation = new Quat();
+		Quat.fromViewUp(lookAtRotation, direction);
+		tile.setRotation(lookAtRotation); // İlk olarak hedefe bakacak şekilde tile'ı döndürüyoruz
+	}
+	static async animateClusterTransfer(cluster: TileCluster, targetGround: GroundTile): Promise<void> {
+		const tiles = cluster.getTiles();
+		const baseTargetPosition = targetGround.node.worldPosition.clone();
+		const tileCount = targetGround.getAllTileCount();
 
-    static async animateClusterTransfer(cluster: TileCluster, targetGround: GroundTile): Promise<void> {
-        const tiles = cluster.getTiles();
-        const baseTargetPosition = targetGround.node.worldPosition.clone();
-        const tileCount = targetGround.getAllTileCount();
-    
-        const baseDuration = 0.2; // TileCount az olduğunda maksimum süre
-        const minDuration = 0.05; // TileCount fazla olduğunda minimum süre
-        const maxTileCount = 10; // Beklenen maksimum tileCount (bu, sisteminizin büyüklüğüne göre ayarlanabilir)
-    
-        // Dinamik duration hesaplama
-        const duration = baseDuration - (tileCount / maxTileCount) * (baseDuration - minDuration);
-    
-        let cumulativeHeight = (tileCount + 1) * 0.1;
-        const animationPromises: Promise<void>[] = [];
-    
-        for (let i = tiles.length - 1; i >= 0; i--) {
-            const reverseIndex = (tiles.length - 1) - i + 1;
-            const tile = tiles[i];
-    
-            const targetPosition = new Vec3(baseTargetPosition.x, cumulativeHeight, baseTargetPosition.z);
-            const liftPosition = new Vec3(baseTargetPosition.x, cumulativeHeight, baseTargetPosition.z);
-    
-            // Hedef yönünü hesapla ve rotasyonları al
-            const direction = this.calculateDirection(tile.node.worldPosition, targetPosition);
-            const { midRotation, endRotation } = this.getRotationByDirection(direction);
-    
-            const animationPromise = new Promise<void>((resolve) => {
-                tween(tile.node)
-                    .sequence(
-                        tween(tile.node)
-                            .parallel(
-                                tween(tile.node).to(duration * reverseIndex, { worldPosition: liftPosition }, { easing: 'linear' }),
-                                tween(tile.node).to(duration * reverseIndex, { rotation: endRotation }, { easing: 'linear' })
-                            ),
-                        tween(tile.node).to(duration, { worldPosition: targetPosition }, { easing: 'linear' })
-                    )
-                    .call(() => {
-                        tile.node.setRotation(Quat.IDENTITY);
-                        resolve();
-                    })
-                    .start();
-            });
-    
-            animationPromises.push(animationPromise);
-    
-            cumulativeHeight += 0.1;
-        }
-    
-        // Tüm animasyonları aynı anda başlat ve bitmelerini bekle
-        await Promise.all(animationPromises);
-    }
+		const baseDuration = 0.3; // Hareket için toplam süre
+		const delayBetweenTiles = 0.1; // Her tile için küçük bir gecikme
+		const peakHeightFactor = 0.5; // Tile'ların çıkacağı tepe yüksekliğinin faktörü
+		const easingFunction = 'quadOut'; // Smooth bir hareket için easing fonksiyonu
 
-    /**
-     * Kaynak ve hedef pozisyonları arasında yön hesaplama.
-     * @param sourcePosition Kaynak GroundTile'ın pozisyonu.
-     * @param targetPosition Hedef GroundTile'ın pozisyonu.
-     * @returns Yön bilgisi (string).
-     */
-    private static calculateDirection(sourcePosition: Vec3, targetPosition: Vec3): string {
-        const deltaX = Math.floor(targetPosition.x - sourcePosition.x);
-        const deltaZ = Math.floor(targetPosition.z - sourcePosition.z);
-        
-        if (deltaX > 0 && deltaZ === 0) return 'LeftUp'; 
-        if (deltaX < 0 && deltaZ === 0) return 'RightUp'; 
-        if (deltaX > 0 && deltaZ < 0) return 'LeftDown'; 
-        if (deltaX < 0 && deltaZ < 0) return 'RightDown';  
-        if (deltaZ > 0) return 'Down';                     
-        return 'Up';                            
-    }
+		const animationPromises: Promise<void>[] = [];
 
-    /**
-     * Yön bilgisine göre orta ve son rotasyonu belirler.
-     * @param direction Yön bilgisi ('Up', 'Down', 'LeftUp', 'LeftDown', 'RightUp', 'RightDown').
-     * @returns Rotasyon bilgileri (midRotation, endRotation).
-     */
-    private static getRotationByDirection(direction: string): { midRotation: Quat, endRotation: Quat } {
-        switch (direction) {
-            case 'Up':
-                return {
-                    midRotation: Quat.fromEuler(new Quat(), -180, 0, 0),
-                    endRotation: Quat.fromEuler(new Quat(), -180, 0, 0),
-                };
-            case 'Down':
-                return {
-                    midRotation: Quat.fromEuler(new Quat(), 90, 0, 0),
-                    endRotation: Quat.fromEuler(new Quat(), 180, 0, 0),
-                };
-            case 'LeftUp':
-                return {
-                    midRotation: Quat.fromEuler(new Quat(), 90, 45, 0),
-                    endRotation: Quat.fromEuler(new Quat(), 180, 60, 0),
-                };
-            case 'LeftDown':
-                return {
-                    midRotation: Quat.fromEuler(new Quat(), -90, -45, 0),
-                    endRotation: Quat.fromEuler(new Quat(), -180, -60, 0),
-                };
-            case 'RightUp':
-                return {
-                    midRotation: Quat.fromEuler(new Quat(), 0, 45, 90),
-                    endRotation: Quat.fromEuler(new Quat(), 0, 60, 180),
-                };
-            case 'RightDown':
-                return {
-                    midRotation: Quat.fromEuler(new Quat(), 0, -45, 90),
-                    endRotation: Quat.fromEuler(new Quat(), 0, -60, 180),
-                };
-            default:
-                return {
-                    midRotation: Quat.fromEuler(new Quat(), 0, 0, 0),
-                    endRotation: Quat.fromEuler(new Quat(), 0, 0, 0),
-                };
-        }
-    }
+		for (let i = 0; i < tiles.length; i++) {
+			const tile = tiles[i];
 
-    static async animateTilesToZeroScale(tiles: Tile[]): Promise<void> {
-        const reversedTiles = [...tiles].reverse();
-        const lastTile = reversedTiles[reversedTiles.length - 1]
+			// Başlangıç, tepe ve hedef pozisyonlarını hesapla
+			const startPosition = tile.node.worldPosition.clone();
+			const targetPosition = new Vec3(
+				baseTargetPosition.x,
+				baseTargetPosition.y + ((i+1) * 0.1), // Hafif kademeli yükseklik farkı
+				baseTargetPosition.z
+			);
+			const peakPosition = new Vec3(
+				(startPosition.x + targetPosition.x) / 2,
+				Math.max(startPosition.y, targetPosition.y) + peakHeightFactor, // Tepe yüksekliği
+				(startPosition.z + targetPosition.z) / 2
+			);
 
-        // Scale all tiles except the last one to (0, 0, 0)
-        for (let i = 0; i < reversedTiles.length; i++) {
-            const tile = reversedTiles[i];
-            if (i === reversedTiles.length - 1) {
-                break;
-            }
-            await new Promise<void>((resolve) => {
-                tween(tile.node)
-                    .to(0.1, { scale: new Vec3(0, 0, 0) })
-                    .call(resolve)
-                    .start();
-            });
-        }
+			// Overlay ve z-index kontrolü
+			tile.node.setSiblingIndex(i);
 
-        // Scale the last tile to (0.231, 0.231, 0.231)
-        await new Promise<void>((resolve) => {
-            tween(lastTile.node)
-                .to(0.1, { scale: new Vec3(0.231, lastTile.node.scale.y * 0.5, 0.231) })
-                .call(resolve)
-                .start();
-        });
+			// Hedef yönü ve rotasyonları hesapla
+			const direction = this.calculateDirection(tile.node.worldPosition, targetPosition);
+			const { midRotation, endRotation } = this.getRotationByDirection(direction);
 
-        //this must be dynamic !todo
-        // Define two target positions for the last tile
-        const position1 = new Vec3(0, 2, 2); // Replace with the desired first position
-        const position2 = new Vec3(-2.3, 7.2, 2); // Replace with the desired second position
+			// Animasyonu oluştur
+			const animationPromise = new Promise<void>((resolve) => {
+				tween(tile.node)
+					.delay(i * delayBetweenTiles) // Her tile için gecikme
+					.sequence(
+						// İlk hareket: Başlangıçtan tepe noktasına (flip sırasında orta rotasyona geçiş)
+						tween(tile.node)
+							.parallel(
+								tween(tile.node).to(
+									baseDuration / 2,
+									{ worldPosition: peakPosition },
+									{ easing: easingFunction }
+								),
+								tween(tile.node).to(
+									baseDuration / 2,
+									{ rotation: midRotation },
+									{ easing: easingFunction }
+								)
+							),
+						// İkinci hareket: Tepe noktasından hedefe (flip sonlanıyor)
+						tween(tile.node)
+							.parallel(
+								tween(tile.node).to(
+									baseDuration / 2,
+									{ worldPosition: targetPosition },
+									{ easing: easingFunction }
+								),
+								tween(tile.node).to(
+									baseDuration / 2,
+									{ rotation: endRotation },
+									{ easing: easingFunction }
+								)
+							)
+					)
+					.call(() => {
+						tile.node.setRotation(Quat.IDENTITY); // Rotasyonu sıfırla
+						resolve();
+					})
+					.start();
+			});
 
-        // Move the last tile to the first position
-        await new Promise<void>((resolve) => {
-            tween(lastTile.node)
-                .to(0.1, { worldPosition: position1 }, { easing: "cubicOut" })
-                .call(resolve)
-                .start();
-        });
+			animationPromises.push(animationPromise);
+		}
 
-        // Move the last tile to the second position
-        await new Promise<void>((resolve) => {
-            tween(lastTile.node)
-                .to(0.1, { worldPosition: position2 }, { easing: "expoIn" })
-                .call(() => {
-                    lastTile.node.active = false;
-                    ScoreManager.getInstance().addScore(10);
-                    resolve()
-                })
-                .start();
-        });
-    }
+		// Tüm animasyonları sıralı bir şekilde bekle
+		await Promise.all(animationPromises);
+	}
+
+	private static calculateDirection(sourcePosition: Vec3, targetPosition: Vec3): string {
+		const deltaX = Math.floor(targetPosition.x - sourcePosition.x);
+		const deltaZ = Math.floor(targetPosition.z - sourcePosition.z);
+
+		if (deltaX > 0 && deltaZ === 0) return 'LeftUp';
+		if (deltaX < 0 && deltaZ === 0) return 'RightUp';
+		if (deltaX > 0 && deltaZ < 0) return 'LeftDown';
+		if (deltaX < 0 && deltaZ < 0) return 'RightDown';
+		if (deltaZ > 0) return 'Down';
+		return 'Up';
+	}
+
+	private static getRotationByDirection(direction: string): { midRotation: Quat, endRotation: Quat } {
+		switch (direction) {
+			case 'Up':
+				return { midRotation: Quat.fromEuler(new Quat(), -180, 0, 0), endRotation: Quat.fromEuler(new Quat(), -180, 0, 0) };
+			case 'Down':
+				return { midRotation: Quat.fromEuler(new Quat(), 90, 0, 0), endRotation: Quat.fromEuler(new Quat(), 180, 0, 0) };
+			case 'LeftUp':
+				return { midRotation: Quat.fromEuler(new Quat(), 90, 45, 0), endRotation: Quat.fromEuler(new Quat(), 180, 60, 0) };
+			case 'LeftDown':
+				return { midRotation: Quat.fromEuler(new Quat(), -90, -45, 0), endRotation: Quat.fromEuler(new Quat(), -180, -60, 0) };
+			case 'RightUp':
+				return { midRotation: Quat.fromEuler(new Quat(), 0, 45, 90), endRotation: Quat.fromEuler(new Quat(), 0, 60, 180) };
+			case 'RightDown':
+				return { midRotation: Quat.fromEuler(new Quat(), 0, -45, 90), endRotation: Quat.fromEuler(new Quat(), 0, -60, 180) };
+			default:
+				return { midRotation: Quat.fromEuler(new Quat(), 0, 0, 0), endRotation: Quat.fromEuler(new Quat(), 0, 0, 0) };
+		}
+	}
+
+	static async animateTilesToZeroScale(tiles: Tile[]): Promise<void> {
+		const reversedTiles = [...tiles].reverse();
+		const lastTile = reversedTiles[reversedTiles.length - 1]
+
+		// Scale all tiles except the last one to (0, 0, 0)
+		for (let i = 0; i < reversedTiles.length; i++) {
+			const tile = reversedTiles[i];
+			if (i === reversedTiles.length - 1) {
+				break;
+			}
+			await new Promise<void>((resolve) => {
+				tween(tile.node)
+					.to(0.1, { scale: new Vec3(0, 0, 0) })
+					.call(resolve)
+					.start();
+			});
+		}
+
+		// Scale the last tile to (0.231, 0.231, 0.231)
+		await new Promise<void>((resolve) => {
+			tween(lastTile.node)
+				.to(0.1, { scale: new Vec3(0.231, lastTile.node.scale.y * 0.5, 0.231) })
+				.call(resolve)
+				.start();
+		});
+
+		//this must be dynamic !todo
+		// Define two target positions for the last tile
+		const position1 = new Vec3(0, 2, 2); // Replace with the desired first position
+		const position2 = new Vec3(-2.3, 7.2, 2); // Replace with the desired second position
+
+		// Move the last tile to the first position
+		await new Promise<void>((resolve) => {
+			tween(lastTile.node)
+				.to(0.1, { worldPosition: position1 }, { easing: "cubicOut" })
+				.call(resolve)
+				.start();
+		});
+
+		// Move the last tile to the second position
+		await new Promise<void>((resolve) => {
+			tween(lastTile.node)
+				.to(0.1, { worldPosition: position2 }, { easing: "expoIn" })
+				.call(() => {
+					lastTile.node.active = false;
+					ScoreManager.getInstance().addScore(10);
+					resolve()
+				})
+				.start();
+		});
+	}
 
 }
