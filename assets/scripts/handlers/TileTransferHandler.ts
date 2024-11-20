@@ -28,7 +28,7 @@ export class TileTransferHandler {
                 // Animasyonu çalıştır ve tileları taşı
                 await TileAnimator.animateClusterTransfer(cluster, targetGround);
                 const targetTopCluster = targetGround.getLastCluster();
-                const transferTiles = cluster.getTiles();
+                const transferTiles = [...cluster.getTiles()].reverse();
                 await targetTopCluster.transferTiles(transferTiles);
                 console.log(`Transferring cluster from (${source.gridPosition.row}, ${source.gridPosition.col}) to (${targetGround.gridPosition.row}, ${targetGround.gridPosition.col}) `);
             } else {

@@ -55,7 +55,7 @@ export class SelectableManager extends Component {
         for (let i = 0; i < clusterCount; i++) {
             const randomIndex = 1//Math.floor(Math.random() * availableTypes.length);
             const tileType = randomIndex//availableTypes.splice(randomIndex, 1)[0];
-            const tileCount = 1//Math.floor(Math.random() * 3) + 1;
+            const tileCount = 3//Math.floor(Math.random() * 3) + 1;
             const tileClusterNode = instantiate(this.tileClusterPrefab);
             tileClusterNode.parent = selectableTile.node;
     
