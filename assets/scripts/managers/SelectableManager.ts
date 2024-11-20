@@ -48,14 +48,14 @@ export class SelectableManager extends Component {
     }
 
     async addRandomClusters(selectableTile: SelectableTiles) {
-        const clusterCount = 1//Math.floor(Math.random() * 3) + 1;
+        const clusterCount = Math.floor(Math.random() * 3) + 1;
         const availableTypes = [1, 2, 3, 4, 5]; // Başlangıç tipi listesi
         let lastClusterTileCount = 0;
     
         for (let i = 0; i < clusterCount; i++) {
-            const randomIndex = 1//Math.floor(Math.random() * availableTypes.length);
-            const tileType = randomIndex//availableTypes.splice(randomIndex, 1)[0];
-            const tileCount = 3//Math.floor(Math.random() * 3) + 1;
+            const randomIndex = Math.floor(Math.random() * availableTypes.length);
+            const tileType = availableTypes.splice(randomIndex, 1)[0];
+            const tileCount = Math.floor(Math.random() * 3) + 1;
             const tileClusterNode = instantiate(this.tileClusterPrefab);
             tileClusterNode.parent = selectableTile.node;
     

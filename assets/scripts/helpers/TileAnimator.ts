@@ -21,7 +21,7 @@ export class TileAnimator {
 		const baseTargetPosition = targetGround.node.worldPosition.clone();
 		const targetTileCount = targetGround.getAllTileCount();
 		
-		let cumulativeHeight = 0.05 + (targetTileCount + 1) * 0.1;
+		let cumulativeHeight =  (targetTileCount + 1) * 0.1;
 		
 		const baseDuration = 0.2; // Hareket için toplam süre
 		const delayBetweenTiles = 0.1; 
