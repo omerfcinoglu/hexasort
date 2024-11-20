@@ -21,57 +21,52 @@ export class TileAnimator {
         const tiles = cluster.getTiles();
         const baseTargetPosition = targetGround.node.worldPosition.clone();
         const tileCount = targetGround.getAllTileCount();
-
+    
         const baseDuration = 0.2; // TileCount az olduğunda maksimum süre
         const minDuration = 0.05; // TileCount fazla olduğunda minimum süre
         const maxTileCount = 10; // Beklenen maksimum tileCount (bu, sisteminizin büyüklüğüne göre ayarlanabilir)
-        
+    
         // Dinamik duration hesaplama
         const duration = baseDuration - (tileCount / maxTileCount) * (baseDuration - minDuration);
-        
+    
         let cumulativeHeight = (tileCount + 1) * 0.1;
-        const animationPromises = [];
-        
+        const animationPromises: Promise<void>[] = [];
+    
         for (let i = tiles.length - 1; i >= 0; i--) {
-            const reverseIndex =( (tiles.length - 1) - i + 1) * 0.8;
+            const reverseIndex = (tiles.length - 1) - i + 1;
             const tile = tiles[i];
-
+    
             const targetPosition = new Vec3(baseTargetPosition.x, cumulativeHeight, baseTargetPosition.z);
-
-            const liftPosition = new Vec3(baseTargetPosition.x, cumulativeHeight+0.2, baseTargetPosition.z);
-            
-
+            const liftPosition = new Vec3(baseTargetPosition.x, cumulativeHeight, baseTargetPosition.z);
+    
             // Hedef yönünü hesapla ve rotasyonları al
             const direction = this.calculateDirection(tile.node.worldPosition, targetPosition);
             const { midRotation, endRotation } = this.getRotationByDirection(direction);
-
+    
             const animationPromise = new Promise<void>((resolve) => {
                 tween(tile.node)
                     .sequence(
                         tween(tile.node)
                             .parallel(
-                                // tween(tile.node).to(duration * reverseIndex, { worldPosition: liftPosition }, { easing: 'cubicInOut' }),
-                                tween(tile.node).to(duration * reverseIndex , { rotation: midRotation }, { easing: 'cubicInOut' }),
-                                tween(tile.node).to(duration, { worldPosition: liftPosition }, { easing: 'cubicInOut' }),
-
+                                tween(tile.node).to(duration * reverseIndex, { worldPosition: liftPosition }, { easing: 'linear' }),
+                                tween(tile.node).to(duration * reverseIndex, { rotation: endRotation }, { easing: 'linear' })
                             ),
-
-                        tween(tile.node)
-                        // .to(duration * reverseIndex, { rotation: endRotation }, { easing: 'cubicInOut' })
-                            .parallel(
-                                tween(tile.node).to(duration , { worldPosition: targetPosition }, { easing: 'cubicInOut' }),
-                                tween(tile.node).to(duration , { rotation: endRotation }, { easing: 'cubicInOut' })
-                            )
+                        tween(tile.node).to(duration, { worldPosition: targetPosition }, { easing: 'linear' })
                     )
-                    .call(resolve)
+                    .call(() => {
+                        tile.node.setRotation(Quat.IDENTITY);
+                        resolve();
+                    })
                     .start();
             });
-
+    
             animationPromises.push(animationPromise);
+    
             cumulativeHeight += 0.1;
         }
-
-        await Promise.all(animationPromises); // Tüm animasyonların tamamlanmasını bekle
+    
+        // Tüm animasyonları aynı anda başlat ve bitmelerini bekle
+        await Promise.all(animationPromises);
     }
 
     /**
@@ -101,7 +96,7 @@ export class TileAnimator {
         switch (direction) {
             case 'Up':
                 return {
-                    midRotation: Quat.fromEuler(new Quat(), -90, 0, 0),
+                    midRotation: Quat.fromEuler(new Quat(), -180, 0, 0),
                     endRotation: Quat.fromEuler(new Quat(), -180, 0, 0),
                 };
             case 'Down':
