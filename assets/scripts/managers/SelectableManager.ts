@@ -1,8 +1,6 @@
 import { _decorator, Component, Node, Prefab, Vec3, instantiate, tween, random } from 'cc';
-import { GroundTile } from '../entity/GroundTile';
 import { TileCluster } from '../core/TileCluster';
 import { SelectableTiles } from '../entity/SelectableTiles';
-import { sleep } from '../helpers/Promises';
 
 const { ccclass, property } = _decorator;
 

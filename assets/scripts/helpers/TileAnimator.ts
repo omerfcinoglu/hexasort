@@ -3,6 +3,8 @@ import { Tile } from '../entity/Tile';
 import { TileCluster } from '../core/TileCluster';
 import { GroundTile } from '../entity/GroundTile';
 import { ScoreManager } from '../managers/ScoreManager';
+import { SoundManager } from '../managers/SoundManager';
+import { Sounds } from '../core/Sounds';
 
 export class TileAnimator {
 
@@ -59,6 +61,7 @@ export class TileAnimator {
 
 			// Animasyonu oluştur
 			const animationPromise = new Promise<void>((resolve) => {
+				SoundManager.getInstance().playSound(Sounds.TransferTiles);
 				tween(tile.node)
 					.delay(i * delayBetweenTiles) // Her tile için gecikme
 					.sequence(
