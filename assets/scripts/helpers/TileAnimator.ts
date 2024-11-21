@@ -61,9 +61,11 @@ export class TileAnimator {
 
 			// Animasyonu oluştur
 			const animationPromise = new Promise<void>((resolve) => {
-				SoundManager.getInstance().playSound(Sounds.TransferTiles);
 				tween(tile.node)
 					.delay(i * delayBetweenTiles) // Her tile için gecikme
+					.call(()=>{
+						SoundManager.getInstance().playSound(Sounds.TransferTiles);
+					})
 					.sequence(
 						// İlk hareket: Başlangıçtan tepe noktasına (flip sırasında orta rotasyona geçiş)
 						tween(tile.node)
@@ -100,13 +102,22 @@ export class TileAnimator {
 					})
 					.start();
 			});
-
+			
 			animationPromises.push(animationPromise);
 		}
 
 		// Tüm animasyonları tamamlamayı bekle
 		await Promise.all(animationPromises);
 	}
+
+	async playSoundSequentially(tileCount: number , delay : number): Promise<void> {
+		for (let i = 0; i < tileCount; i++) {
+		    // SoundManager üzerinden sesi çal
+		    SoundManager.getInstance().playSound(Sounds.TransferTiles);
+		    // Her ses çalma işlemi arasında delay ekle
+		    await new Promise((resolve) => setTimeout(resolve, 1000 * delay)); // Delay saniye cinsinden
+		}
+	 }
 
 
 	private static calculateDirection(sourcePosition: Vec3, targetPosition: Vec3): string {

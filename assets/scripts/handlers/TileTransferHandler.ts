@@ -29,8 +29,9 @@ export class TileTransferHandler {
                 await TileAnimator.animateClusterTransfer(cluster, targetGround);
                 const targetTopCluster = targetGround.getLastCluster();
                 const transferTiles = [...cluster.getTiles()].reverse();
-                if(!targetTopCluster) return;
-                await targetTopCluster.transferTiles(transferTiles);
+                if(targetTopCluster){
+                    await targetTopCluster.transferTiles(transferTiles);
+                }
                 console.log(`Transferring cluster from (${source.gridPosition.row}, ${source.gridPosition.col}) to (${targetGround.gridPosition.row}, ${targetGround.gridPosition.col}) `);
             } else {
                 console.warn('No lastAttachedCluster found on targetGround. Skipping transferTiles.');

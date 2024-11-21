@@ -3,6 +3,8 @@ import { _decorator, Component, Node, Prefab, Vec3, instantiate, tween, Collider
 import { Tile } from '../entity/Tile';
 import { GroundTile } from '../entity/GroundTile';
 import { LockableComponent } from '../helpers/LockableComponent';
+import { SoundManager } from '../managers/SoundManager';
+import { Sounds } from './Sounds';
 
 const { ccclass, property } = _decorator;
 
@@ -59,6 +61,8 @@ export class TileCluster extends LockableComponent {
             this.tiles.push(tileComp!);
         }
     }
+
+
 
     /**
      * Transfers tiles from another cluster to this one, keeping their world positions.
