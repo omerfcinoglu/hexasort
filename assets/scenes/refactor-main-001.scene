@@ -336,7 +336,7 @@
   {
     "__type__": "cc.Node",
     "_name": "Ground",
-    "_objFlags": 0,
+    "_objFlags": 512,
     "_parent": {
       "__id__": 8
     },
@@ -515,58 +515,58 @@
     "__prefab": null,
     "color1": {
       "__type__": "cc.Color",
-      "r": 202,
-      "g": 202,
-      "b": 202,
+      "r": 255,
+      "g": 255,
+      "b": 255,
       "a": 255
     },
     "color2": {
       "__type__": "cc.Color",
-      "r": 78,
-      "g": 92,
+      "r": 27,
+      "g": 45,
       "b": 255,
       "a": 255
     },
     "color3": {
       "__type__": "cc.Color",
       "r": 255,
-      "g": 88,
-      "b": 228,
+      "g": 34,
+      "b": 219,
       "a": 255
     },
     "color4": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 163,
-      "b": 63,
+      "r": 235,
+      "g": 255,
+      "b": 0,
       "a": 255
     },
     "color5": {
       "__type__": "cc.Color",
       "r": 255,
-      "g": 32,
-      "b": 32,
+      "g": 14,
+      "b": 14,
       "a": 255
     },
     "color6": {
       "__type__": "cc.Color",
-      "r": 108,
+      "r": 24,
       "g": 255,
-      "b": 95,
+      "b": 3,
       "a": 255
     },
     "ground": {
       "__type__": "cc.Color",
-      "r": 41,
-      "g": 41,
-      "b": 41,
+      "r": 95,
+      "g": 95,
+      "b": 95,
       "a": 255
     },
     "highlight": {
       "__type__": "cc.Color",
-      "r": 179,
-      "g": 179,
-      "b": 179,
+      "r": 206,
+      "g": 206,
+      "b": 206,
       "a": 255
     },
     "_id": "6bSX5IjG5Pe5K6Chjg62qW"
@@ -961,7 +961,7 @@
     "_priority": 1073741824,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 480,
+    "_orthoHeight": 315.7894736842105,
     "_near": 1,
     "_far": 2000,
     "_color": {

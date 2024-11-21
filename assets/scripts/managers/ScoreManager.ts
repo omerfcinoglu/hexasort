@@ -51,18 +51,15 @@ export class ScoreManager extends Component {
             originalPosition,
         ];
 
-        // Duration for each segment of the shake
         const segmentDuration = shakeDuration / shakeSequence.length;
 
-        // Build the tween sequence
         const shakeTweens = shakeSequence.map((pos) =>
             tween().to(segmentDuration, { position: pos })
         );
 
-        // Run the shake tween sequence on the node
         tween(node)
             .sequence(...shakeTweens)
-            .call(() => node.setPosition(originalPosition)) // Ensure it ends at the original position
+            .call(() => node.setPosition(originalPosition)) 
             .start();
     }
 }
