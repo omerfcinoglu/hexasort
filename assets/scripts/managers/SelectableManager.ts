@@ -65,7 +65,6 @@ export class SelectableManager extends Component {
                 cluster.node.setPosition(0, (lastClusterTileCount * 0.1), -0.01 * i);
             }
     
-            console.log(`TileType ${tileType}\nTileCount ${tileCount}`);
             lastClusterTileCount += tileCount;
         }
     }
