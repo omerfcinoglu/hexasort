@@ -31,6 +31,7 @@ export class StackHandler {
                     try {
                         if (lastCluster.getLength() >= this.matchStackCount) {
                             // console.log(`Clearing stack on GroundTile (${ground.gridPosition.row}, ${ground.gridPosition.col}).`);
+                            ground.lock();
                             await TileAnimator.animateTilesToZeroScale(lastCluster.getTiles());
                             ground.popTileCluster();
                             if (!processedGrounds.includes(ground)) {

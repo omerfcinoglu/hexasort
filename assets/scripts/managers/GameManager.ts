@@ -53,8 +53,6 @@ export class GameManager extends Component {
 			
 			if (!currentGround || !currentGround.tryLock()) continue;
 			try {
-				// console.log(`Processing ground (${currentGround.gridPosition.row}, ${currentGround.gridPosition.col})`);
-
 				const transferedGrounds = await this.neighborHandler?.processNeighbors(currentGround);
 				const stackedGrounds = await this.stackHandler?.processStacks(transferedGrounds);
 				const allGroundsToCheck = new Set([...transferedGrounds, ...stackedGrounds]);

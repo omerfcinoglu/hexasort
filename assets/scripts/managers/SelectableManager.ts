@@ -14,8 +14,7 @@ export class SelectableManager extends Component {
     @property(Node)
     public selectableArea: Node = null!;
 
-    @property
-    tilesCount: number = 3; 
+    tilesCount: number = 5; 
 
     private selectableTiles: SelectableTiles[] = [];
 
@@ -24,9 +23,9 @@ export class SelectableManager extends Component {
     }
 
     async createSelectableTiles() {
-        const startX = -(this.tilesCount - 1); 
+        const startX = -(this.tilesCount/2); 
         const startXOffset = 15
-        const gap = 2;
+        const gap = 1.3;
         for (let i = 0; i < this.tilesCount; i++) {
             const selectableTileNode = instantiate(this.selectableTilesPrefab);
             selectableTileNode.parent = this.selectableArea;
