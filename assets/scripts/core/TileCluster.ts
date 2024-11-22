@@ -9,7 +9,7 @@ import { Sounds } from './Sounds';
 const { ccclass, property } = _decorator;
 
 @ccclass('TileCluster')
-export class TileCluster extends LockableComponent {
+export class TileCluster extends Component {
     
     @property({ type: Prefab })
     public tilePrefab: Prefab = null!; // Prefab for creating individual tiles within the cluster
@@ -75,6 +75,7 @@ export class TileCluster extends LockableComponent {
             const worldPosition = tile!.node.getWorldPosition();
             tile!.node.removeFromParent();
             tile!.node.setParent(this.node, true);
+            worldPosition.y += 0.05;
             tile!.node.setWorldPosition(worldPosition);
             this.tiles.push(tile!);
         }

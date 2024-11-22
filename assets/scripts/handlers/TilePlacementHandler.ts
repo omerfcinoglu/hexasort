@@ -2,7 +2,6 @@
 import { _decorator, Component, Vec3 } from "cc";
 import { SelectableTiles } from "../entity/SelectableTiles";
 import { SelectableManager } from "../managers/SelectableManager";
-import { TileCluster } from "../core/TileCluster";
 import { GroundTile } from "../entity/GroundTile";
 
 const { ccclass, property } = _decorator;

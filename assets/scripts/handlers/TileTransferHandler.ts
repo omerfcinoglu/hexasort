@@ -9,18 +9,19 @@ const { ccclass } = _decorator;
 export class TileTransferHandler {
 
     async transferClusterToTarget(source: GroundTile, targetGround: GroundTile): Promise<void> {
+		console.log("b");
         if (!source || !targetGround) return;
 
         const cluster = source.getLastCluster();
         if (!cluster) return;
 
-        if (!cluster.tryLock()) {
+        if (!source.tryLock()) {
             console.warn('Cluster is already locked. Skipping transfer.');
-            return;
         }
 
         try {
             if (targetGround) {
+                targetGround.tryLock();
                 await TileAnimator.animateClusterTransfer(cluster, targetGround);
                 const targetTopCluster = targetGround.getLastCluster();
                 const transferTiles = [...cluster.getTiles()].reverse();
@@ -33,7 +34,8 @@ export class TileTransferHandler {
             }
             source.popTileCluster();
         } finally {
-            cluster.unlock();
+            targetGround.unlock();
+            source.unlock();
         }
     }
 }

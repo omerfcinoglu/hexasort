@@ -109,7 +109,7 @@ export class SelectableTiles extends Component {
             new Vec3(
                 this.node.worldPosition.x,
                 0.1,
-                this.node.worldPosition.z - 0.1,
+                this.node.worldPosition.z ,
             )
         )
     }

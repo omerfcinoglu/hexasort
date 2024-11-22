@@ -25,7 +25,7 @@ export class TileAnimator {
 		
 		let cumulativeHeight =  (targetTileCount + 1) * 0.1;
 		
-		const baseDuration = 3; // Hareket için toplam süre
+		const baseDuration = 0.3; // Hareket için toplam süre
 		const delayBetweenTiles = 0.1; 
 		const peakHeightFactor = 0.7; 
 		const down_easingFunction = 'quartOut'; 
@@ -45,7 +45,7 @@ export class TileAnimator {
 			const startPosition = tile.node.worldPosition.clone();
 			const targetPosition = new Vec3(
 				baseTargetPosition.x,
-				cumulativeHeight + ((i) * 0.1), // B'deki mevcut tile'ların üstüne konumlanıyor
+				cumulativeHeight + ((i+1) * 0.1), // B'deki mevcut tile'ların üstüne konumlanıyor
 				baseTargetPosition.z
 			);
 			const peakPosition = new Vec3(

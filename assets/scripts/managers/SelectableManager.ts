@@ -26,11 +26,12 @@ export class SelectableManager extends Component {
     async createSelectableTiles() {
         const startX = -(this.tilesCount - 1); 
         const startXOffset = 15
+        const gap = 2;
         for (let i = 0; i < this.tilesCount; i++) {
             const selectableTileNode = instantiate(this.selectableTilesPrefab);
             selectableTileNode.parent = this.selectableArea;
 
-            const position = new Vec3(startX + i * 2, 0, 0);
+            const position = new Vec3(startX + i * gap, 0, 0);
             selectableTileNode.setPosition(position);
             
             const selectableTile = selectableTileNode.getComponent(SelectableTiles);

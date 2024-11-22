@@ -23,7 +23,7 @@ export class StackHandler {
             try {
                 const lastCluster = ground.getLastCluster();
                 if (lastCluster) {
-                    if (!lastCluster.tryLock()) {
+                    if (!ground.tryLock()) {
                         // console.warn(`TileCluster on GroundTile (${ground.gridPosition.row}, ${ground.gridPosition.col}) is already locked. Skipping.`);
                         continue;
                     }
@@ -38,7 +38,7 @@ export class StackHandler {
                             }
                         }
                     } finally {
-                        lastCluster.unlock();
+                        ground.unlock();
                     }
                 }
             } finally {

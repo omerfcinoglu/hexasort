@@ -50,6 +50,7 @@ export class GameManager extends Component {
 
 		while (processingQueue.length > 0) {
 			const currentGround = processingQueue.shift();
+			
 			if (!currentGround || !currentGround.tryLock()) continue;
 			try {
 				// console.log(`Processing ground (${currentGround.gridPosition.row}, ${currentGround.gridPosition.col})`);
@@ -70,3 +71,8 @@ export class GameManager extends Component {
 	}
 }
 
+/*
+	====todo===
+		1- tiles overlay each other when they transfer new ground
+		2- major bug while already checked neighbors
+*/
