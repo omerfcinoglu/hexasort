@@ -68,7 +68,7 @@ export class ColorProvider extends Component {
                 material.setProperty('albedo', color);
             } else {
                 console.error('Material not found on MeshRenderer.');
-            }
+            }                                           
         }
     }
 }

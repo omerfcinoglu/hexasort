@@ -46,7 +46,8 @@ export class SelectableManager extends Component {
     }
 
     async addRandomClusters(selectableTile: SelectableTiles) {
-        const clusterCount = Math.floor(Math.random() * 3) + 1;
+        let clusterCount = Math.floor(Math.random() * 3) + 1;
+        if(clusterCount === 1) clusterCount = 2;
         const availableTypes = [1, 2, 3, 4, 5]; // Başlangıç tipi listesi
         let lastClusterTileCount = 0;
     

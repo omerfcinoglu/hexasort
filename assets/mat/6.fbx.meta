@@ -1,0 +1,146 @@
+{
+  "ver": "2.3.0",
+  "importer": "fbx",
+  "imported": true,
+  "uuid": "cf829270-fc46-4c15-8dad-b096bdcc732d",
+  "files": [],
+  "subMetas": {
+    "a5f8b": {
+      "importer": "gltf-mesh",
+      "uuid": "cf829270-fc46-4c15-8dad-b096bdcc732d@a5f8b",
+      "displayName": "",
+      "id": "a5f8b",
+      "name": "Plane.001.mesh",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.1.0",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "89ec2": {
+      "importer": "gltf-material",
+      "uuid": "cf829270-fc46-4c15-8dad-b096bdcc732d@89ec2",
+      "displayName": "",
+      "id": "89ec2",
+      "name": "Floor.001.material",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "5ec6a": {
+      "importer": "gltf-scene",
+      "uuid": "cf829270-fc46-4c15-8dad-b096bdcc732d@5ec6a",
+      "displayName": "",
+      "id": "5ec6a",
+      "name": "6.prefab",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "imageMetas": [],
+    "legacyFbxImporter": false,
+    "allowMeshDataAccess": true,
+    "fbx": {
+      "smartMaterialEnabled": true
+    },
+    "redirect": "cf829270-fc46-4c15-8dad-b096bdcc732d@5ec6a",
+    "assetFinder": {
+      "meshes": [
+        "cf829270-fc46-4c15-8dad-b096bdcc732d@a5f8b"
+      ],
+      "skeletons": [],
+      "textures": [],
+      "materials": [
+        "cf829270-fc46-4c15-8dad-b096bdcc732d@89ec2"
+      ],
+      "scenes": [
+        "cf829270-fc46-4c15-8dad-b096bdcc732d@5ec6a"
+      ]
+    },
+    "materials": {
+      "cf829270-fc46-4c15-8dad-b096bdcc732d@89ec2": {
+        "__type__": "cc.Material",
+        "_name": "",
+        "_objFlags": 0,
+        "_native": "",
+        "_effectAsset": {
+          "__uuid__": "f648964e-8d32-41fc-9ac9-7a1e714dd17b",
+          "__expectedType__": "cc.EffectAsset"
+        },
+        "_techIdx": 0,
+        "_defines": [
+          {
+            "DCC_APP_NAME": 2,
+            "HAS_EXPORTED_METALLIC": true
+          },
+          {},
+          {}
+        ],
+        "_states": [
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          }
+        ],
+        "_props": [
+          {
+            "emissive": {
+              "__type__": "cc.Color",
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 255
+            },
+            "shininessExponent": 66.74581535372204,
+            "specularFactor": 0.25,
+            "transparencyFactor": 0
+          },
+          {},
+          {}
+        ]
+      }
+    }
+  }
+}

@@ -98,15 +98,15 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 15,
-      "z": 0
+      "y": 11.383,
+      "z": 13.433
     },
     "_lrot": {
       "__type__": "cc.Quat",
-      "x": -0.8005972817813567,
-      "y": -0.1453229557254247,
-      "z": -0.33176781330654553,
-      "w": 0.4773419623260901
+      "x": -0.3983074572237589,
+      "y": 0.15244370511190206,
+      "z": -0.06731314696316178,
+      "w": 0.9019872651748553
     },
     "_lscale": {
       "__type__": "cc.Vec3",
@@ -117,9 +117,9 @@
     "_layer": 1073741824,
     "_euler": {
       "__type__": "cc.Vec3",
-      "x": -120.254,
-      "y": -42.248,
-      "z": -4.821
+      "x": -46.018,
+      "y": 13.192,
+      "z": -14.056
     },
     "_id": "c0y6F5f+pAvI805TdmxIjx"
   },
@@ -140,12 +140,12 @@
       "a": 255
     },
     "_useColorTemperature": false,
-    "_colorTemperature": 6715,
+    "_colorTemperature": 13000,
     "_staticSettings": {
       "__id__": 4
     },
-    "_illuminanceHDR": 65000,
-    "_illuminance": 65000,
+    "_illuminanceHDR": 100000,
+    "_illuminance": 100000,
     "_illuminanceLDR": 1.6927083333333335,
     "_shadowEnabled": false,
     "_shadowPcf": 0,
@@ -168,7 +168,7 @@
     "_baked": false,
     "_editorOnly": false,
     "_bakeable": false,
-    "_castShadow": false
+    "_castShadow": true
   },
   {
     "__type__": "cc.Node",
@@ -402,7 +402,7 @@
       "__uuid__": "1263d74c-8167-4928-91a6-4e2672411f47@2e76e",
       "__expectedType__": "cc.Mesh"
     },
-    "_shadowCastingMode": 0,
+    "_shadowCastingMode": 1,
     "_shadowReceivingMode": 1,
     "_shadowBias": 0,
     "_shadowNormalBias": 0,
@@ -421,8 +421,8 @@
     },
     "_bakeable": false,
     "_castShadow": false,
-    "_receiveShadow": false,
-    "_recieveShadow": false,
+    "_receiveShadow": true,
+    "_recieveShadow": true,
     "_lightmapSize": 64
   },
   {
@@ -518,9 +518,9 @@
     "__prefab": null,
     "color1": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
+      "r": 141,
+      "g": 141,
+      "b": 141,
       "a": 255
     },
     "color2": {
@@ -964,7 +964,7 @@
     "_priority": 1073741824,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 68.11731315042573,
+    "_orthoHeight": 480,
     "_near": 1,
     "_far": 2000,
     "_color": {
@@ -2336,33 +2336,33 @@
     "__type__": "cc.AmbientInfo",
     "_skyColorHDR": {
       "__type__": "cc.Vec4",
-      "x": 0.242613,
-      "y": 0.362617,
-      "z": 0.798746,
+      "x": 1,
+      "y": 1,
+      "z": 1,
       "w": 0.520833125
     },
     "_skyColor": {
       "__type__": "cc.Vec4",
-      "x": 0.242613,
-      "y": 0.362617,
-      "z": 0.798746,
+      "x": 1,
+      "y": 1,
+      "z": 1,
       "w": 0.520833125
     },
     "_skyIllumHDR": 20000,
     "_skyIllum": 20000,
     "_groundAlbedoHDR": {
       "__type__": "cc.Vec4",
-      "x": 0.241814,
-      "y": 0.361945,
-      "z": 0.798799,
-      "w": 0
+      "x": 1,
+      "y": 1,
+      "z": 1,
+      "w": 1
     },
     "_groundAlbedo": {
       "__type__": "cc.Vec4",
-      "x": 0.241814,
-      "y": 0.361945,
-      "z": 0.798799,
-      "w": 0
+      "x": 1,
+      "y": 1,
+      "z": 1,
+      "w": 1
     },
     "_skyColorLDR": {
       "__type__": "cc.Vec4",
@@ -2382,7 +2382,7 @@
   },
   {
     "__type__": "cc.ShadowsInfo",
-    "_enabled": false,
+    "_enabled": true,
     "_type": 0,
     "_normal": {
       "__type__": "cc.Vec3",
@@ -2393,10 +2393,10 @@
     "_distance": 0,
     "_shadowColor": {
       "__type__": "cc.Color",
-      "r": 76,
-      "g": 76,
-      "b": 76,
-      "a": 255
+      "r": 82,
+      "g": 82,
+      "b": 82,
+      "a": 115
     },
     "_maxReceived": 4,
     "_size": {

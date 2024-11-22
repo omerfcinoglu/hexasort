@@ -2,12 +2,12 @@
   "ver": "2.3.0",
   "importer": "fbx",
   "imported": true,
-  "uuid": "42e0f629-90ce-4f6f-b646-72992079d5c4",
+  "uuid": "463773d9-48e2-4ea9-b230-fda0d889e126",
   "files": [],
   "subMetas": {
     "a5f8b": {
       "importer": "gltf-mesh",
-      "uuid": "42e0f629-90ce-4f6f-b646-72992079d5c4@a5f8b",
+      "uuid": "463773d9-48e2-4ea9-b230-fda0d889e126@a5f8b",
       "displayName": "",
       "id": "a5f8b",
       "name": "Plane.001.mesh",
@@ -24,7 +24,7 @@
     },
     "89ec2": {
       "importer": "gltf-material",
-      "uuid": "42e0f629-90ce-4f6f-b646-72992079d5c4@89ec2",
+      "uuid": "463773d9-48e2-4ea9-b230-fda0d889e126@89ec2",
       "displayName": "",
       "id": "89ec2",
       "name": "Floor.001.material",
@@ -40,10 +40,10 @@
     },
     "5ec6a": {
       "importer": "gltf-scene",
-      "uuid": "42e0f629-90ce-4f6f-b646-72992079d5c4@5ec6a",
+      "uuid": "463773d9-48e2-4ea9-b230-fda0d889e126@5ec6a",
       "displayName": "",
       "id": "5ec6a",
-      "name": "Hexagon.prefab",
+      "name": "5.prefab",
       "userData": {
         "gltfIndex": 0
       },
@@ -62,18 +62,18 @@
     "fbx": {
       "smartMaterialEnabled": true
     },
-    "redirect": "42e0f629-90ce-4f6f-b646-72992079d5c4@5ec6a",
+    "redirect": "463773d9-48e2-4ea9-b230-fda0d889e126@5ec6a",
     "assetFinder": {
       "meshes": [
-        "42e0f629-90ce-4f6f-b646-72992079d5c4@a5f8b"
+        "463773d9-48e2-4ea9-b230-fda0d889e126@a5f8b"
       ],
       "skeletons": [],
       "textures": [],
       "materials": [
-        "42e0f629-90ce-4f6f-b646-72992079d5c4@89ec2"
+        "463773d9-48e2-4ea9-b230-fda0d889e126@89ec2"
       ],
       "scenes": [
-        "42e0f629-90ce-4f6f-b646-72992079d5c4@5ec6a"
+        "463773d9-48e2-4ea9-b230-fda0d889e126@5ec6a"
       ]
     }
   }
