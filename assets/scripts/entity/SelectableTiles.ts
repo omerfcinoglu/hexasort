@@ -15,10 +15,10 @@ export class SelectableTiles extends Component {
     public originalPosition: Vec3 = new Vec3(); 
     public attachedGround: GroundTile | null = null;
 
-    private idleColliderSize : Vec3 = new Vec3(1.5,5,1.5);
+    private idleColliderSize : Vec3 = new Vec3(1,10,1);
     private selectedColliderSize : Vec3 = new Vec3(0.5,20,0.5);
 
-    private liftedYOffset: number = 0.5; // Görsel olarak kaldırma için Y ekseninde eklenen yükseklik
+    private liftedYOffset: number = 1;
 
     start() {
         this.setColliderSize(false);
@@ -34,7 +34,7 @@ export class SelectableTiles extends Component {
         ? this.node.getComponent(BoxCollider).size = this.selectedColliderSize
         : this.node.getComponent(BoxCollider).size = this.idleColliderSize
 
-        this.testCollider(isSelected);
+        // this.testCollider(isSelected);
     }
 
     enableCollider(isActive : boolean){
@@ -48,7 +48,6 @@ export class SelectableTiles extends Component {
      */
     public select(touchWorldPos: Vec3) {
         this.originalPosition = this.node.getWorldPosition();
-        console.log(this.originalPosition);
         
         if (!this.isSelectable) return;
         this.setColliderSize(true);
