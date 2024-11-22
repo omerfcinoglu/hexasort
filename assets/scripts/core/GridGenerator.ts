@@ -23,9 +23,9 @@ export class GridGenerator {
         const numCols = levelMatrix[0].length;
     
         // Define spacing adjustments
-        const tileSpacingX = 0.01; // X-axis spacing adjustment for closer columns
-        const tileSpacingZ = 0.15; // Z-axis spacing adjustment for row spacing
-        const staggerOffset = -0.55; // Lowering offset for every even column
+        const tileSpacingX = -0.05; // X-axis spacing adjustment for closer columns
+        const tileSpacingZ = 0.01; // Z-axis spacing adjustment for row spacing
+        const staggerOffset = -0.5; // Lowering offset for every even column
     
         // Calculate effective tile sizes with spacing adjustments
         const adjustedTileSizeX = this.tileSize + tileSpacingX;

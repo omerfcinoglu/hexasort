@@ -113,7 +113,7 @@
     },
     "_materials": [
       {
-        "__uuid__": "d3c7820c-2a98-4429-8bc7-b8453bc9ac41",
+        "__uuid__": "42e0f629-90ce-4f6f-b646-72992079d5c4@89ec2",
         "__expectedType__": "cc.Material"
       }
     ],
@@ -147,7 +147,7 @@
       "w": 0
     },
     "_bakeable": false,
-    "_castShadow": true,
+    "_castShadow": false,
     "_receiveShadow": false,
     "_recieveShadow": false,
     "_lightmapSize": 64

@@ -44,7 +44,6 @@ export class NeighborChecker {
             // Access GroundTile from GridManager
             const neighborGround = GridManager.getInstance().getGroundTile(neighborRow, neighborCol);
 
-            // Only consider neighbors that are not locked
             if (neighborGround && !neighborGround.isLocked && neighborGround.getLastCluster()) {
                 neighborGrounds.push(neighborGround);
             }

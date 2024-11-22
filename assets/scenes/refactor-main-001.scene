@@ -82,7 +82,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Main Light",
+    "_name": "Directional Light",
     "_objFlags": 0,
     "_parent": {
       "__id__": 1
@@ -98,15 +98,15 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 11.383,
-      "z": 13.433
+      "y": 11.194,
+      "z": 12.058
     },
     "_lrot": {
       "__type__": "cc.Quat",
-      "x": -0.3983074572237589,
-      "y": 0.15244370511190206,
-      "z": -0.06731314696316178,
-      "w": 0.9019872651748553
+      "x": -0.4435632167895596,
+      "y": 0.1581323646311065,
+      "z": -0.011557705531901566,
+      "w": 0.8821067097637965
     },
     "_lscale": {
       "__type__": "cc.Vec3",
@@ -117,11 +117,11 @@
     "_layer": 1073741824,
     "_euler": {
       "__type__": "cc.Vec3",
-      "x": -46.018,
-      "y": 13.192,
-      "z": -14.056
+      "x": -52.105,
+      "y": 15.799,
+      "z": -9.246
     },
-    "_id": "c0y6F5f+pAvI805TdmxIjx"
+    "_id": "318BMe7s9G7LjwmtAYYBYU"
   },
   {
     "__type__": "cc.DirectionalLight",
@@ -140,12 +140,12 @@
       "a": 255
     },
     "_useColorTemperature": false,
-    "_colorTemperature": 6398,
+    "_colorTemperature": 7405,
     "_staticSettings": {
       "__id__": 4
     },
-    "_illuminanceHDR": 90000,
-    "_illuminance": 90000,
+    "_illuminanceHDR": 50000,
+    "_illuminance": 50000,
     "_illuminanceLDR": 1.6927083333333335,
     "_shadowEnabled": false,
     "_shadowPcf": 0,
@@ -161,14 +161,14 @@
     "_shadowNear": 0.1,
     "_shadowFar": 10,
     "_shadowOrthoSize": 5,
-    "_id": "597uMYCbhEtJQc0ffJlcgA"
+    "_id": "31niuyAl5IzYxZJWOJ/Lnk"
   },
   {
     "__type__": "cc.StaticLightSettings",
     "_baked": false,
     "_editorOnly": false,
     "_bakeable": false,
-    "_castShadow": true
+    "_castShadow": false
   },
   {
     "__type__": "cc.Node",
@@ -188,15 +188,15 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 21.32,
-      "z": 14.417
+      "y": 11.359,
+      "z": 7.748
     },
     "_lrot": {
       "__type__": "cc.Quat",
-      "x": -0.4952843129346344,
+      "x": -0.5243797840533468,
       "y": 0,
       "z": 0,
-      "w": 0.8687309418691539
+      "w": 0.8514844931507357
     },
     "_lscale": {
       "__type__": "cc.Vec3",
@@ -207,7 +207,7 @@
     "_layer": 1073741824,
     "_euler": {
       "__type__": "cc.Vec3",
-      "x": -59.377,
+      "x": -63.253,
       "y": 0,
       "z": 0
     },
@@ -224,7 +224,7 @@
     "__prefab": null,
     "_projection": 1,
     "_priority": 0,
-    "_fov": 30,
+    "_fov": 45,
     "_fovAxis": 0,
     "_orthoHeight": 7,
     "_near": 1,
@@ -525,44 +525,44 @@
     },
     "color2": {
       "__type__": "cc.Color",
-      "r": 27,
-      "g": 45,
+      "r": 0,
+      "g": 163,
       "b": 255,
       "a": 255
     },
     "color3": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 34,
-      "b": 219,
+      "r": 195,
+      "g": 0,
+      "b": 255,
       "a": 255
     },
     "color4": {
       "__type__": "cc.Color",
-      "r": 235,
-      "g": 255,
+      "r": 255,
+      "g": 224,
       "b": 0,
       "a": 255
     },
     "color5": {
       "__type__": "cc.Color",
       "r": 255,
-      "g": 14,
-      "b": 14,
+      "g": 0,
+      "b": 0,
       "a": 255
     },
     "color6": {
       "__type__": "cc.Color",
-      "r": 24,
+      "r": 0,
       "g": 255,
-      "b": 3,
+      "b": 29,
       "a": 255
     },
     "ground": {
       "__type__": "cc.Color",
-      "r": 95,
-      "g": 95,
-      "b": 95,
+      "r": 71,
+      "g": 71,
+      "b": 71,
       "a": 255
     },
     "highlight": {
@@ -1544,7 +1544,7 @@
       "__type__": "cc.Vec3",
       "x": 0,
       "y": 0,
-      "z": 5.942
+      "z": 4.771
     },
     "_lrot": {
       "__type__": "cc.Quat",
@@ -2387,7 +2387,7 @@
     "_normal": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 1,
+      "y": 0.5,
       "z": 0
     },
     "_distance": 0,

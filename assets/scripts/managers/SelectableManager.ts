@@ -46,14 +46,14 @@ export class SelectableManager extends Component {
     }
 
     async addRandomClusters(selectableTile: SelectableTiles) {
-        let clusterCount = Math.floor(Math.random() * 3) + 1;
+        let clusterCount = 2 //Math.floor(Math.random() * 3) + 1;
         if(clusterCount === 1) clusterCount = 2;
         const availableTypes = [1, 2, 3, 4, 5]; 
         let lastClusterTileCount = 1;
     
         for (let i = 0; i < clusterCount; i++) {
-            const randomIndex = Math.floor(Math.random() * availableTypes.length);
-            const tileType = availableTypes.splice(randomIndex, 1)[0];
+            const randomIndex = 2 - i // Math.floor(Math.random() * availableTypes.length);
+            const tileType = randomIndex //availableTypes.splice(randomIndex, 1)[0];
             const tileCount = Math.floor(Math.random() * 3) + 1;
             const tileClusterNode = instantiate(this.tileClusterPrefab);
             tileClusterNode.parent = selectableTile.node;
@@ -62,7 +62,7 @@ export class SelectableManager extends Component {
             if (cluster) {
                 cluster.initCluster(tileType, tileCount);
                 selectableTile.tileClusters.push(cluster);
-                cluster.node.setPosition(0, (lastClusterTileCount * 0.1), -0.01 * i);
+                cluster.node.setPosition(0, (lastClusterTileCount * 0.1), -0.05 * i);
             }
     
             lastClusterTileCount += tileCount;
@@ -86,7 +86,7 @@ export class SelectableManager extends Component {
     async enterTheSceneAnimation(selectableTileNode: Node, position: Vec3): Promise<void> {
         await new Promise<void>((resolve) => {
             tween(selectableTileNode)
-                .to(0.5, { position: position } , {easing:'expoInOut'})  // Move to target position
+                .to(1, { position: position } , {easing:'expoInOut'})  // Move to target position
                 .call(resolve)  // Resolve the promise when the position animation completes
                 .start();
         });

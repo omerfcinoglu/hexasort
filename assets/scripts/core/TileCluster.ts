@@ -51,7 +51,7 @@ export class TileCluster extends LockableComponent {
             const tileNode = instantiate(this.tilePrefab);
             tileNode.parent = this.node;
 
-            const tilePosition = new Vec3(0, i * 0.1, -i * 0.01); // Staggered positioning within the cluster
+            const tilePosition = new Vec3(0, i * 0.13, -i * 0.015); // Staggered positioning within the cluster
             tileNode.setPosition(tilePosition);
 
             const tileComp = tileNode.getComponent(Tile);

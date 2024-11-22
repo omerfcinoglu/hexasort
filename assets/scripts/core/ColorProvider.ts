@@ -65,7 +65,7 @@ export class ColorProvider extends Component {
         if (body) {
             const material = body.material;
             if (material) {
-                material.setProperty('albedo', color);
+                material.setProperty('diffuseColor', color);
             } else {
                 console.error('Material not found on MeshRenderer.');
             }                                           

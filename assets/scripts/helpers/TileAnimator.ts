@@ -25,10 +25,12 @@ export class TileAnimator {
 		
 		let cumulativeHeight =  (targetTileCount + 1) * 0.1;
 		
-		const baseDuration = 0.2; // Hareket için toplam süre
+		const baseDuration = 3; // Hareket için toplam süre
 		const delayBetweenTiles = 0.1; 
-		const peakHeightFactor = 0.5; 
-		const easingFunction = 'quadOut'; 
+		const peakHeightFactor = 0.7; 
+		const down_easingFunction = 'quartOut'; 
+		const lift_easingFunction = 'quartIn'; 
+
 
 		const animationPromises: Promise<void>[] = [];
 
@@ -73,12 +75,12 @@ export class TileAnimator {
 								tween(tile.node).to(
 									baseDuration / 2,
 									{ worldPosition: peakPosition },
-									{ easing: easingFunction }
+									{ easing: lift_easingFunction }
 								),
 								tween(tile.node).to(
 									baseDuration / 2,
 									{ rotation: midRotation },
-									{ easing: easingFunction }
+									{ easing: lift_easingFunction }
 								)
 							),
 						// İkinci hareket: Tepe noktasından hedefe (flip sonlanıyor)
@@ -87,12 +89,12 @@ export class TileAnimator {
 								tween(tile.node).to(
 									baseDuration / 2,
 									{ worldPosition: targetPosition },
-									{ easing: easingFunction }
+									{ easing: down_easingFunction }
 								),
 								tween(tile.node).to(
 									baseDuration / 2,
 									{ rotation: endRotation },
-									{ easing: easingFunction }
+									{ easing: down_easingFunction }
 								)
 							)
 					)
