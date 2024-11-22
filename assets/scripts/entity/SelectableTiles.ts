@@ -34,7 +34,7 @@ export class SelectableTiles extends Component {
         ? this.node.getComponent(BoxCollider).size = this.selectedColliderSize
         : this.node.getComponent(BoxCollider).size = this.idleColliderSize
 
-        // this.testCollider(isSelected);
+        this.testCollider(isSelected);
     }
 
     enableCollider(isActive : boolean){
