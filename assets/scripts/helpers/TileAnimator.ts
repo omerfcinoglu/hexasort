@@ -60,7 +60,7 @@ export class TileAnimator {
 			// Hedef yönü ve rotasyonları hesapla
 			const direction = this.calculateDirection(tile.node.worldPosition, targetPosition);
 			const { midRotation, endRotation } = this.getRotationByDirection(direction);
-
+			
 			// Animasyonu oluştur
 			const animationPromise = new Promise<void>((resolve) => {
 				tween(tile.node)
@@ -137,7 +137,7 @@ export class TileAnimator {
 	private static getRotationByDirection(direction: string): { midRotation: Quat, endRotation: Quat } {
 		switch (direction) {
 			case 'Up':
-				return { midRotation: Quat.fromEuler(new Quat(), -180, 0, 0), endRotation: Quat.fromEuler(new Quat(), -180, 0, 0) };
+				return { midRotation: Quat.fromEuler(new Quat(), -90, 0, 0), endRotation: Quat.fromEuler(new Quat(), -180, 0, 0) };
 			case 'Down':
 				return { midRotation: Quat.fromEuler(new Quat(), 90, 0, 0), endRotation: Quat.fromEuler(new Quat(), 180, 0, 0) };
 			case 'LeftUp':
