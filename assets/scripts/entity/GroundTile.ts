@@ -30,11 +30,12 @@ export class GroundTile extends LockableComponent {
 
         const currentWorldPos = tileCluster.node.worldPosition.clone();
         tileCluster.node.parent = this.node.parent;
-        tileCluster.node.setWorldPosition(new Vec3(
-            this.node.position.x,
-            currentWorldPos.y,
-            this.node.position.z
-        ));
+        // tileCluster.node.setWorldPosition(new Vec3(
+        //     this.node.position.x,
+        //     currentWorldPos.y + 0.1,
+        //     this.node.position.z
+        // ));
+        tileCluster.node.setPosition(currentWorldPos);
     }
 
     public setActiveCollider(value: boolean) {

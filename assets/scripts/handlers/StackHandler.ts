@@ -15,31 +15,14 @@ export class StackHandler {
     async processStacks(grounds: GroundTile[]): Promise<GroundTile[]> {
         const processedGrounds: GroundTile[] = [];
         for (const ground of grounds) {
-            // if (!ground.tryLock()) {
-            //     console.warn(`GroundTile (${ground.gridPosition.row}, ${ground.gridPosition.col}) is already locked. Skipping.`);
-            //     continue;
-            // }
-
+            if (!ground.tryLock()) continue;
             try {
                 const lastCluster = ground.getLastCluster();
                 if (lastCluster) {
-                    if (!ground.tryLock()) {
-                        // console.warn(`TileCluster on GroundTile (${ground.gridPosition.row}, ${ground.gridPosition.col}) is already locked. Skipping.`);
-                        continue;
-                    }
-
-                    try {
-                        if (lastCluster.getLength() >= this.matchStackCount) {
-                            // console.log(`Clearing stack on GroundTile (${ground.gridPosition.row}, ${ground.gridPosition.col}).`);
-                            ground.lock();
-                            await TileAnimator.animateTilesToZeroScale(lastCluster.getTiles());
-                            ground.popTileCluster();
-                            if (!processedGrounds.includes(ground)) {
-                                processedGrounds.push(ground);
-                            }
-                        }
-                    } finally {
-                        ground.unlock();
+                    if (lastCluster.getLength() >= this.matchStackCount) {
+                        await TileAnimator.animateTilesToZeroScale(lastCluster.getTiles());
+                        ground.popTileCluster();
+                        processedGrounds.push(ground);
                     }
                 }
             } finally {
@@ -48,4 +31,5 @@ export class StackHandler {
         }
         return processedGrounds;
     }
+    
 }

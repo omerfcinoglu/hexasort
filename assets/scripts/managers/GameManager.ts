@@ -8,6 +8,7 @@ import { SelectableTiles } from "../entity/SelectableTiles";
 import { SelectableManager } from "./SelectableManager";
 import { NeighborHandler } from "../handlers/NeighborHandler";
 import { StackHandler } from "../handlers/StackHandler";
+import { TaskQueue } from "../core/TaskQueue";
 
 const { ccclass, property } = _decorator;
 
@@ -19,6 +20,7 @@ export class GameManager extends Component {
 	@property(SelectableManager)
 	selectableManager: SelectableManager | null = null;
 
+	private taskQueue: TaskQueue = new TaskQueue();
 	private MATCH_STACK_COUNT: number = 7;
 
 	tilePlacementHandler: TilePlacementHandler | null = null;
@@ -38,35 +40,37 @@ export class GameManager extends Component {
 	}
 
 	async onPlacementTriggered(selectedTile: SelectableTiles) {
-		const placedGround = await this.tilePlacementHandler?.place(selectedTile, this.selectableManager);
-		if (placedGround) {
-			placedGround.highlight(false);
-			await this.processPlacement(placedGround);
-		}
-	}
-
-	private async processPlacement(initialGround: GroundTile) {
+		const task = async () => {
+		    const placedGround = await this.tilePlacementHandler?.place(selectedTile, this.selectableManager);
+		    if (placedGround) {
+			   placedGround.highlight(false);
+			   await this.processPlacement(placedGround);
+		    }
+		};
+		this.taskQueue.add(task);
+	 }
+  
+	 private async processPlacement(initialGround: GroundTile) {
 		const processingQueue: GroundTile[] = [initialGround];
-
+  
 		while (processingQueue.length > 0) {
-			const currentGround = processingQueue.shift();
-			
-			if (!currentGround || !currentGround.tryLock()) continue;
-			try {
-				const transferedGrounds = await this.neighborHandler?.processNeighbors(currentGround);
-				const stackedGrounds = await this.stackHandler?.processStacks(transferedGrounds);
-				const allGroundsToCheck = new Set([...transferedGrounds, ...stackedGrounds]);
-
-				for (const ground of allGroundsToCheck) {
-					if (!processingQueue.includes(ground)) {
-						processingQueue.push(ground);
-					}
-				}
-			} finally {
-				currentGround.unlock();
-			}
+		    const currentGround = processingQueue.shift();
+		    if (!currentGround || !currentGround.tryLock()) continue;
+		    try {
+			   const transferedGrounds = await this.neighborHandler?.processNeighbors(currentGround);
+			   const stackedGrounds = await this.stackHandler?.processStacks(transferedGrounds);
+  
+			   const allGroundsToCheck = new Set([...transferedGrounds, ...stackedGrounds]);
+			   for (const ground of allGroundsToCheck) {
+				  if (!processingQueue.includes(ground)) {
+					 processingQueue.push(ground);
+				  }
+			   }
+		    } finally {
+			   currentGround.unlock();
+		    }
 		}
-	}
+	 }
 }
 
 /*

@@ -107,9 +107,9 @@ export class SelectableTiles extends Component {
     public grounded(){
         this.node.setWorldPosition(
             new Vec3(
-                this.node.worldPosition.x,
+                this.attachedGround.node.worldPosition.x,
                 0.1,
-                this.node.worldPosition.z ,
+                this.attachedGround.node.worldPosition.z ,
             )
         )
     }

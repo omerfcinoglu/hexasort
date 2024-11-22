@@ -18,7 +18,7 @@ export class TilePlacementHandler {
         const targetGround = selectedTile.attachedGround;
         if (!targetGround || !selectedTile) return null;
 
-        selectedTile.grounded();
+        // selectedTile.grounded();
 
         for (const cluster of selectedTile.tileClusters) {
             targetGround.addTileCluster(cluster);

@@ -70,6 +70,7 @@ export class TileSelectionHandler extends Component {
             const placingTile = this.selectedTile.attachedGround;
             if (placingTile) {
                 // Emit placement event for the selected tile
+                this.selectedTile.grounded();
                 TileSelectionHandler.placementEvent.emit('placement', this.selectedTile);
             } else {
                 
