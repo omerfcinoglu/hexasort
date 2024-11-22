@@ -140,12 +140,12 @@
       "a": 255
     },
     "_useColorTemperature": false,
-    "_colorTemperature": 13000,
+    "_colorTemperature": 6398,
     "_staticSettings": {
       "__id__": 4
     },
-    "_illuminanceHDR": 100000,
-    "_illuminance": 100000,
+    "_illuminanceHDR": 90000,
+    "_illuminance": 90000,
     "_illuminanceLDR": 1.6927083333333335,
     "_shadowEnabled": false,
     "_shadowPcf": 0,
@@ -2396,7 +2396,7 @@
       "r": 82,
       "g": 82,
       "b": 82,
-      "a": 115
+      "a": 77
     },
     "_maxReceived": 4,
     "_size": {
