@@ -28,8 +28,6 @@ export class TileAnimator {
 
 		const direction = this.calculateDirection(targetGridPos, sourceGridPos);
 
-		console.log(direction);
-		
 
 		let cumulativeHeight =  (targetTileCount + 1) * 0.1;
 		
