@@ -28,6 +28,7 @@ export class TileAnimator {
 
 		const direction = this.calculateDirection(targetGridPos, sourceGridPos);
 
+		
 
 		let cumulativeHeight =  (targetTileCount + 1) * 0.1;
 		
@@ -128,8 +129,8 @@ export class TileAnimator {
 		const evenColmDirections = [
 		    { dRow: -1, dCol: 0, direction: "Up" },
 		    { dRow: 1, dCol: 0, direction: "Down" },
-		    { dRow: 0, dCol: -1, direction: "Left" },
-		    { dRow: 0, dCol: 1, direction: "Right" },
+		    { dRow: 0, dCol: -1, direction: "LeftUp" },
+		    { dRow: 0, dCol: 1, direction: "RightUp" },
 		    { dRow: 1, dCol: -1, direction: "LeftDown" },
 		    { dRow: 1, dCol: 1, direction: "RightDown" },
 		];
