@@ -18,11 +18,19 @@ export class TileAnimator {
 		Quat.fromViewUp(lookAtRotation, direction);
 		tile.setRotation(lookAtRotation); // İlk olarak hedefe bakacak şekilde tile'ı döndürüyoruz
 	}
-	static async animateClusterTransfer(cluster: TileCluster, targetGround: GroundTile): Promise<void> {
+	static async animateClusterTransfer(cluster: TileCluster, targetGround: GroundTile , source : GroundTile): Promise<void> {
 		const tiles = cluster.getTiles();
 		const baseTargetPosition = targetGround.node.worldPosition.clone();
 		const targetTileCount = targetGround.getAllTileCount();
 		
+		const sourceGridPos = source.gridPosition;
+		const targetGridPos = targetGround.gridPosition;
+
+		const direction = this.calculateDirection(targetGridPos, sourceGridPos);
+
+		console.log(direction);
+		
+
 		let cumulativeHeight =  (targetTileCount + 1) * 0.1;
 		
 		const baseDuration = 0.3; // Hareket için toplam süre
@@ -58,7 +66,6 @@ export class TileAnimator {
 			tile.node.setSiblingIndex(i);
 
 			// Hedef yönü ve rotasyonları hesapla
-			const direction = this.calculateDirection(tile.node.worldPosition, targetPosition);
 			const { midRotation, endRotation } = this.getRotationByDirection(direction);
 			
 			// Animasyonu oluştur
@@ -112,28 +119,41 @@ export class TileAnimator {
 		await Promise.all(animationPromises);
 	}
 
-	async playSoundSequentially(tileCount: number , delay : number): Promise<void> {
-		for (let i = 0; i < tileCount; i++) {
-		    // SoundManager üzerinden sesi çal
-		    SoundManager.getInstance().playSound(Sounds.TransferTiles);
-		    // Her ses çalma işlemi arasında delay ekle
-		    await new Promise((resolve) => setTimeout(resolve, 1000 * delay)); // Delay saniye cinsinden
+
+	private static calculateDirection(
+		source: { row: number; col: number },
+		target: { row: number; col: number }
+	 ): string {
+		const dRow = target.row - source.row;
+		const dCol = target.col - source.col;
+  
+		const evenColmDirections = [
+		    { dRow: -1, dCol: 0, direction: "Up" },
+		    { dRow: 1, dCol: 0, direction: "Down" },
+		    { dRow: 0, dCol: -1, direction: "Left" },
+		    { dRow: 0, dCol: 1, direction: "Right" },
+		    { dRow: 1, dCol: -1, direction: "LeftDown" },
+		    { dRow: 1, dCol: 1, direction: "RightDown" },
+		];
+  
+		const oddColmDirections = [
+		    { dRow: -1, dCol: 0, direction: "Up" },
+		    { dRow: 1, dCol: 0, direction: "Down" },
+		    { dRow: 0, dCol: -1, direction: "LeftUp" },
+		    { dRow: 0, dCol: 1, direction: "RightUp" },
+		    { dRow: -1, dCol: -1, direction: "LeftDown" },
+		    { dRow: -1, dCol: 1, direction: "RightDown" },
+		];
+  
+		const directions = source.col % 2 === 0 ? evenColmDirections : oddColmDirections;
+  
+		for (const dir of directions) {
+		    if (dRow === dir.dRow && dCol === dir.dCol) {
+			   return dir.direction;
+		    }
 		}
+		return "Unknown";
 	 }
-
-
-	private static calculateDirection(sourcePosition: Vec3, targetPosition: Vec3): string {
-		const deltaX = Math.floor(targetPosition.x - sourcePosition.x);
-		const deltaZ = Math.floor(targetPosition.z - sourcePosition.z);
-
-		if (deltaX > 0 && deltaZ === 0) return 'LeftUp';
-		if (deltaX < 0 && deltaZ === 0) return 'RightUp';
-		if (deltaX > 0 && deltaZ < 0) return 'LeftDown';
-		if (deltaX < 0 && deltaZ < 0) return 'RightDown';
-		if (deltaZ > 0) return 'Down';
-		return 'Up';
-	}
-
 	private static getRotationByDirection(direction: string): { midRotation: Quat, endRotation: Quat } {
 		switch (direction) {
 			case 'Up':

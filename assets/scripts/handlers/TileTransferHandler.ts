@@ -9,7 +9,6 @@ const { ccclass } = _decorator;
 export class TileTransferHandler {
 
     async transferClusterToTarget(source: GroundTile, targetGround: GroundTile): Promise<void> {
-		console.log("b");
         if (!source || !targetGround) return;
 
         const cluster = source.getLastCluster();
@@ -22,7 +21,7 @@ export class TileTransferHandler {
         try {
             if (targetGround) {
                 targetGround.tryLock();
-                await TileAnimator.animateClusterTransfer(cluster, targetGround);
+                await TileAnimator.animateClusterTransfer(cluster, targetGround , source);
                 const targetTopCluster = targetGround.getLastCluster();
                 const transferTiles = [...cluster.getTiles()].reverse();
                 if(targetTopCluster){
