@@ -20,8 +20,8 @@ export class StackHandler {
                 const lastCluster = ground.getLastCluster();
                 if (lastCluster) {
                     if (lastCluster.getLength() >= this.matchStackCount) {
-                        await TileAnimator.animateTilesToZeroScale(lastCluster.getTiles());
                         ground.popTileCluster();
+                        await TileAnimator.animateTilesToZeroScale(lastCluster.getTiles());
                         processedGrounds.push(ground);
                     }
                 }

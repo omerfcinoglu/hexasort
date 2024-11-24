@@ -47,14 +47,15 @@ export class GameManager extends Component {
     }
 
     async onPlacementTriggered(selectedTile: SelectableTiles) {
-        const task = async () => {
-            const placedGround = await this.tilePlacementHandler?.place(selectedTile, this.selectableManager);
-            if (placedGround) {
-                placedGround.highlight(false);
-                await this.processPlacement(placedGround);
-            }
-        };
-        this.taskQueue.add(task);
+        // const task = async () => {
+           
+        // };
+        // this.taskQueue.add(task);
+        const placedGround = await this.tilePlacementHandler?.place(selectedTile, this.selectableManager);
+        if (placedGround) {
+            placedGround.highlight(false);
+            await this.processPlacement(placedGround);
+        }
     }
 
     private async processPlacement(initialGround: GroundTile) {
