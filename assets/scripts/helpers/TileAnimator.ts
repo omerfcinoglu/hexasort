@@ -16,7 +16,7 @@ export class TileAnimator {
 
 		const lookAtRotation = new Quat();
 		Quat.fromViewUp(lookAtRotation, direction);
-		tile.setRotation(lookAtRotation); // İlk olarak hedefe bakacak şekilde tile'ı döndürüyoruz
+		tile.setRotation(lookAtRotation); 
 	}
 	static async animateClusterTransfer(cluster: TileCluster, targetGround: GroundTile , source : GroundTile): Promise<void> {
 		const tiles = cluster.getTiles();
@@ -28,24 +28,20 @@ export class TileAnimator {
 
 		const direction = this.calculateDirection(targetGridPos, sourceGridPos);
 
-		console.log(direction);
-		
 
 		let cumulativeHeight =  (targetTileCount + 1) * 0.1;
 		
-		const baseDuration = 0.3; // Hareket için toplam süre
-		const delayBetweenTiles = 0.1; 
-		const peakHeightFactor = 0.7; 
+		const baseDuration = 0.35;
+		const delayBetweenTiles = 0.06; 
+		const peakHeightFactor = 0.9; 
 		const down_easingFunction = 'quartOut'; 
-		const lift_easingFunction = 'quartIn'; 
+		const lift_easingFunction = 'linear'; 
 
 
 		const animationPromises: Promise<void>[] = [];
 
-		// Tiles, yukarıdan aşağıya doğru sıralanıyor
 		tiles.reverse();
 
-		// A'daki her tile, B'deki uygun pozisyona hareket edecek
 		for (let i = 0; i < tiles.length; i++) {
 			const tile = tiles[i];
 
@@ -53,30 +49,26 @@ export class TileAnimator {
 			const startPosition = tile.node.worldPosition.clone();
 			const targetPosition = new Vec3(
 				baseTargetPosition.x,
-				cumulativeHeight + ((i+1) * 0.1), // B'deki mevcut tile'ların üstüne konumlanıyor
+				cumulativeHeight + ((i+1) * 0.11), 
 				baseTargetPosition.z
 			);
 			const peakPosition = new Vec3(
 				(startPosition.x + targetPosition.x) / 2,
-				Math.max(startPosition.y, targetPosition.y) + peakHeightFactor, // Tepe yüksekliği
+				Math.max(startPosition.y, targetPosition.y) + peakHeightFactor, 
 				(startPosition.z + targetPosition.z) / 2
 			);
 
-			// Overlay ve z-index kontrolü
 			tile.node.setSiblingIndex(i);
 
-			// Hedef yönü ve rotasyonları hesapla
 			const { midRotation, endRotation } = this.getRotationByDirection(direction);
 			
-			// Animasyonu oluştur
 			const animationPromise = new Promise<void>((resolve) => {
 				tween(tile.node)
-					.delay(i * delayBetweenTiles) // Her tile için gecikme
+					.delay(i * delayBetweenTiles) 
 					.call(()=>{
 						SoundManager.getInstance().playSound(Sounds.TransferTiles);
 					})
 					.sequence(
-						// İlk hareket: Başlangıçtan tepe noktasına (flip sırasında orta rotasyona geçiş)
 						tween(tile.node)
 							.parallel(
 								tween(tile.node).to(
@@ -90,7 +82,6 @@ export class TileAnimator {
 									{ easing: lift_easingFunction }
 								)
 							),
-						// İkinci hareket: Tepe noktasından hedefe (flip sonlanıyor)
 						tween(tile.node)
 							.parallel(
 								tween(tile.node).to(
@@ -106,7 +97,7 @@ export class TileAnimator {
 							)
 					)
 					.call(() => {
-						tile.node.setRotation(Quat.IDENTITY); // Rotasyonu sıfırla
+						tile.node.setRotation(Quat.IDENTITY); 
 						resolve();
 					})
 					.start();
@@ -115,7 +106,6 @@ export class TileAnimator {
 			animationPromises.push(animationPromise);
 		}
 
-		// Tüm animasyonları tamamlamayı bekle
 		await Promise.all(animationPromises);
 	}
 
@@ -180,7 +170,6 @@ export class TileAnimator {
 		const reversedTiles = [...tiles].reverse()
 		const lastTile = reversedTiles[reversedTiles.length - 1]
 		const duration = 0.1;
-		// Scale all tiles except the last one to (0, 0, 0)
 		for (let i = 0; i < reversedTiles.length; i++) {
 			const tile = reversedTiles[i];
 			if (i === reversedTiles.length - 1) {
@@ -194,7 +183,6 @@ export class TileAnimator {
 			});
 		}
 
-		// Scale the last tile to (0.231, 0.231, 0.231)
 		await new Promise<void>((resolve) => {
 			tween(lastTile.node)
 				.to(duration, { scale: new Vec3(0.231, lastTile.node.scale.y * 0.5, 0.231) })
@@ -203,11 +191,9 @@ export class TileAnimator {
 		});
 
 		//this must be dynamic !todo
-		// Define two target positions for the last tile
-		const position1 = new Vec3(0, 2, 2); // Replace with the desired first position
-		const position2 = new Vec3(-2.3, 7.2, 2); // Replace with the desired second position
+		const position1 = new Vec3(0, 2, 2);
+		const position2 = new Vec3(-2.3, 7.2, 2); 
 
-		// Move the last tile to the first position
 		await new Promise<void>((resolve) => {
 			tween(lastTile.node)
 				.to(duration, { worldPosition: position1 }, { easing: "cubicOut" })
@@ -215,7 +201,6 @@ export class TileAnimator {
 				.start();
 		});
 
-		// Move the last tile to the second position
 		await new Promise<void>((resolve) => {
 			tween(lastTile.node)
 				.to(duration, { worldPosition: position2 }, { easing: "expoIn" })

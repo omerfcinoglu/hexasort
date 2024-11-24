@@ -16,9 +16,9 @@ export class LockableComponent extends Component {
         this._isLocked = true;
     
         this._lockTimeout = setTimeout(() => {
-            console.warn(`${this.node.name} lock timeout! Unlocking.`);
+            // console.warn(`${this.node.name} lock timeout! Unlocking.`);
             this.unlock();
-        }, 5000); // 5 saniye sonra otomatik kilit açılır
+        }, 5000);
     }
     
     public unlock(): void {

@@ -5,21 +5,21 @@ export class LevelConfig {
                 [0, 3, 0, 0, 0],
                 [0, 0, 0, 0, 3],
                 [1, 1, 1, 0, 0],
-                [1, 0, 1, 0, 0],
+                [1, 0, 1, 0, 1],
                 [0, 1, 0, 0, 0],
             ],
             // matrix: [
             //     [0, 0, 0, 0, 0],
-            //     [0, 0, 0, 0, 0],
             //     [0, 1, 0, 0, 0],
-            //     [0, 0, 0, 0, 0],
+            //     [0, 0, 1, 0, 0],
+            //     [0, 1, 0, 0, 0],
             //     [0, 0, 0, 0, 0],
             // ],
             isSpecial: true,
             startTiles: {
                 1: [
-                    { tileType: 1, tileCount: 2 },
                     { tileType: 2, tileCount: 2 },
+                    { tileType: 1, tileCount: 2 },
                 ],
                 2: [
                     { tileType: 2, tileCount: 2 },
