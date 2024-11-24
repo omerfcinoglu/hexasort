@@ -136,7 +136,8 @@ export class TileAnimator {
 		    { dRow: 1, dCol: -1, direction: "LeftUp" },
 		    { dRow: 1, dCol: 1, direction: "RightUp" },
 		];
-  
+		
+		//checked
 		const oddColmDirections = [
 		    { dRow: -1, dCol: 0, direction: "Up" },
 		    { dRow: 1, dCol: 0, direction: "Down" },
