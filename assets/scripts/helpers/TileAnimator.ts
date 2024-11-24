@@ -127,13 +127,14 @@ export class TileAnimator {
 		const dRow = target.row - source.row;
 		const dCol = target.col - source.col;
   
+		//checked
 		const evenColmDirections = [
 		    { dRow: -1, dCol: 0, direction: "Up" },
 		    { dRow: 1, dCol: 0, direction: "Down" },
-		    { dRow: 0, dCol: -1, direction: "LeftUp" },
-		    { dRow: 0, dCol: 1, direction: "RightUp" },
-		    { dRow: 1, dCol: -1, direction: "LeftDown" },
-		    { dRow: 1, dCol: 1, direction: "RightDown" },
+		    { dRow: 0, dCol: -1, direction: "LeftDown" },
+		    { dRow: 0, dCol: 1, direction: "RightDown" },
+		    { dRow: 1, dCol: -1, direction: "LeftUp" },
+		    { dRow: 1, dCol: 1, direction: "RightUp" },
 		];
   
 		const oddColmDirections = [
@@ -146,6 +147,7 @@ export class TileAnimator {
 		];
   
 		const directions = source.col % 2 === 0 ? evenColmDirections : oddColmDirections;
+
   
 		for (const dir of directions) {
 		    if (dRow === dir.dRow && dCol === dir.dCol) {
