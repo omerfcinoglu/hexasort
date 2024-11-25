@@ -1,46 +1,62 @@
-import { _decorator, Component, director, Node, RichText, tween, Vec3 } from 'cc';
+import { _decorator, Component, director, Node, ProgressBar, RichText, tween, UITransform, Vec3 } from 'cc';
+import { SingletonComponent } from '../helpers/SingletonComponent';
 const { ccclass, property } = _decorator;
 
 @ccclass('ScoreManager')
-export class ScoreManager extends Component {
-    private static _instance: ScoreManager | null = null;
+export class ScoreManager extends SingletonComponent<ScoreManager> {
 
     @property(Node)
-    public score: Node = null!;
+    private progressBar: Node = null!;
+
+    @property(Node)
+    public bar: UITransform = null!;
 
     private m_score = 0;
+    private m_goal = 100;
 
+    private progressBarComp : ProgressBar = null;
     onLoad() {
-        if (ScoreManager._instance === null) {
-            ScoreManager._instance = this;
-            director.addPersistRootNode(this.node);
-        } else {
-            this.destroy();
-            console.warn("Only one instance of ScoreManager is allowed.");
-        }
-    }
-
-    public static getInstance(): ScoreManager {
-        if (!ScoreManager._instance) {
-            console.error("ScoreManager instance is not yet initialized.");
-        }
-        return ScoreManager._instance!;
+        this.progressBarComp = this.progressBar.getComponent(ProgressBar); 
     }
 
     start() {
+        this.progressBarComp.progress = 0;
+        console.log(this.progressBar);
+        this.addScore(50)
         this.updateText();
     }
 
     updateText() {
-        this.score.getComponentInChildren(RichText).string = `<color=#00000>${this.m_score}</color>`
+        this.progressBar.getComponentInChildren(RichText).string = `<color=#ffffff>${this.m_score}</color>/<color=#ffffff>${this.m_goal} </color>`
     }
 
+
     addScore(score: number) {
-        //shake animation
-        this.shakeUI(this.score)
-        this.m_score += score;
-        this.updateText();
+        const newScore = this.m_score + score;
+        const targetProgress = Math.min(newScore / this.m_goal, 1);
+        const targetWidth = targetProgress * this.progressBar.getComponent(UITransform).width;
+        const bar = this.progressBar.getChildByName("Bar");
+        const barTransform = bar.getComponent(UITransform);
+        const initialWidth = barTransform.width;
+    
+        tween({ value: initialWidth })
+            .to(
+                0.5,
+                { value: targetWidth },
+                {
+                    easing: 'quadOut',
+                    onUpdate: (obj:any) => {
+                        barTransform.width = obj.value;
+                    },
+                }
+            )
+            .call(() => {
+                this.m_score = Math.min(newScore, this.m_goal);
+                this.updateText();
+            })
+            .start();
     }
+    
     shakeUI(node: Node, shakeIntensity: number = 3, shakeDuration: number = 0.3) {
         const originalPosition = node.position.clone();
         const shakeSequence = [
