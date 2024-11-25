@@ -28,7 +28,7 @@ export class CollisionHandler extends Component {
     private onCollisionEnter(event: ICollisionEvent) {
         const otherNode = event.otherCollider.node;
         const groundTile = otherNode.getComponent(GroundTile);
-
+        
         if (groundTile) {
             this.collidedGroundTile = groundTile;
             

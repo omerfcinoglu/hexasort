@@ -39,7 +39,7 @@ export class TileSelectionHandler extends Component {
         const touchPos = event.getLocation();
         const touchPos3D = new Vec3(touchPos.x, touchPos.y, 0);
         const hitNode = this.performRaycast(touchPos3D);
-
+        
         if (hitNode) {
             const selectableTile = this.getSelectableTileFromNode(hitNode);
             if (selectableTile && selectableTile.isSelectable) {
