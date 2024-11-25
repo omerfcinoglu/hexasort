@@ -3,6 +3,7 @@ import { TileCluster } from '../core/TileCluster';
 import { SelectableTiles } from '../entity/SelectableTiles';
 import { ColorProvider } from '../core/ColorProvider';
 import { LockableComponent } from '../helpers/LockableComponent';
+import { TileConfig } from '../core/TileConfig';
 
 const { ccclass, property } = _decorator;
 
@@ -30,11 +31,11 @@ export class GroundTile extends LockableComponent {
 
         const currentWorldPos = tileCluster.node.worldPosition.clone();
         tileCluster.node.parent = this.node.parent;
-        // tileCluster.node.setWorldPosition(new Vec3(
-        //     this.node.position.x,
-        //     currentWorldPos.y + 0.1,
-        //     this.node.position.z
-        // ));
+        tileCluster.node.setWorldPosition(new Vec3(
+            this.node.position.x,
+            currentWorldPos.y ,
+            this.node.position.z
+        ));
         tileCluster.node.setPosition(currentWorldPos);
     }
 

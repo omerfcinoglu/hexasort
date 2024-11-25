@@ -46,12 +46,11 @@ export class TileAnimator {
 		for (let i = 0; i < tiles.length; i++) {
 			const tile = tiles[i];
 
-			// Başlangıç ve hedef pozisyonlarını hesapla
 			const startPosition = tile.node.worldPosition.clone();
 			const targetPosition = new Vec3(
 				baseTargetPosition.x,
 				cumulativeHeight + ((i+1) * TileConfig.spacingY), 
-				baseTargetPosition.z
+				baseTargetPosition.z  + 0.1
 			);
 			const peakPosition = new Vec3(
 				(startPosition.x + targetPosition.x) / 2,
@@ -192,19 +191,19 @@ export class TileAnimator {
 		});
 
 		//this must be dynamic !todo
-		const position1 = new Vec3(0, 2, 2);
-		const position2 = new Vec3(-2.3, 7.2, 2); 
+		const midPosition = new Vec3(0, 2, 2);
+		const position2 = new Vec3(0, 7.2, 2); 
 
 		await new Promise<void>((resolve) => {
 			tween(lastTile.node)
-				.to(duration, { worldPosition: position1 }, { easing: "cubicOut" })
+				.to(duration, { worldPosition: midPosition }, { easing: "cubicOut" })
 				.call(resolve)
 				.start();
 		});
 
 		await new Promise<void>((resolve) => {
 			tween(lastTile.node)
-				.to(duration, { worldPosition: position2 }, { easing: "expoIn" })
+				.to(duration + 0.3, { worldPosition: position2 }, { easing: "expoIn" })
 				.call(() => {
 					lastTile.node.active = false;
 					resolve()
