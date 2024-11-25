@@ -3,6 +3,7 @@ import { GroundTile } from "../entity/GroundTile";
 import { Tile } from "../entity/Tile";
 import { TileCluster } from "./TileCluster";
 import { ColorProvider } from "./ColorProvider";
+import { TileConfig } from "./TileConfig";
 const { ccclass, property } = _decorator;
 
 @ccclass("GridGenerator")
@@ -76,7 +77,7 @@ export class GridGenerator {
         const tileCluster = clusterNode.getComponent(TileCluster);
         if (tileCluster) {
             tileCluster.initCluster(tileType,3); 
-            tileCluster.node.setPosition(new Vec3(groundTileNode.position.x, 0.1 ,groundTileNode.position.z))
+            tileCluster.node.setPosition(new Vec3(groundTileNode.position.x, TileConfig.spacingY ,groundTileNode.position.z))
             tileCluster.node.setParent(groundTileNode.parent);
             tileCluster.attachedGround = groundTileComp;
 

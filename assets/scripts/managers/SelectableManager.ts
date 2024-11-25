@@ -1,6 +1,7 @@
 import { _decorator, Component, Node, Prefab, Vec3, instantiate, tween } from "cc";
 import { TileCluster } from "../core/TileCluster";
 import { SelectableTiles } from "../entity/SelectableTiles";
+import { TileConfig } from "../core/TileConfig";
 
 const { ccclass, property } = _decorator;
 
@@ -42,9 +43,9 @@ export class SelectableManager extends Component {
 
                 const tileConfig = startTiles[i + 1] || [];
                 if (tileConfig.length > 0) {
-                    await this.addCustomClusters(selectableTile, tileConfig);
+                    this.addCustomClusters(selectableTile, tileConfig);
                 } else {
-                    await this.addRandomClusters(selectableTile);
+                    this.addRandomClusters(selectableTile);
                 }
 
                 this.selectableTiles.push(selectableTile);
@@ -56,6 +57,7 @@ export class SelectableManager extends Component {
     async addCustomClusters(selectableTile: SelectableTiles, tileConfig: { tileType: number; tileCount: number }[]) {
         let lastClusterTileCount = 1;
 
+
         for (let i = 0; i < tileConfig.length; i++) {
             const { tileType, tileCount } = tileConfig[i];
             const tileClusterNode = instantiate(this.tileClusterPrefab);
@@ -65,18 +67,23 @@ export class SelectableManager extends Component {
             if (cluster) {
                 cluster.initCluster(tileType, tileCount);
                 selectableTile.tileClusters.push(cluster);
-                cluster.node.setPosition(0, lastClusterTileCount * 0.1, -0.05 * i);
+                cluster.node.setPosition(
+                    0,
+                    lastClusterTileCount * TileConfig.spacingY,
+                    lastClusterTileCount * -TileConfig.spacingZ
+                );
             }
 
             lastClusterTileCount += tileCount;
         }
     }
 
-    async addRandomClusters(selectableTile: SelectableTiles) {
+     addRandomClusters(selectableTile: SelectableTiles) {
+
         let clusterCount = Math.floor(Math.random() * 3) + 1;
         if(clusterCount === 1) clusterCount = 2;
         const availableTypes = [1, 2, 3, 4, 5]; 
-        let lastClusterTileCount = 1;
+        let lastClusterTileCount = 0;
     
         for (let i = 0; i < clusterCount; i++) {
             const randomIndex =  Math.floor(Math.random() * availableTypes.length);
@@ -86,10 +93,15 @@ export class SelectableManager extends Component {
             tileClusterNode.parent = selectableTile.node;
     
             const cluster = tileClusterNode.getComponent(TileCluster);
+
             if (cluster) {
                 cluster.initCluster(tileType, tileCount);
                 selectableTile.tileClusters.push(cluster);
-                cluster.node.setPosition(0, (lastClusterTileCount * 0.1), -0.05 * i);
+                cluster.node.setPosition(
+                    0,
+                    lastClusterTileCount * TileConfig.spacingY,
+                    lastClusterTileCount * -TileConfig.spacingZ
+                );
             }
     
             lastClusterTileCount += tileCount;

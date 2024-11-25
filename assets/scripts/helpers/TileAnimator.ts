@@ -5,6 +5,7 @@ import { GroundTile } from '../entity/GroundTile';
 import { ScoreManager } from '../managers/ScoreManager';
 import { SoundManager } from '../managers/SoundManager';
 import { Sounds } from '../core/Sounds';
+import { TileConfig } from '../core/TileConfig';
 
 export class TileAnimator {
 
@@ -29,7 +30,7 @@ export class TileAnimator {
 		const direction = this.calculateDirection(targetGridPos, sourceGridPos);
 
 
-		let cumulativeHeight =  (targetTileCount + 1) * 0.1;
+		let cumulativeHeight =  (targetTileCount + 1) * TileConfig.spacingY;
 		
 		const baseDuration = 0.35;
 		const delayBetweenTiles = 0.06; 
@@ -49,7 +50,7 @@ export class TileAnimator {
 			const startPosition = tile.node.worldPosition.clone();
 			const targetPosition = new Vec3(
 				baseTargetPosition.x,
-				cumulativeHeight + ((i+1) * 0.11), 
+				cumulativeHeight + ((i+1) * TileConfig.spacingY), 
 				baseTargetPosition.z
 			);
 			const peakPosition = new Vec3(

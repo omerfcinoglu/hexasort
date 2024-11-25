@@ -5,6 +5,7 @@ import { GroundTile } from '../entity/GroundTile';
 import { LockableComponent } from '../helpers/LockableComponent';
 import { SoundManager } from '../managers/SoundManager';
 import { Sounds } from './Sounds';
+import { TileConfig } from './TileConfig';
 
 const { ccclass, property } = _decorator;
 
@@ -51,7 +52,7 @@ export class TileCluster extends Component {
             const tileNode = instantiate(this.tilePrefab);
             tileNode.parent = this.node;
 
-            const tilePosition = new Vec3(0, i * 0.13, -i * 0.015); // Staggered positioning within the cluster
+            const tilePosition = new Vec3(0, i * TileConfig.spacingY, -(i+1) * TileConfig.spacingZ);
             tileNode.setPosition(tilePosition);
 
             const tileComp = tileNode.getComponent(Tile);
@@ -75,7 +76,6 @@ export class TileCluster extends Component {
             const worldPosition = tile!.node.getWorldPosition();
             tile!.node.removeFromParent();
             tile!.node.setParent(this.node, true);
-            worldPosition.y += 0.05;
             tile!.node.setWorldPosition(worldPosition);
             this.tiles.push(tile!);
         }
