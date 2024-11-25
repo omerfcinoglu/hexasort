@@ -2,7 +2,9 @@
   "general": {
     "designResolution": {
       "height": 960,
-      "width": 640
+      "width": 640,
+      "fitHeight": true,
+      "fitWidth": true
     }
   },
   "physics": {
