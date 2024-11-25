@@ -8,44 +8,47 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
     @property(Node)
     private progressBar: Node = null!;
 
-    @property(Node)
-    public bar: UITransform = null!;
+
+    @property(UITransform)
+    private bar: UITransform = null!;
 
     private m_score = 0;
     private m_goal = 100;
 
-    private progressBarComp : ProgressBar = null;
+    private progressBarComp: ProgressBar = null;
     onLoad() {
-        this.progressBarComp = this.progressBar.getComponent(ProgressBar); 
+        super.onLoad();
+        this.progressBarComp = this.progressBar.getComponent(ProgressBar);
     }
 
     start() {
         this.progressBarComp.progress = 0;
         console.log(this.progressBar);
-        this.addScore(50)
         this.updateText();
     }
 
     updateText() {
+        if (this.m_score >= this.m_goal) this.m_score = this.m_goal
         this.progressBar.getComponentInChildren(RichText).string = `<color=#ffffff>${this.m_score}</color>/<color=#ffffff>${this.m_goal} </color>`
     }
 
 
     addScore(score: number) {
         const newScore = this.m_score + score;
+
         const targetProgress = Math.min(newScore / this.m_goal, 1);
         const targetWidth = targetProgress * this.progressBar.getComponent(UITransform).width;
         const bar = this.progressBar.getChildByName("Bar");
         const barTransform = bar.getComponent(UITransform);
         const initialWidth = barTransform.width;
-    
+
         tween({ value: initialWidth })
             .to(
                 0.5,
                 { value: targetWidth },
                 {
                     easing: 'quadOut',
-                    onUpdate: (obj:any) => {
+                    onUpdate: (obj: any) => {
                         barTransform.width = obj.value;
                     },
                 }
@@ -56,7 +59,7 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
             })
             .start();
     }
-    
+
     shakeUI(node: Node, shakeIntensity: number = 3, shakeDuration: number = 0.3) {
         const originalPosition = node.position.clone();
         const shakeSequence = [
@@ -75,7 +78,7 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
 
         tween(node)
             .sequence(...shakeTweens)
-            .call(() => node.setPosition(originalPosition)) 
+            .call(() => node.setPosition(originalPosition))
             .start();
     }
 }

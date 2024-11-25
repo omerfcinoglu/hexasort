@@ -1,6 +1,7 @@
 import { _decorator } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
 import { TileAnimator } from '../helpers/TileAnimator';
+import { ScoreManager } from '../managers/ScoreManager';
 
 const { ccclass } = _decorator;
 
@@ -22,6 +23,7 @@ export class StackHandler {
                     if (lastCluster.getLength() >= this.matchStackCount) {
                         ground.popTileCluster();
                         await TileAnimator.animateTilesToZeroScale(lastCluster.getTiles());
+                        ScoreManager.getInstance().addScore(10);
                         processedGrounds.push(ground);
                     }
                 }

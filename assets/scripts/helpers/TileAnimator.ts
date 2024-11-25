@@ -206,7 +206,6 @@ export class TileAnimator {
 				.to(duration, { worldPosition: position2 }, { easing: "expoIn" })
 				.call(() => {
 					lastTile.node.active = false;
-					ScoreManager.getInstance().addScore(10);
 					resolve()
 				})
 				.start();
