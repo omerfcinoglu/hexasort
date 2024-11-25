@@ -15,15 +15,17 @@ export class SelectableManager extends Component {
 
     tilesCount: number = 3;
     private selectableTiles: SelectableTiles[] = [];
+    private enterTheSceneDuration : number = 0.5;
 
     async init(startTiles: { [key: number]: { tileType: number; tileCount: number }[] }) {
         await this.createSelectableTiles(startTiles);
     }
 
     async createSelectableTiles(startTiles: { [key: number]: { tileType: number; tileCount: number }[] }) {
-        const startX = -(this.tilesCount - 1);
+        const idlePositionOffset = -3.5
+        const startX = (this.tilesCount - 1) + idlePositionOffset ;
         const startXOffset = 15;
-        const gap = 2;
+        const gap = 1.5;
 
         for (let i = 0; i < this.tilesCount; i++) {
             const selectableTileNode = instantiate(this.selectableTilesPrefab);
@@ -109,7 +111,7 @@ export class SelectableManager extends Component {
     async enterTheSceneAnimation(selectableTileNode: Node, position: Vec3): Promise<void> {
         await new Promise<void>((resolve) => {
             tween(selectableTileNode)
-                .to(1, { position: position }, { easing: "expoInOut" })
+                .to(this.enterTheSceneDuration, { position: position }, { easing: "expoInOut" })
                 .call(resolve)
                 .start();
         });
