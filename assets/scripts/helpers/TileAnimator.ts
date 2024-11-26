@@ -61,13 +61,15 @@ export class TileAnimator {
 			tile.node.setSiblingIndex(i);
 
 			const { midRotation, endRotation } = this.getRotationByDirection(direction);
+			SoundManager.getInstance().playSound(Sounds.TransferTiles);
 			
 			const animationPromise = new Promise<void>((resolve) => {
 				tween(tile.node)
+				.call(()=>{
+					SoundManager.getInstance().playSound(Sounds.TransferTiles);
+				})
 					.delay(i * delayBetweenTiles) 
-					.call(()=>{
-						SoundManager.getInstance().playSound(Sounds.TransferTiles);
-					})
+				
 					.sequence(
 						tween(tile.node)
 							.parallel(
@@ -186,7 +188,10 @@ export class TileAnimator {
 		await new Promise<void>((resolve) => {
 			tween(lastTile.node)
 				.to(duration, { scale: new Vec3(0.231, lastTile.node.scale.y * 0.5, 0.231) })
-				.call(resolve)
+				.call(()=>{
+					SoundManager.getInstance().playSound(Sounds.StackedTiles)
+					resolve();
+				})
 				.start();
 		});
 

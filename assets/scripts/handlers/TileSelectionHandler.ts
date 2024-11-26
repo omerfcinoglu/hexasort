@@ -4,6 +4,8 @@ import { InputProvider } from '../input/InputProvider';
 import { SelectableTiles } from '../entity/SelectableTiles';
 import { test } from '../../test/test';
 import { GroundTile } from '../entity/GroundTile';
+import { SoundManager } from '../managers/SoundManager';
+import { Sounds } from '../core/Sounds';
 
 const { ccclass, property } = _decorator;
 
@@ -32,6 +34,21 @@ export class TileSelectionHandler extends Component {
     }
 
     /**
+     * input provider ve input handler sınıfı olmalı
+     * tile selection sınıfı hit node'u işlemeli.
+     * grid rotation sınıfı hitnode ground/grid ise bunu işlemelidir.
+     * 
+     * !todo
+     * 
+     * InputHandler.ts
+     * TileSelectionHandler.ts
+     * GridRotationHandler.ts
+     * 
+     * Soundların düzgün çalışması
+     */
+
+
+    /**
      * Handles the start of a touch, checking if a SelectableTiles object was touched.
      * @param event The touch event triggered by the user.
      */
@@ -46,6 +63,7 @@ export class TileSelectionHandler extends Component {
                 const touchWorldPos = this.getTouchWorldPosition(event);
                 selectableTile.select(touchWorldPos);
                 this.selectedTile = selectableTile;
+                SoundManager.getInstance().playSound(Sounds.Selected)
             }
         }
     }

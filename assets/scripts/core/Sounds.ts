@@ -1,4 +1,6 @@
 export enum Sounds {
-	PickUpSelectables = "PickUpSelectable<AudioSource>",
+	SelectablesEntry = "SelectablesEntry<AudioSource>",
 	TransferTiles = "TransferTiles<AudioSource>",
+	StackedTiles = "StackedTiles<AudioSource>",
+	Selected = "Selected<AudioSource>",
 }
