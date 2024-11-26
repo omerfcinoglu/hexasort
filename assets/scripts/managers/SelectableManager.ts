@@ -23,10 +23,10 @@ export class SelectableManager extends Component {
     }
 
     async createSelectableTiles(startTiles: { [key: number]: { tileType: number; tileCount: number }[] }) {
-        const idlePositionOffset = -3.5
+        const idlePositionOffset = -4.5
         const startX = (this.tilesCount - 1) + idlePositionOffset ;
         const startXOffset = 15;
-        const gap = 1.5;
+        const gap = 3;
 
         for (let i = 0; i < this.tilesCount; i++) {
             const selectableTileNode = instantiate(this.selectableTilesPrefab);

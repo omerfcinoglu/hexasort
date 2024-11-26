@@ -18,7 +18,7 @@ export class SelectableTiles extends Component {
     private idleColliderSize : Vec3 = new Vec3(1,10,1);
     private selectedColliderSize : Vec3 = new Vec3(0.5,20,0.5);
 
-    private liftedYOffset: number = 1;
+    private liftedYOffset: number = 3.5;
 
     start() {
         this.setColliderSize(false);

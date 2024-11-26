@@ -1,4 +1,4 @@
 export const TileConfig = {
-    spacingY : 0.15,
-    spacingZ : 0.002,
+    spacingY : 0.5,
+    spacingZ : 0.01,
 }
