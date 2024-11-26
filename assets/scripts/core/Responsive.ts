@@ -1,62 +1,63 @@
-import { _decorator, Component, UITransform, Vec2, Node, view } from 'cc';
+import { _decorator, Component, log, screen, Size, Camera } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('Responsive')
 export class Responsive extends Component {
-    @property([Node])
-    public uiElements: Node[] = []; // Canvas üzerindeki yeniden pozisyonlanacak nesneler
+    @property(Camera)
+    public mainCamera: Camera = null!;
 
-    @property
-    public padding: Vec2 = new Vec2(10, 10); // UI elemanları için kenar boşlukları
-
-    private canvasTransform: UITransform | null = null;
+    private prevSize: Size = new Size(0, 0);
+    private designRatio: number = 16 / 9; // Tasarım oranı
+    private availableHeights: number[] = [10, 12, 14, 16]; // Kullanılabilir orthoHeight değerleri
 
     onLoad() {
-        this.canvasTransform = this.node.getComponent(UITransform);
-        if (!this.canvasTransform) {
-            console.error('UITransform component is missing on Canvas node.');
+        this.prevSize = screen.windowSize.clone();
+        this.checkResize();
+    }
+
+    update() {
+        this.checkResize();
+    }
+
+    private checkResize() {
+        const currentSize = screen.windowSize;
+
+        if (!currentSize.equals(this.prevSize)) {
+            this.prevSize.set(currentSize);
+            this.updateCameraOrthoHeight();
+            log("Screen resized.");
+        }
+    }
+
+    private updateCameraOrthoHeight() {
+        if (!this.mainCamera) {
+            log("Main camera is not assigned.");
             return;
         }
-        this.updateUIPositions();
-        view.on('resize', this.updateUIPositions, this);
+
+        const deviceResolution = screen.windowSize;
+        const deviceRatio = deviceResolution.width / deviceResolution.height;
+
+        let targetOrthoHeight = this.availableHeights[0]; // Varsayılan minimum değeri al
+
+        if (deviceRatio > this.designRatio) {
+            const scaleFactor = deviceRatio / this.designRatio;
+            targetOrthoHeight = this.getClosestHeight(this.availableHeights, scaleFactor * this.availableHeights[0]);
+        } else if (deviceRatio < this.designRatio) {
+            const scaleFactor = this.designRatio / deviceRatio;
+            targetOrthoHeight = this.getClosestHeight(this.availableHeights, scaleFactor * this.availableHeights[0]);
+        }
+
+        this.mainCamera.orthoHeight = targetOrthoHeight;
+
+        log(`Device Resolution: ${deviceResolution.width}x${deviceResolution.height}`);
+        log(`Aspect Ratio: ${deviceRatio}`);
+        log(`Adjusted OrthoHeight: ${targetOrthoHeight}`);
     }
 
-    onDestroy() {
-        view.off('resize', this.updateUIPositions, this);
-    }
-
-    private updateUIPositions() {
-        if (!this.canvasTransform) return;
-
-        const canvasWidth = this.canvasTransform.width;
-        const canvasHeight = this.canvasTransform.height;
-
-        this.uiElements.forEach((element) => {
-            const uiTransform = element.getComponent(UITransform);
-            if (!uiTransform) return;
-
-            // Örnek Pozisyonlama: Sol üst, sağ alt gibi
-            if (element.name === 'TopLeft') {
-                element.setPosition(
-                    -canvasWidth / 2 + uiTransform.width / 2 + this.padding.x,
-                    canvasHeight / 2 - uiTransform.height / 2 - this.padding.y
-                );
-            } else if (element.name === 'TopRight') {
-                element.setPosition(
-                    canvasWidth / 2 - uiTransform.width / 2 - this.padding.x,
-                    canvasHeight / 2 - uiTransform.height / 2 - this.padding.y
-                );
-            } else if (element.name === 'BottomLeft') {
-                element.setPosition(
-                    -canvasWidth / 2 + uiTransform.width / 2 + this.padding.x,
-                    -canvasHeight / 2 + uiTransform.height / 2 + this.padding.y
-                );
-            } else if (element.name === 'BottomRight') {
-                element.setPosition(
-                    canvasWidth / 2 - uiTransform.width / 2 - this.padding.x,
-                    -canvasHeight / 2 + uiTransform.height / 2 + this.padding.y
-                );
-            }
-        });
+    private getClosestHeight(heights: number[], target: number): number {
+        return heights.reduce((prev, curr) => 
+            Math.abs(curr - target) < Math.abs(prev - target) ? curr : prev
+        );
     }
 }

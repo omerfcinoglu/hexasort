@@ -452,7 +452,7 @@
     "_cameraComponent": {
       "__id__": 15
     },
-    "_alignCanvasWithScreen": false,
+    "_alignCanvasWithScreen": true,
     "_id": "010jP9UDBKYYPQ5zviOdMz"
   },
   {
@@ -2123,21 +2123,8 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "uiElements": [
-      {
-        "__id__": 16
-      },
-      {
-        "__id__": 32
-      },
-      {
-        "__id__": 36
-      }
-    ],
-    "padding": {
-      "__type__": "cc.Vec2",
-      "x": 10,
-      "y": 10
+    "mainCamera": {
+      "__id__": 6
     },
     "_id": "e5fPiT06NJ4LBzuESe3N+g"
   },
