@@ -1,6 +1,7 @@
 import { _decorator, Component, Node, UIOpacity, tween, Vec3, Quat } from 'cc';
 import { CameraManager } from './CameraManager';
 import { ScoreManager } from './ScoreManager';
+import { GridManager } from './GridManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('SceneManager')
@@ -14,6 +15,9 @@ export class SceneManager extends Component {
     @property(Node)
     private EndCard: Node = null!;
 
+    @property(Node)
+    private ProgressBar: Node = null!;
+
     onLoad(): void {
         ScoreManager.goalReached.on('goalReached', this.onGoalReached, this);
     }
@@ -26,7 +30,9 @@ export class SceneManager extends Component {
         if (!this.particle || !this.gridContainer || !this.EndCard) return;
 
         this.particle.active = true;
+        this.ProgressBar.active = false;
         CameraManager.getInstance().zoom(false, 1.5);
+        GridManager.getInstance().ClearStack();
         await this.rotateGridContainerY();
         await this.fadeInEndCard(150, 1);
     }

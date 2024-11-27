@@ -4,8 +4,17 @@ import { SelectableTiles } from '../entity/SelectableTiles';
 import { ColorProvider } from '../core/ColorProvider';
 import { LockableComponent } from '../helpers/LockableComponent';
 import { TileConfig } from '../core/TileConfig';
+import { TileAnimator } from '../helpers/TileAnimator';
 
 const { ccclass, property } = _decorator;
+
+/**
+ * !TODO
+ * 
+ * Ground Tile'ın içinde transfer olan tilelar kontrol edilip burada pozisyon verilemeli.
+ * Bu tile animatorü groundtile'da çağırmayı sağlar
+ * 
+ */
 
 @ccclass('GroundTile')
 export class GroundTile extends LockableComponent {
@@ -71,5 +80,11 @@ export class GroundTile extends LockableComponent {
 
     getAllTileCount(): number {
         return this.attachedClusters.reduce((count, cluster) => count + cluster.getTiles().length, 0);
+    }
+
+    clearAllTiles(twenDuration : number){
+        this.attachedClusters.forEach((cluster)=>{
+            TileAnimator.animateTilesToZeroScale(cluster.getTiles(),twenDuration);
+        })
     }
 }

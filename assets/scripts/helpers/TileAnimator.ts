@@ -160,11 +160,10 @@ export class TileAnimator {
 		}
 	}
 
-	static async animateTilesToZeroScale(tiles: Tile[]): Promise<void> {
+	static async animateTilesToZeroScale(tiles: Tile[] , duration : number = 0.05): Promise<void> {
 		const reversedTiles = [...tiles].reverse()
 		const lastTile = reversedTiles[reversedTiles.length - 1]
-		const duration = 0.05;
-					SoundManager.getInstance().playSound(Sounds.StackedTiles)
+		SoundManager.getInstance().playSound(Sounds.StackedTiles)
 		
 		for (let i = 0; i < reversedTiles.length; i++) {
 			const tile = reversedTiles[i];

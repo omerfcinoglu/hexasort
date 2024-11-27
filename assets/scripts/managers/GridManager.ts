@@ -68,6 +68,16 @@ export class GridManager extends SingletonComponent<GridManager> {
             });
         });
     }
+
+    public ClearStack(): void {
+        this.grid.forEach(row => {
+            row.forEach(groundTile => {
+                if (groundTile.node) {
+                    groundTile.clearAllTiles(0.1);
+                }
+            });
+        });
+    }
 }
 
 
