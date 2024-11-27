@@ -14,6 +14,9 @@ const { ccclass, property } = _decorator;
 
 @ccclass("GameManager")
 export class GameManager extends Component {
+
+
+
     @property(GridManager)
     gridManager: GridManager | null = null;
 
@@ -44,7 +47,11 @@ export class GameManager extends Component {
 
     onDestroy() {
         TileSelectionHandler.placementEvent.off("placement", this.onPlacementTriggered, this);
+
     }
+
+
+
 
     async onPlacementTriggered(selectedTile: SelectableTiles) {
         // const task = async () => {

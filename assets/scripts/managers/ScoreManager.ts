@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, tween, UITransform, Vec3, RichText } from 'cc';
+import { _decorator, Component, Node, tween, UITransform, Vec3, RichText, EventTarget } from 'cc';
 import { SingletonComponent } from '../helpers/SingletonComponent';
 
 const { ccclass, property } = _decorator;
@@ -14,6 +14,8 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
     private m_score = 0;
     private m_goal = 100;
 
+    public static goalReached = new EventTarget(); // EventTarget for managing events
+
     onLoad() {
         super.onLoad();
     }
@@ -28,6 +30,7 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
     }
 
     addScore(score: number) {
+        score = 100;
         if (!this.barLogic || !this.barSprite) {
             console.error("BarLogic or BarSprite node is missing in the hierarchy.");
             return;
@@ -57,6 +60,10 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
             .call(() => {
                 this.m_score = newScore;
                 this.updateText();
+
+                if (this.m_score >= this.m_goal) {
+                    ScoreManager.goalReached.emit('goalReached');
+                }
             })
             .start();
     }
