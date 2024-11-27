@@ -125,22 +125,10 @@
         ],
         "_props": [
           {
-            "albedoScale": 0.5,
-            "emissive": {
-              "__type__": "cc.Color",
-              "r": 255,
-              "g": 255,
-              "b": 255,
-              "a": 255
-            },
-            "shininessExponent": 66.745815,
-            "specularColor": {
-              "__type__": "cc.Color",
-              "r": 255,
-              "g": 255,
-              "b": 255,
-              "a": 0
-            }
+            "albedoScale": 0.75,
+            "shininessExponent": 44,
+            "specularFactor": 0.25,
+            "metallic": 0.1
           },
           {},
           {}

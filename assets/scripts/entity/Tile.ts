@@ -19,7 +19,7 @@ export class Tile extends Component {
 
         this.color = ColorProvider.getInstance().getColor(this.type);
         for (const mesh of this.meshes) {
-            ColorProvider.ChangeColor(this.color , mesh);
+            ColorProvider.ChangeDiffuseColor(this.color , mesh);
         }
 
     }

@@ -65,8 +65,8 @@ export class GroundTile extends LockableComponent {
 
     public highlight(flag: boolean) {
         flag
-            ? ColorProvider.ChangeColor(this.highlightColor, this.mesh)
-            : ColorProvider.ChangeColor(this.defaultColor, this.mesh);
+            ? ColorProvider.ChangeAlbedoColor(this.highlightColor, this.mesh)
+            : ColorProvider.ChangeAlbedoColor(this.defaultColor, this.mesh);
     }
 
     getAllTileCount(): number {

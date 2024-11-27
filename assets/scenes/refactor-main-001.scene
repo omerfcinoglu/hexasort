@@ -103,16 +103,16 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 11.194,
-      "z": 12.058
+      "x": 2.405,
+      "y": 22.975,
+      "z": 12.631
     },
     "_lrot": {
       "__type__": "cc.Quat",
-      "x": -0.6089356018172272,
-      "y": 0.08172097334897271,
-      "z": -0.03797557401559755,
-      "w": 0.7880843680295744
+      "x": -0.6816171012632689,
+      "y": 0.10770357871648337,
+      "z": -0.03228826708399774,
+      "w": 0.7230183498403298
     },
     "_lscale": {
       "__type__": "cc.Vec3",
@@ -123,9 +123,9 @@
     "_layer": 1073741824,
     "_euler": {
       "__type__": "cc.Vec3",
-      "x": -75,
-      "y": 4.797,
-      "z": -9.171
+      "x": -85.984,
+      "y": 6.539,
+      "z": -11.158
     },
     "_id": "318BMe7s9G7LjwmtAYYBYU"
   },
@@ -140,18 +140,18 @@
     "__prefab": null,
     "_color": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
+      "r": 221,
+      "g": 221,
+      "b": 221,
       "a": 255
     },
-    "_useColorTemperature": true,
-    "_colorTemperature": 15000,
+    "_useColorTemperature": false,
+    "_colorTemperature": 5367,
     "_staticSettings": {
       "__id__": 4
     },
-    "_illuminanceHDR": 20000,
-    "_illuminance": 20000,
+    "_illuminanceHDR": 50000,
+    "_illuminance": 50000,
     "_illuminanceLDR": 1.6927083333333335,
     "_shadowEnabled": false,
     "_shadowPcf": 0,
@@ -194,15 +194,15 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 12.528,
-      "z": 4.697
+      "y": 14.599,
+      "z": 5.252
     },
     "_lrot": {
       "__type__": "cc.Quat",
-      "x": -0.573576436351046,
+      "x": -0.6087614290087207,
       "y": 0,
       "z": 0,
-      "w": 0.8191520442889918
+      "w": 0.7933533402912352
     },
     "_lscale": {
       "__type__": "cc.Vec3",
@@ -213,7 +213,7 @@
     "_layer": 1073741824,
     "_euler": {
       "__type__": "cc.Vec3",
-      "x": -70,
+      "x": -75,
       "y": 0,
       "z": 0
     },
@@ -232,9 +232,9 @@
     "_priority": 0,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 11,
-    "_near": 1,
-    "_far": 1000,
+    "_orthoHeight": 10,
+    "_near": 2,
+    "_far": 100,
     "_color": {
       "__type__": "cc.Color",
       "r": 51,
@@ -573,7 +573,7 @@
     "_priority": 1073741824,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 480.00000000000006,
+    "_orthoHeight": 479.99999999999994,
     "_near": 1,
     "_far": 2000,
     "_color": {
@@ -2173,21 +2173,21 @@
     "color2": {
       "__type__": "cc.Color",
       "r": 0,
-      "g": 163,
-      "b": 255,
+      "g": 219,
+      "b": 211,
       "a": 255
     },
     "color3": {
       "__type__": "cc.Color",
-      "r": 195,
+      "r": 126,
       "g": 0,
-      "b": 255,
+      "b": 165,
       "a": 255
     },
     "color4": {
       "__type__": "cc.Color",
       "r": 255,
-      "g": 224,
+      "g": 214,
       "b": 0,
       "a": 255
     },
@@ -2201,8 +2201,8 @@
     "color6": {
       "__type__": "cc.Color",
       "r": 0,
-      "g": 255,
-      "b": 29,
+      "g": 206,
+      "b": 24,
       "a": 255
     },
     "ground": {
@@ -2482,7 +2482,7 @@
       "__type__": "cc.Vec3",
       "x": 0,
       "y": 0,
-      "z": 9.987
+      "z": 8.411
     },
     "_lrot": {
       "__type__": "cc.Quat",
@@ -3169,7 +3169,7 @@
     "_enabled": true,
     "__prefab": null,
     "_clip": {
-      "__uuid__": "41ec528e-9da4-4f24-ab64-29f58165a790",
+      "__uuid__": "a643fe7d-848e-4f6e-ab68-6a556f74eeca",
       "__expectedType__": "cc.AudioClip"
     },
     "_loop": false,

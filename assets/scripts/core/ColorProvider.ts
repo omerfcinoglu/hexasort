@@ -61,11 +61,22 @@ export class ColorProvider extends Component {
         }
     }
 
-    public static ChangeColor(color: Color , body : MeshRenderer){
+    public static ChangeDiffuseColor(color: Color , body : MeshRenderer){
         if (body) {
             const material = body.material;
             if (material) {
                 material.setProperty('diffuseColor', color);
+            } else {
+                console.error('Material not found on MeshRenderer.');
+            }                                           
+        }
+    }
+
+    public static ChangeAlbedoColor(color: Color , body : MeshRenderer){
+        if (body) {
+            const material = body.material;
+            if (material) {
+                material.setProperty('albedo', color);
             } else {
                 console.error('Material not found on MeshRenderer.');
             }                                           

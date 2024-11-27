@@ -2,6 +2,8 @@ import { _decorator, Component, Node, Prefab, Vec3, instantiate, tween } from "c
 import { TileCluster } from "../core/TileCluster";
 import { SelectableTiles } from "../entity/SelectableTiles";
 import { TileConfig } from "../core/TileConfig";
+import { SoundManager } from "./SoundManager";
+import { Sounds } from "../core/Sounds";
 
 const { ccclass, property } = _decorator;
 
@@ -16,7 +18,7 @@ export class SelectableManager extends Component {
 
     tilesCount: number = 3;
     private selectableTiles: SelectableTiles[] = [];
-    private enterTheSceneDuration : number = 0.5;
+    private enterTheSceneDuration : number = 0.3;
 
     async init(startTiles: { [key: number]: { tileType: number; tileCount: number }[] }) {
         await this.createSelectableTiles(startTiles);
@@ -25,7 +27,7 @@ export class SelectableManager extends Component {
     async createSelectableTiles(startTiles: { [key: number]: { tileType: number; tileCount: number }[] }) {
         const idlePositionOffset = -4.5
         const startX = (this.tilesCount - 1) + idlePositionOffset ;
-        const startXOffset = 15;
+        const startXOffset = 20;
         const gap = 3;
 
         for (let i = 0; i < this.tilesCount; i++) {
@@ -121,6 +123,7 @@ export class SelectableManager extends Component {
     }
 
     async enterTheSceneAnimation(selectableTileNode: Node, position: Vec3): Promise<void> {
+        SoundManager.getInstance().playSound(Sounds.SelectablesEntry);
         await new Promise<void>((resolve) => {
             tween(selectableTileNode)
                 .to(this.enterTheSceneDuration, { position: position }, { easing: "expoInOut" })

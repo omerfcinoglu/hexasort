@@ -39,10 +39,10 @@ export class LockableComponent extends Component {
         return true;
     }
 
-    private changeColor(color: Color): void {
+    private ChangeDiffuseColor(color: Color): void {
         const meshRenderer = this.node.getComponentInChildren(MeshRenderer); // MeshRenderer'ı bul
         if (meshRenderer) {
-            ColorProvider.ChangeColor(color, meshRenderer); // ColorProvider ile rengi değiştir
+            ColorProvider.ChangeDiffuseColor(color, meshRenderer); // ColorProvider ile rengi değiştir
         } else {
             console.error(`MeshRenderer not found on node ${this.node.name}.`);
         }
