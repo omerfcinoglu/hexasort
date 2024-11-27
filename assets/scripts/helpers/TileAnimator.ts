@@ -171,7 +171,9 @@ export class TileAnimator {
 	static async animateTilesToZeroScale(tiles: Tile[]): Promise<void> {
 		const reversedTiles = [...tiles].reverse()
 		const lastTile = reversedTiles[reversedTiles.length - 1]
-		const duration = 0.1;
+		const duration = 0.05;
+		SoundManager.getInstance().playSound(Sounds.StackedTiles)
+	
 		for (let i = 0; i < reversedTiles.length; i++) {
 			const tile = reversedTiles[i];
 			if (i === reversedTiles.length - 1) {
@@ -189,7 +191,6 @@ export class TileAnimator {
 			tween(lastTile.node)
 				.to(duration, { scale: new Vec3(0.231, lastTile.node.scale.y * 0.5, 0.231) })
 				.call(()=>{
-					SoundManager.getInstance().playSound(Sounds.StackedTiles)
 					resolve();
 				})
 				.start();
@@ -208,7 +209,7 @@ export class TileAnimator {
 
 		await new Promise<void>((resolve) => {
 			tween(lastTile.node)
-				.to(duration + 0.3, { worldPosition: position2 }, { easing: "expoIn" })
+				.to(duration + 0.1, { worldPosition: position2 }, { easing: "expoIn" })
 				.call(() => {
 					lastTile.node.active = false;
 					resolve()
