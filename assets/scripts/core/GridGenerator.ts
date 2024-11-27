@@ -25,7 +25,7 @@ export class GridGenerator {
     
         // Define spacing adjustments
         const tileSpacingX = 0.92; // X-axis spacing adjustment for closer columns
-        const tileSpacingZ = 1.05; // Z-axis spacing adjustment for row spacing
+        const tileSpacingZ = 1.1; // Z-axis spacing adjustment for row spacing
         const staggerOffset = -1; // Lowering offset for every even column
     
         // Calculate effective tile sizes with spacing adjustments

@@ -42,7 +42,7 @@ export class GroundTile extends LockableComponent {
         tileCluster.node.parent = this.node.parent;
         tileCluster.node.setWorldPosition(new Vec3(
             this.node.position.x,
-            currentWorldPos.y ,
+            0 ,
             this.node.position.z
         ));
         tileCluster.node.setPosition(currentWorldPos);
@@ -69,6 +69,9 @@ export class GroundTile extends LockableComponent {
         const lastCluster = this.attachedClusters.pop();
         if (this.attachedClusters.length === 0) {
             this.setActiveCollider(true);
+        }
+        else{
+
         }
     }
 
