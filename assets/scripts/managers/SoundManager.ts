@@ -19,14 +19,18 @@ export class SoundManager extends SingletonComponent<SoundManager> {
 	private soundsMap: Map<string, AudioSource> = new Map();
 	private audioSource: AudioSource | null = null;
 
-	playSound(key: string, loop: boolean = false): void {
+	playSound(key: string, loop: boolean = false, speed: number = 1.0): void {
 		const audioSource = this.soundsMap.get(key);
-
+	 
 		if (audioSource) {
-			audioSource.loop = loop;
-			audioSource.play();
+		    if (audioSource.playing) {
+			   audioSource.stop();
+		    }
+	 
+		    audioSource.loop = loop;
+		    audioSource.playOneShot(audioSource.clip);
 		}
-	}
+	 }
 
 	stopSound(key: string): void {
 		const audioSource = this.soundsMap.get(key);

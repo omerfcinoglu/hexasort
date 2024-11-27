@@ -19,98 +19,90 @@ export class TileAnimator {
 		Quat.fromViewUp(lookAtRotation, direction);
 		tile.setRotation(lookAtRotation); 
 	}
-	static async animateClusterTransfer(cluster: TileCluster, targetGround: GroundTile , source : GroundTile): Promise<void> {
+	static async animateClusterTransfer(cluster: TileCluster, targetGround: GroundTile, source: GroundTile): Promise<void> {
 		const tiles = cluster.getTiles();
 		const baseTargetPosition = targetGround.node.worldPosition.clone();
 		const targetTileCount = targetGround.getAllTileCount();
-		
+	 
 		const sourceGridPos = source.gridPosition;
 		const targetGridPos = targetGround.gridPosition;
-
+	 
 		const direction = this.calculateDirection(targetGridPos, sourceGridPos);
-
-
-		let cumulativeHeight =  (targetTileCount + 1) * TileConfig.spacingY;
-		
+	 
+		let cumulativeHeight = (targetTileCount + 1) * TileConfig.spacingY;
+	 
 		const baseDuration = 0.35;
-		const delayBetweenTiles = 0.06; 
-		const peakHeightFactor = 0.9; 
-		const down_easingFunction = 'quartOut'; 
-		const lift_easingFunction = 'linear'; 
-
-
+		const delayBetweenTiles = 0.09;
+		const peakHeightFactor = 0.9;
+		const down_easingFunction = 'quartOut';
+		const lift_easingFunction = 'linear';
+	 
 		const animationPromises: Promise<void>[] = [];
-
+	 
 		tiles.reverse();
-
+	 
 		for (let i = 0; i < tiles.length; i++) {
-			const tile = tiles[i];
-
-			const startPosition = tile.node.worldPosition.clone();
-			const targetPosition = new Vec3(
-				baseTargetPosition.x,
-				cumulativeHeight + ((i+1) * TileConfig.spacingY), 
-				baseTargetPosition.z  + 0.1
-			);
-			const peakPosition = new Vec3(
-				(startPosition.x + targetPosition.x) / 2,
-				Math.max(startPosition.y, targetPosition.y) + peakHeightFactor, 
-				(startPosition.z + targetPosition.z) / 2
-			);
-
-			tile.node.setSiblingIndex(i);
-
-			const { midRotation, endRotation } = this.getRotationByDirection(direction);
-			SoundManager.getInstance().playSound(Sounds.TransferTiles);
-			
-			const animationPromise = new Promise<void>((resolve) => {
-				tween(tile.node)
-				.call(()=>{
-					SoundManager.getInstance().playSound(Sounds.TransferTiles);
-				})
-					.delay(i * delayBetweenTiles) 
-				
-					.sequence(
-						tween(tile.node)
-							.parallel(
-								tween(tile.node).to(
-									baseDuration / 2,
-									{ worldPosition: peakPosition },
-									{ easing: lift_easingFunction }
-								),
-								tween(tile.node).to(
-									baseDuration / 2,
-									{ rotation: midRotation },
-									{ easing: lift_easingFunction }
-								)
-							),
-						tween(tile.node)
-							.parallel(
-								tween(tile.node).to(
-									baseDuration / 2,
-									{ worldPosition: targetPosition },
-									{ easing: down_easingFunction }
-								),
-								tween(tile.node).to(
-									baseDuration / 2,
-									{ rotation: endRotation },
-									{ easing: down_easingFunction }
-								)
-							)
-					)
-					.call(() => {
-						tile.node.setRotation(Quat.IDENTITY); 
-						resolve();
-					})
-					.start();
-			});
-			
-			animationPromises.push(animationPromise);
+		    const tile = tiles[i];
+	 
+		    const startPosition = tile.node.worldPosition.clone();
+		    const targetPosition = new Vec3(
+			   baseTargetPosition.x,
+			   cumulativeHeight + ((i + 1) * TileConfig.spacingY),
+			   baseTargetPosition.z + 0.1
+		    );
+		    const peakPosition = new Vec3(
+			   (startPosition.x + targetPosition.x) / 2,
+			   Math.max(startPosition.y, targetPosition.y) + peakHeightFactor,
+			   (startPosition.z + targetPosition.z) / 2
+		    );
+	 
+		    tile.node.setSiblingIndex(i);
+	 
+		    const { midRotation, endRotation } = this.getRotationByDirection(direction);
+	 
+		    const animationPromise = new Promise<void>((resolve) => {
+			   tween(tile.node)
+				  .delay(i * delayBetweenTiles)
+				  .call(() => {
+					 SoundManager.getInstance().playSound(Sounds.TransferTiles); 
+				  })
+				  .parallel(
+					 tween(tile.node).to(
+						baseDuration / 2,
+						{ worldPosition: peakPosition },
+						{ easing: lift_easingFunction }
+					 ),
+					 tween(tile.node).to(
+						baseDuration / 2,
+						{ rotation: midRotation },
+						{ easing: lift_easingFunction }
+					 )
+				  )
+				  .parallel(
+					 tween(tile.node).to(
+						baseDuration / 2,
+						{ worldPosition: targetPosition },
+						{ easing: down_easingFunction }
+					 ),
+					 tween(tile.node).to(
+						baseDuration / 2,
+						{ rotation: endRotation },
+						{ easing: down_easingFunction }
+					 )
+				  )
+				  .call(() => {
+					 tile.node.setRotation(Quat.IDENTITY);
+					 resolve();
+				  })
+				  .start();
+		    });
+	 
+		    animationPromises.push(animationPromise);
 		}
-
+	 
 		await Promise.all(animationPromises);
-	}
-
+	 }
+	 
 
 	private static calculateDirection(
 		source: { row: number; col: number },
@@ -172,8 +164,8 @@ export class TileAnimator {
 		const reversedTiles = [...tiles].reverse()
 		const lastTile = reversedTiles[reversedTiles.length - 1]
 		const duration = 0.05;
-		SoundManager.getInstance().playSound(Sounds.StackedTiles)
-	
+					SoundManager.getInstance().playSound(Sounds.StackedTiles)
+		
 		for (let i = 0; i < reversedTiles.length; i++) {
 			const tile = reversedTiles[i];
 			if (i === reversedTiles.length - 1) {
