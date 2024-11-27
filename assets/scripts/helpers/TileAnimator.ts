@@ -48,7 +48,7 @@ export class TileAnimator {
 		    const targetPosition = new Vec3(
 			   baseTargetPosition.x,
 			   cumulativeHeight + ((i + 1) * TileConfig.spacingY),
-			   baseTargetPosition.z + 0.1
+			   baseTargetPosition.z + TileConfig.spacingZ * 22
 		    );
 		    const peakPosition = new Vec3(
 			   (startPosition.x + targetPosition.x) / 2,

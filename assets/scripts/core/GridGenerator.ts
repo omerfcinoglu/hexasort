@@ -77,7 +77,7 @@ export class GridGenerator {
         const tileCluster = clusterNode.getComponent(TileCluster);
         if (tileCluster) {
             tileCluster.initCluster(tileType,3); 
-            tileCluster.node.setPosition(new Vec3(groundTileNode.position.x, TileConfig.spacingY ,groundTileNode.position.z))
+            tileCluster.node.setPosition(new Vec3(groundTileNode.position.x, TileConfig.spacingY ,groundTileNode.position.z + TileConfig.spacingZ))
             tileCluster.node.setParent(groundTileNode.parent);
             tileCluster.attachedGround = groundTileComp;
 

@@ -140,18 +140,18 @@
     "__prefab": null,
     "_color": {
       "__type__": "cc.Color",
-      "r": 221,
-      "g": 221,
-      "b": 221,
+      "r": 255,
+      "g": 255,
+      "b": 255,
       "a": 255
     },
-    "_useColorTemperature": false,
-    "_colorTemperature": 5367,
+    "_useColorTemperature": true,
+    "_colorTemperature": 15000,
     "_staticSettings": {
       "__id__": 4
     },
-    "_illuminanceHDR": 50000,
-    "_illuminance": 50000,
+    "_illuminanceHDR": 44444,
+    "_illuminance": 44444,
     "_illuminanceLDR": 1.6927083333333335,
     "_shadowEnabled": false,
     "_shadowPcf": 0,

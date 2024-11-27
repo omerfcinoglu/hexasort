@@ -125,10 +125,10 @@
         ],
         "_props": [
           {
-            "albedoScale": 0.75,
+            "albedoScale": 0.65,
             "shininessExponent": 44,
             "specularFactor": 0.25,
-            "metallic": 0.1
+            "metallic": 0.064
           },
           {},
           {}
