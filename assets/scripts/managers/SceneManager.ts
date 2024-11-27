@@ -2,6 +2,8 @@ import { _decorator, Component, Node, UIOpacity, tween, Vec3, Quat } from 'cc';
 import { CameraManager } from './CameraManager';
 import { ScoreManager } from './ScoreManager';
 import { GridManager } from './GridManager';
+import { InputManager } from './InputManager';
+import { SelectableManager } from './SelectableManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('SceneManager')
@@ -33,6 +35,7 @@ export class SceneManager extends Component {
         this.ProgressBar.active = false;
         CameraManager.getInstance().zoom(false, 1.5);
         GridManager.getInstance().ClearStack();
+        InputManager.getInstance().lockInputs();
         await this.rotateGridContainerY();
         await this.fadeInEndCard(150, 1);
     }

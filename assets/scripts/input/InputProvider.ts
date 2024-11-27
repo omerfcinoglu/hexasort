@@ -1,4 +1,5 @@
 import { _decorator, Component, Camera, geometry, input, Input, EventTouch, Vec3, Node, PhysicsSystem } from 'cc';
+import { InputManager } from '../managers/InputManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('InputProvider')
@@ -29,15 +30,21 @@ export class InputProvider extends Component {
     }
 
     private handleTouchStart(event: EventTouch) {
+        InputManager.getInstance().handleInput(()=>{
             this.onTouchStart?.(event);
+        })
     }
 
     private handleTouchMove(event: EventTouch) {
-        this.onTouchMove?.(event);
+        InputManager.getInstance().handleInput(()=>{
+          this.onTouchMove?.(event);
+        })
     }
 
     private handleTouchEnd(event: EventTouch) {
-        this.onTouchEnd?.(event);
+        InputManager.getInstance().handleInput(()=>{
+            this.onTouchEnd?.(event);
+          })
     }
 
     public performRaycast(touchPosition: Vec3): Node | null {
