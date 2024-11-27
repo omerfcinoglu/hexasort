@@ -2,7 +2,7 @@ export class LevelConfig {
     private static data = {
         1: {
             matrix: [
-                [0, 3, 0, 0, 0],
+                [0, 1, 0, 0, 0],
                 [0, 0, 0, 0, 3],
                 [1, 5, 5, 0, 0],
                 [1, 0, 1, 0, 1],

@@ -30,14 +30,23 @@ export class SceneManager extends Component {
 
     async onGoalReached() {
         if (!this.particle || !this.gridContainer || !this.EndCard) return;
-
+    
         this.particle.active = true;
         this.ProgressBar.active = false;
         CameraManager.getInstance().zoom(false, 1.5);
         GridManager.getInstance().ClearStack();
+    
         InputManager.getInstance().lockInputs();
-        await this.rotateGridContainerY();
-        await this.fadeInEndCard(150, 1);
+        try {
+            await Promise.all([
+                this.rotateGridContainerY(),
+                this.fadeInEndCard(150, 1),
+            ]);
+        } catch (error) {
+            console.error("Error in onGoalReached:", error);
+        } finally {
+            InputManager.getInstance().unlockInputs();
+        }
     }
 
     private rotateGridContainerY(): Promise<void> {

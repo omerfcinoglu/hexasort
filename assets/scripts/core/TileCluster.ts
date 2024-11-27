@@ -52,7 +52,7 @@ export class TileCluster extends Component {
             const tileNode = instantiate(this.tilePrefab);
             tileNode.parent = this.node;
 
-            const tilePosition = new Vec3(0, i * TileConfig.spacingY, -(i+1) * TileConfig.spacingZ);
+            const tilePosition = new Vec3(0, i * TileConfig.spacingY, -(i) * TileConfig.spacingZ);
             tileNode.setPosition(tilePosition);
 
             const tileComp = tileNode.getComponent(Tile);
