@@ -43,9 +43,7 @@ export class NeighborChecker {
 
             // Access GroundTile from GridManager
             const neighborGround = GridManager.getInstance().getGroundTile(neighborRow, neighborCol);
-            console.warn(`${row},${col}  neighceking`);
             if (neighborGround && !neighborGround.isLocked && neighborGround.getLastCluster()) {
-                console.log("girme");
                 neighborGround.lock();
                 neighborGrounds.push(neighborGround);
             }

@@ -57,7 +57,7 @@ export class SelectableManager extends Component {
     }
 
     async addCustomClusters(selectableTile: SelectableTiles, tileConfig: { tileType: number; tileCount: number }[]) {
-        let lastClusterTileCount = 1;
+        let lastClusterTileCount = 0;
 
 
         for (let i = 0; i < tileConfig.length; i++) {
@@ -72,7 +72,7 @@ export class SelectableManager extends Component {
                 cluster.node.setPosition(
                     0,
                     lastClusterTileCount * TileConfig.spacingY,
-                    lastClusterTileCount * -TileConfig.spacingZ
+                    0
                 );
             }
 
@@ -102,7 +102,7 @@ export class SelectableManager extends Component {
                 cluster.node.setPosition(
                     0,
                     lastClusterTileCount * TileConfig.spacingY,
-                    lastClusterTileCount * -TileConfig.spacingZ
+                    0
                 );
             }
     
@@ -114,6 +114,7 @@ export class SelectableManager extends Component {
         const index = this.selectableTiles.indexOf(selected);
         if (index !== -1) {
             this.selectableTiles.splice(index, 1); // Remove the selected tile from the array
+            selected.node.setPosition(100,100,100)
             selected.node.destroy(); // Optionally, destroy the node to clean up
         }
 

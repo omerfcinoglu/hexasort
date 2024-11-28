@@ -48,11 +48,13 @@ export class TileCluster extends Component {
      * @param tileCount - Number of tiles to create.
      */
     private createTiles(tileCount: number) {
+        console.log("çağırıldım");
+        
         for (let i = 0; i < tileCount; i++) {
             const tileNode = instantiate(this.tilePrefab);
             tileNode.parent = this.node;
 
-            const tilePosition = new Vec3(0, i * TileConfig.spacingY, 0);
+            const tilePosition = new Vec3(0, (i+1) * TileConfig.spacingY, 0);
             tileNode.setPosition(tilePosition);
 
             const tileComp = tileNode.getComponent(Tile);

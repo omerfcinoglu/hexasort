@@ -5,6 +5,7 @@ import { ColorProvider } from '../core/ColorProvider';
 import { LockableComponent } from '../helpers/LockableComponent';
 import { TileConfig } from '../core/TileConfig';
 import { TileAnimator } from '../helpers/TileAnimator';
+import { TilePlacementHandler } from '../handlers/TilePlacementHandler';
 
 const { ccclass, property } = _decorator;
 
@@ -42,7 +43,7 @@ export class GroundTile extends LockableComponent {
         tileCluster.node.parent = this.node.parent;
         tileCluster.node.setWorldPosition(new Vec3(
             this.node.position.x,
-            0 ,
+            TileConfig.spacingY,
             this.node.position.z
         ));
         tileCluster.node.setPosition(currentWorldPos);
