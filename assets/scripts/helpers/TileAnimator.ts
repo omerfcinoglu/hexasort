@@ -29,7 +29,7 @@ export class TileAnimator {
 	 
 		const direction = this.calculateDirection(targetGridPos, sourceGridPos);
 	 
-		let cumulativeHeight = (targetTileCount + 1) * TileConfig.spacingY;
+		let cumulativeHeight = (targetTileCount) * TileConfig.spacingY;
 	 
 		const baseDuration = 0.35;
 		const delayBetweenTiles = 0.09;
@@ -47,7 +47,7 @@ export class TileAnimator {
 		    const startPosition = tile.node.worldPosition.clone();
 		    const targetPosition = new Vec3(
 			   baseTargetPosition.x,
-			   cumulativeHeight + ((i) * TileConfig.spacingY),
+			   cumulativeHeight + (i * TileConfig.spacingY),
 			   baseTargetPosition.z
 		    );
 		    const peakPosition = new Vec3(
@@ -80,12 +80,12 @@ export class TileAnimator {
 				  )
 				  .parallel(
 					 tween(tile.node).to(
-						baseDuration / 2,
+						0.3,
 						{ worldPosition: targetPosition },
 						{ easing: down_easingFunction }
 					 ),
 					 tween(tile.node).to(
-						baseDuration / 2,
+						0.3,
 						{ rotation: endRotation },
 						{ easing: down_easingFunction }
 					 )

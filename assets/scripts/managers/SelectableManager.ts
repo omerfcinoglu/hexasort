@@ -4,11 +4,12 @@ import { SelectableTiles } from "../entity/SelectableTiles";
 import { TileConfig } from "../core/TileConfig";
 import { SoundManager } from "./SoundManager";
 import { Sounds } from "../core/Sounds";
+import { SingletonComponent } from "../helpers/SingletonComponent";
 
 const { ccclass, property } = _decorator;
 
 @ccclass("SelectableManager")
-export class SelectableManager extends Component {
+export class SelectableManager extends SingletonComponent<SelectableManager> {
     @property(Prefab)
     selectableTilesPrefab: Prefab = null!;
     @property(Prefab)
@@ -110,7 +111,7 @@ export class SelectableManager extends Component {
         }
     }
 
-    remove(selected: SelectableTiles) {
+    remove(selected: SelectableTiles , endGame : boolean = false ) {
         const index = this.selectableTiles.indexOf(selected);
         if (index !== -1) {
             this.selectableTiles.splice(index, 1); // Remove the selected tile from the array
@@ -118,7 +119,7 @@ export class SelectableManager extends Component {
             selected.node.destroy(); // Optionally, destroy the node to clean up
         }
 
-        if (this.selectableTiles.length === 0) {
+        if (this.selectableTiles.length === 0 && !endGame) {
             this.createSelectableTiles([]);
         }
     }
@@ -139,5 +140,9 @@ export class SelectableManager extends Component {
                 .call(resolve)
                 .start();
         });
+    }
+
+    clear(){
+        this.selectableTiles.forEach(sTile =>  sTile.node.active = false)
     }
 }

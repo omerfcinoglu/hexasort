@@ -18,6 +18,9 @@ export class SceneManager extends Component {
     private EndCard: Node = null!;
 
     @property(Node)
+    private HexasortPlay: Node = null!;
+
+    @property(Node)
     private ProgressBar: Node = null!;
 
     onLoad(): void {
@@ -35,8 +38,9 @@ export class SceneManager extends Component {
         this.ProgressBar.active = false;
         CameraManager.getInstance().zoom(false, 1.5);
         GridManager.getInstance().ClearStack();
-    
         InputManager.getInstance().lockInputs();
+        SelectableManager.getInstance().clear();
+
         try {
             await Promise.all([
                 this.rotateGridContainerY(),
@@ -45,6 +49,7 @@ export class SceneManager extends Component {
         } catch (error) {
             console.error("Error in onGoalReached:", error);
         } finally {
+            this.HexasortPlay.active = true;
             InputManager.getInstance().unlockInputs();
         }
     }

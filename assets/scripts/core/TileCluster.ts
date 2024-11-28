@@ -48,8 +48,6 @@ export class TileCluster extends Component {
      * @param tileCount - Number of tiles to create.
      */
     private createTiles(tileCount: number) {
-        console.log("çağırıldım");
-        
         for (let i = 0; i < tileCount; i++) {
             const tileNode = instantiate(this.tilePrefab);
             tileNode.parent = this.node;
@@ -76,6 +74,7 @@ export class TileCluster extends Component {
         for (let i = 0; i < tilesToAddCount; i++) {
             const tile = tiles.pop();
             const worldPosition = tile!.node.getWorldPosition();
+            this.tileCount++;
             tile!.node.removeFromParent();
             tile!.node.setParent(this.node, true);
             tile!.node.setWorldPosition(worldPosition);

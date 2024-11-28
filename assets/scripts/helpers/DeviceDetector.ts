@@ -38,4 +38,19 @@ export class DeivceDetector {
         const size = view.getCanvasSize();
         return size.width / size.height;
     }
+
+    /**
+     * !todo
+     * urlleler bir providerdan gelsin
+     */
+    static redirectToStore(): void {
+        if (sys.platform === sys.Platform.ANDROID) {
+            window.location.href = 'https://play.google.com/store/apps/details?id=com.gamebrain.hexasort&hl=en_US';
+        } else if (sys.platform === sys.Platform.IOS) {
+            window.location.href = 'https://apps.apple.com/us/app/hexa-sort/id6463127238';
+        } else {
+            window.location.href = 'https://play.google.com/store/apps/details?id=com.gamebrain.hexasort&hl=en_US';
+        }
+    }
+    
 }

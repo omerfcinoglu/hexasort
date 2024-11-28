@@ -43,7 +43,7 @@ export class GroundTile extends LockableComponent {
         tileCluster.node.parent = this.node.parent;
         tileCluster.node.setWorldPosition(new Vec3(
             this.node.position.x,
-            TileConfig.spacingY,
+            this.getAllTileCount() * TileConfig.spacingY,
             this.node.position.z
         ));
         tileCluster.node.setPosition(currentWorldPos);

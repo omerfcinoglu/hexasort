@@ -20,7 +20,10 @@ export class StackHandler {
             try {
                 const lastCluster = ground.getLastCluster();
                 if (lastCluster) {
+                    console.log(this.matchStackCount);
+                    
                     if (lastCluster.getLength() >= this.matchStackCount) {
+
                         ground.popTileCluster();
                         await TileAnimator.animateTilesToZeroScale(lastCluster.getTiles());
                         ScoreManager.getInstance().addScore(10);

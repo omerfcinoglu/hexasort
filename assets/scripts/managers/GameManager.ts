@@ -24,7 +24,7 @@ export class GameManager extends Component {
     selectableManager: SelectableManager | null = null;
 
     private taskQueue: TaskQueue = new TaskQueue();
-    private MATCH_STACK_COUNT: number = 7;
+    private MATCH_STACK_COUNT: number = 10;
     private level_id = 1;
 
     tilePlacementHandler: TilePlacementHandler | null = null;
@@ -67,17 +67,25 @@ export class GameManager extends Component {
 
     private async processPlacement(initialGround: GroundTile) {
         const processingQueue: GroundTile[] = [initialGround];
-
+    
         while (processingQueue.length > 0) {
             const currentGround = processingQueue.shift();
             if (!currentGround || !currentGround.tryLock()) continue;
-
+    
             try {
-                const transferedGrounds = await this.neighborHandler?.processNeighbors(currentGround);
-                const stackedGrounds = await this.stackHandler?.processStacks(transferedGrounds);
-
+                const transferedGrounds = await this.neighborHandler?.processNeighbors(currentGround) || [];
+    
+                const stackedGrounds = await this.stackHandler?.processStacks(transferedGrounds) || [];
+    
                 const allGroundsToCheck = new Set([...transferedGrounds, ...stackedGrounds]);
                 for (const ground of allGroundsToCheck) {
+                    if (!processingQueue.includes(ground)) {
+                        processingQueue.push(ground);
+                    }
+                }
+    
+                const selfStackedGrounds = await this.stackHandler?.processStacks([currentGround]) || [];
+                for (const ground of selfStackedGrounds) {
                     if (!processingQueue.includes(ground)) {
                         processingQueue.push(ground);
                     }
@@ -87,4 +95,5 @@ export class GameManager extends Component {
             }
         }
     }
+    
 }
