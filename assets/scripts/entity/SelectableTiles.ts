@@ -15,8 +15,8 @@ export class SelectableTiles extends Component {
     public originalPosition: Vec3 = new Vec3(); 
     public attachedGround: GroundTile | null = null;
 
-    private idleColliderSize : Vec3 = new Vec3(1,10,1);
-    private selectedColliderSize : Vec3 = new Vec3(0.5,20,0.5);
+    private idleColliderSize : Vec3 = new Vec3(3,10,3);
+    private selectedColliderSize : Vec3 = new Vec3(0.7,20,0.7);
 
     private liftedYOffset: number = 3.5;
 
