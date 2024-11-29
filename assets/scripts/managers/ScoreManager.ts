@@ -1,5 +1,6 @@
 import { _decorator, Component, Node, tween, UITransform, Vec3, RichText, EventTarget, CylinderCollider } from 'cc';
 import { SingletonComponent } from '../helpers/SingletonComponent';
+import { UIManager } from './UIManager';
 
 const { ccclass, property } = _decorator;
 
@@ -16,11 +17,9 @@ const { ccclass, property } = _decorator;
 
 @ccclass('ScoreManager')
 export class ScoreManager extends SingletonComponent<ScoreManager> {
-    @property(Node)
-    private barLogic: Node = null!;
 
-    @property(Node)
-    private barSprite: Node = null!;
+    private progressBar_sprite :Node;
+    private progressBar_progress :Node;
 
     private s_base = 10;
     private s_external = 15;
@@ -38,24 +37,24 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
     }
 
     start() {
+        this.progressBar_progress = UIManager.getInstance().barLogic;
+        this.progressBar_sprite = UIManager.getInstance().barSprite; 
         this.updateText();
-        console.log(
-        );
         
     }
 
     updateText() {
         if (this.m_score >= this.m_goal) this.m_score = this.m_goal;
-        this.barLogic.getComponentInChildren(RichText).string = `<color=#ffffff>${this.m_score}</color>/<color=#ffffff>${this.m_goal}</color>`;
+        this.progressBar_progress.getComponentInChildren(RichText).string = `<color=#ffffff>${this.m_score}</color>/<color=#ffffff>${this.m_goal}</color>`;
     }
 
     addScore(score: number) {
-        if (!this.barLogic || !this.barSprite) {
+        if (!this.progressBar_progress || !this.progressBar_sprite) {
             console.error("BarLogic or BarSprite node is missing in the hierarchy.");
             return;
         }
 
-        const barLogicWidth = this.barLogic.getComponent(UITransform).width;
+        const barLogicWidth = this.progressBar_progress.getComponent(UITransform).width;
         const minX = -barLogicWidth;
         const maxX = 0;
 
@@ -63,9 +62,8 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
         const targetProgress = newScore / this.m_goal;
         const targetX = minX + targetProgress * (maxX - minX);
 
-        const initialX = this.barSprite.position.x;
-        this.m_score = newScore;
-        this.updateText();
+        const initialX = this.progressBar_sprite.position.x;
+
 
         tween({ value: initialX })
             .to(
@@ -74,12 +72,14 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
                 {
                     easing: 'quadOut',
                     onUpdate: (obj: any) => {
-                        this.barSprite.setPosition(new Vec3(obj.value, this.barSprite.position.y, this.barSprite.position.z));
+                        this.progressBar_sprite.setPosition(new Vec3(obj.value, this.progressBar_sprite.position.y, this.progressBar_sprite.position.z));
 
                     },
                 }
             )
             .call(() => {
+                this.m_score = newScore;
+                this.updateText();
                 if (this.m_score >= this.m_goal) {
                      ScoreManager.goalReached.emit('goalReached');
                 }

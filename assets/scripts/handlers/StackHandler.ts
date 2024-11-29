@@ -1,4 +1,4 @@
-import { _decorator, getWorldTransformUntilRoot } from 'cc';
+import { _decorator,  } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
 import { TileAnimator } from '../helpers/TileAnimator';
 import { ScoreManager } from '../managers/ScoreManager';
@@ -8,11 +8,9 @@ const { ccclass } = _decorator;
 @ccclass('StackHandler')
 export class StackHandler {
     private minStackCount = 0;
-
     constructor(minStackCount = 5) {
         this.minStackCount = minStackCount;
     }
-
 
     async processStacks(grounds: GroundTile[]): Promise<GroundTile[]> {
         const processedGrounds: GroundTile[] = [];
@@ -23,12 +21,12 @@ export class StackHandler {
                 if (lastCluster) {
                     const lastClusterLength = lastCluster.getLength();
                     if (lastClusterLength >= this.minStackCount) {
-                        console.log(grounds.length);
-                        //! calculate score'a combo bilgisi göndermeliyiz.
-                        const score = ScoreManager.getInstance().calculateScore(1,lastClusterLength, this.minStackCount);
-                        ScoreManager.getInstance().addScore(score);
                         ground.popTileCluster();
                         await TileAnimator.animateTilesToZeroScale(lastCluster.getTiles());
+                        
+                        const score = ScoreManager.getInstance().calculateScore(1,lastClusterLength, this.minStackCount);
+                        ScoreManager.getInstance().addScore(score);
+                        
                         processedGrounds.push(ground);
                     }
                 }

@@ -1,5 +1,6 @@
 import { _decorator, Component, Node } from 'cc';
 import { DeivceDetector , Orientation } from './DeviceDetector';
+import { UIManager } from '../managers/UIManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Responsive')
@@ -20,6 +21,7 @@ export class Responsive extends Component {
         console.log("something");
         const orientation = DeivceDetector.getOrientation();
         if(orientation !== this.currentOrientation) this.currentOrientation = orientation;
+        UIManager.getInstance().alingItems(this.currentOrientation);
     }
 }
 

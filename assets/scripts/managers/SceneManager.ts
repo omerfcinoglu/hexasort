@@ -55,7 +55,7 @@ export class SceneManager extends Component {
     }
 
     private rotateGridContainerY(): Promise<void> {
-        return new Promise((resolve) => {
+        return new Promise((resolve) => {   
             const currentRotation = this.gridContainer!.getRotation();
             const currentEuler = new Vec3();
             currentRotation.getEulerAngles(currentEuler);

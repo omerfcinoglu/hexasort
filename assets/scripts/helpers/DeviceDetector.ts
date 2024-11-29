@@ -40,6 +40,7 @@ export class DeivceDetector {
 
     static getAspectRatio(): number {
         const size = view.getCanvasSize();
+    
         return size.width / size.height;
     }
 

@@ -1,4 +1,4 @@
-import { _decorator, Component, Camera, tween } from 'cc';
+import { _decorator, Component, Camera, tween, Vec3 } from 'cc';
 import { SingletonComponent } from '../helpers/SingletonComponent';
 const { ccclass, property } = _decorator;
 
@@ -31,5 +31,9 @@ export class CameraManager extends SingletonComponent<CameraManager> {
                 { easing: 'quadOut' }
             )
             .start();
+    }
+
+    setCameraPosition(position : Vec3){
+        
     }
 }
