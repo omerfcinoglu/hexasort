@@ -24,8 +24,8 @@ export class StackHandler {
                         ground.popTileCluster();
                         await TileAnimator.animateTilesToZeroScale(lastCluster.getTiles());
                         
-                        const score = ScoreManager.getInstance().calculateScore(1,lastClusterLength, this.minStackCount);
-                        ScoreManager.getInstance().addScore(score);
+                        // const score = ScoreManager.getInstance().calculateScore(1,lastClusterLength, this.minStackCount);
+                        // ScoreManager.getInstance().addScore(score);
                         
                         processedGrounds.push(ground);
                     }

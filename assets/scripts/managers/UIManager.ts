@@ -12,6 +12,10 @@ export class UIManager extends SingletonComponent<UIManager> {
 
     @property(Node)
     public barSprite: Node = null!;
+
+    protected onLoad(): void {
+        super.onLoad();
+    }
     
     start() {
 

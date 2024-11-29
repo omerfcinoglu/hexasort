@@ -9,6 +9,7 @@ import { NeighborHandler } from "../handlers/NeighborHandler";
 import { StackHandler } from "../handlers/StackHandler";
 import { TaskQueue } from "../core/TaskQueue";
 import { LevelConfig } from "../../data/LevelConfig";
+import { ComboCounter } from "../helpers/ComboCounter";
 
 const { ccclass, property } = _decorator;
 
@@ -55,7 +56,7 @@ export class GameManager extends Component {
 
     async onPlacementTriggered(selectedTile: SelectableTiles) {
         // const task = async () => {
-           
+
         // };
         // this.taskQueue.add(task);
         const placedGround = await this.tilePlacementHandler?.place(selectedTile, this.selectableManager);
@@ -67,33 +68,56 @@ export class GameManager extends Component {
 
     private async processPlacement(initialGround: GroundTile) {
         const processingQueue: GroundTile[] = [initialGround];
-    
+
         while (processingQueue.length > 0) {
             const currentGround = processingQueue.shift();
             if (!currentGround || !currentGround.tryLock()) continue;
-    
+
             try {
                 const transferedGrounds = await this.neighborHandler?.processNeighbors(currentGround) || [];
-    
+                if (transferedGrounds.length > 0) {
+                    ComboCounter.getInstance().startCombo();
+                }
+
                 const stackedGrounds = await this.stackHandler?.processStacks(transferedGrounds) || [];
-    
+                if (stackedGrounds.length > 0) {
+                    ComboCounter.getInstance().incrementCombo();
+                }
+
                 const allGroundsToCheck = new Set([...transferedGrounds, ...stackedGrounds]);
                 for (const ground of allGroundsToCheck) {
                     if (!processingQueue.includes(ground)) {
                         processingQueue.push(ground);
                     }
                 }
-    
+
                 const selfStackedGrounds = await this.stackHandler?.processStacks([currentGround]) || [];
+                if (selfStackedGrounds.length > 0) {
+                    ComboCounter.getInstance().incrementCombo();
+                }
                 for (const ground of selfStackedGrounds) {
                     if (!processingQueue.includes(ground)) {
                         processingQueue.push(ground);
                     }
                 }
             } finally {
+
+
                 currentGround.unlock();
             }
         }
+
+        console.log("her şey bitti puan ekleyeceğiz");
+        console.log(ComboCounter.getInstance().getComboCount());
+        ComboCounter.getInstance().endCombo();
     }
-    
+
 }
+
+
+/**
+ * !todo total stacked tiles sayısını trackleyebiliriz.
+ * totalde combo var mı diye bakılır
+ * combo yoksa normal işlemler
+ * combo varsa puan eklemeli devam edebiliriz
+ */
