@@ -15,7 +15,7 @@ export class TileTransferHandler {
         if (!cluster) return;
 
         if (!source.tryLock()) {
-            console.warn('Cluster is already locked. Skipping transfer.');
+            // console.warn('Cluster is already locked. Skipping transfer.');
         }
 
         try {

@@ -2,8 +2,8 @@ export class LevelConfig {
     private static data = {
         1: {
             matrix: [
-                [0, 1, 0, 0, 0],
-                [0, 0, 0, 0, 3],
+                [0, 1, 0, 3, 0],
+                [0, 0, 0, 3, 3],
                 [1, 4, 5, 0, 0],
                 [1, 0, 1, 0, 1],
                 [0, 1, 0, 0, 0],
@@ -27,7 +27,7 @@ export class LevelConfig {
                 ],
                 3: [
                     { tileType: 4, tileCount: 3 },
-                    { tileType: 3, tileCount: 3 },
+                    { tileType: 3, tileCount: 1 },
                 ],
             },
         },
