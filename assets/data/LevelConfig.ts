@@ -11,7 +11,7 @@ export class LevelConfig {
             matrix: [
                 [-1, -1, 0, -1, -1],
                 [ 0,  0, 0,  0,  0],
-                [ 0,  0, 0,  0,  0],
+                [ 0,  1, 2,  1,  0],
                 [ 0,  0, 0,  0,  0],
                 [-1,  0, 0,  0, -1],
 
@@ -20,8 +20,8 @@ export class LevelConfig {
         isSpecial: true,
             startTiles: {
                 1: [
-                    { tileType: 2, tileCount: 7 },
-                    { tileType: 1, tileCount: 7 },
+                    { tileType: 1, tileCount: 5 },
+                    { tileType: 2, tileCount: 2 },
                 ],
                 2: [
                     { tileType: 2, tileCount: 2 },

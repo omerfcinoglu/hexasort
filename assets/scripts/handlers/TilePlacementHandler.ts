@@ -6,10 +6,6 @@ import { GroundTile } from "../entity/GroundTile";
 
 const { ccclass, property } = _decorator;
 
-/**
- * !todo
- * bazı tile clusterlar yerleşirken ground'un içine giriyorken bazıları üzerinde konumlanıyor
- */
 
 @ccclass("TilePlacementHandler")
 export class TilePlacementHandler {

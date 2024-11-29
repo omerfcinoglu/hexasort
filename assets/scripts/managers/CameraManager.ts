@@ -13,7 +13,11 @@ export class CameraManager extends SingletonComponent<CameraManager> {
     @property
     public maxOrthoHeight: number = 20;
 
-    zoom(inOrOut: boolean, duration: number) {
+    protected onLoad(): void {
+        super.onLoad();
+    }
+
+    public zoom(inOrOut: boolean, duration: number) {
         if (!this.mainCamera) {
             console.error('Main camera is not assigned.');
             return;
@@ -21,8 +25,8 @@ export class CameraManager extends SingletonComponent<CameraManager> {
 
         const currentOrthoHeight = this.mainCamera.orthoHeight;
         const targetOrthoHeight = inOrOut
-            ? Math.max(this.minOrthoHeight, currentOrthoHeight - 5) // Zoom In
-            : Math.min(this.maxOrthoHeight, currentOrthoHeight + 5); // Zoom Out
+            ? 15 // Zoom In
+            : 8 // Zoom Out
 
         tween(this.mainCamera)
             .to(
@@ -31,6 +35,9 @@ export class CameraManager extends SingletonComponent<CameraManager> {
                 { easing: 'quadOut' }
             )
             .start();
+
+    console.log(targetOrthoHeight);
+    
     }
 
     setCameraPosition(position : Vec3){

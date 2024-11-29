@@ -10,6 +10,7 @@ import { StackHandler } from "../handlers/StackHandler";
 import { TaskQueue } from "../core/TaskQueue";
 import { LevelConfig } from "../../data/LevelConfig";
 import { ComboCounter } from "../helpers/ComboCounter";
+import { ScoreManager } from "./ScoreManager";
 
 const { ccclass, property } = _decorator;
 
@@ -25,7 +26,7 @@ export class GameManager extends Component {
     selectableManager: SelectableManager | null = null;
 
     private taskQueue: TaskQueue = new TaskQueue();
-    private MATCH_STACK_COUNT: number = 10;
+    private MIN_MATCH_STACK_COUNT: number = 10;
     private level_id = 1;
 
     tilePlacementHandler: TilePlacementHandler | null = null;
@@ -35,7 +36,7 @@ export class GameManager extends Component {
     onLoad(): void {
         this.neighborHandler = new NeighborHandler();
         this.tilePlacementHandler = new TilePlacementHandler();
-        this.stackHandler = new StackHandler(this.MATCH_STACK_COUNT);
+        this.stackHandler = new StackHandler(this.MIN_MATCH_STACK_COUNT);
 
         const levelMatrix = LevelConfig.getLevelMatrix(this.level_id);
         if (levelMatrix) this.gridManager?.setGrid(levelMatrix);
@@ -68,7 +69,7 @@ export class GameManager extends Component {
 
     private async processPlacement(initialGround: GroundTile) {
         const processingQueue: GroundTile[] = [initialGround];
-        let popedTilesCount : number = 0;
+        let popedTilesCounts : number[] = [];
         while (processingQueue.length > 0) {
             const currentGround = processingQueue.shift();
             if (!currentGround || !currentGround.tryLock()) continue;
@@ -84,7 +85,7 @@ export class GameManager extends Component {
                     ComboCounter.getInstance().incrementCombo();
     
                     for (const info of stackedGroundInfo) {
-                        popedTilesCount += info.stackedCount
+                        popedTilesCounts.push(info.stackedCount)
                     }
                 }
     
@@ -101,10 +102,11 @@ export class GameManager extends Component {
                 const selfStackedGroundInfo = await this.stackHandler?.processStacks([currentGround]) || [];
                 if (selfStackedGroundInfo.length > 0) {
                     ComboCounter.getInstance().incrementCombo();
-                    
                     for (const info of stackedGroundInfo) {
-                        popedTilesCount += info.stackedCount
-                    }                    
+                        popedTilesCounts.push(info.stackedCount)
+                    }
+                        
+                    
                 }
     
                 for (const info of selfStackedGroundInfo) {
@@ -117,24 +119,18 @@ export class GameManager extends Component {
             }
         }
     
-        this.AddScoreAndCheckGameStatus();
+        this.AddScoreAndCheckGameStatus(popedTilesCounts);
     }
 
-    private AddScoreAndCheckGameStatus(){
-        console.log("her şey bitti puan ekleyeceğiz");
-        console.log(ComboCounter.getInstance().getComboCount());
+    private AddScoreAndCheckGameStatus(popedTilesCounts : number[]){
+        let totalScore = 0;
+        const comboCount = ComboCounter.getInstance().getComboCount();
+        popedTilesCounts.forEach(tilesCount => {
+            const calculatedScore = ScoreManager.getInstance().calculateScore(comboCount,tilesCount , this.MIN_MATCH_STACK_COUNT)
+            totalScore +=calculatedScore;
+        });
+
+        ScoreManager.getInstance().addScore(totalScore)
         ComboCounter.getInstance().endCombo();
-
-        // const score = ScoreManager.getInstance().calculateScore(1,lastClusterLength, this.minStackCount);
-        // ScoreManager.getInstance().addScore(score);
     }
-
 }
-
-
-/**
- * !todo total stacked tiles sayısını trackleyebiliriz.
- * totalde combo var mı diye bakılır
- * combo yoksa normal işlemler
- * combo varsa puan eklemeli devam edebiliriz
- */

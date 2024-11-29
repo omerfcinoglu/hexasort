@@ -18,7 +18,6 @@ export class Responsive extends Component {
     }
 
     resize(){
-        console.log("something");
         const orientation = DeivceDetector.getOrientation();
         if(orientation !== this.currentOrientation) this.currentOrientation = orientation;
         UIManager.getInstance().alingItems(this.currentOrientation);

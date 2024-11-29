@@ -1,5 +1,6 @@
 import { _decorator, Component, Node, UIOpacity, tween, Vec3, Quat } from 'cc';
 import { CameraManager } from './CameraManager';
+import { ScoreManager } from './ScoreManager';
 import { GridManager } from './GridManager';
 import { InputManager } from './InputManager';
 import { SelectableManager } from './SelectableManager';
@@ -22,6 +23,13 @@ export class SceneManager extends Component {
     @property(Node)
     private ProgressBar: Node = null!;
 
+    onLoad(): void {
+        ScoreManager.goalReached.on('goalReached', this.onGoalReached, this);
+    }
+
+    onDestroy() {
+        ScoreManager.goalReached.off('goalReached', this.onGoalReached, this);
+    }
 
     async onGoalReached() {
         if (!this.particle || !this.gridContainer || !this.EndCard) return;

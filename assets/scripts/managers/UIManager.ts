@@ -1,6 +1,7 @@
 import { _decorator, Component, Node, Vec2, Vec3 } from 'cc';
 import { SingletonComponent } from '../helpers/SingletonComponent';
 import { Orientation } from '../helpers/DeviceDetector';
+import { CameraManager } from './CameraManager';
 const { ccclass, property } = _decorator;
 
 
@@ -33,10 +34,12 @@ export class UIManager extends SingletonComponent<UIManager> {
 
     setItemsPortrait(){
         // this.barLogic.setPosition(new Vec3(0,0,0));
+        // CameraManager.getInstance().zoom(false, 0.5);
     }
 
     setItemsLandscape(){
         // this.barLogic.setPosition(new Vec3(0,0,0));
+        // CameraManager.getInstance().zoom(true , 0.5);
     }
 }
 

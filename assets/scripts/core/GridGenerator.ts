@@ -24,7 +24,7 @@ export class GridGenerator {
         const numCols = levelMatrix[0].length;
     
         // Define spacing adjustments
-        const tileSpacingX = 0.9; // X-axis spacing adjustment for closer columns
+        const tileSpacingX = 0.84; // X-axis spacing adjustment for closer columns
         const tileSpacingZ = 1.1; // Z-axis spacing adjustment for row spacing
         const staggerOffset = -1; // Lowering offset for every even column
     
@@ -76,7 +76,7 @@ export class GridGenerator {
         const clusterNode = instantiate(this.tileClusterPrefab);
         const tileCluster = clusterNode.getComponent(TileCluster);
         if (tileCluster) {
-            tileCluster.initCluster(tileType,3); 
+            tileCluster.initCluster(tileType,8); 
             tileCluster.node.setPosition(new Vec3(groundTileNode.position.x, 0 ,groundTileNode.position.z))
             tileCluster.node.setParent(groundTileNode.parent);
             tileCluster.attachedGround = groundTileComp;

@@ -4,17 +4,6 @@ import { UIManager } from './UIManager';
 
 const { ccclass, property } = _decorator;
 
-/**
- * !todo
- * if stack count is 10 give it 10 point
- * if stack > 10 give it extra 2 point for each tile
- * if there is combo stacking and stack > 10 give extra 4 point for each tile
- * if there is current_stack % goal_stack === 0 give stack should give 15 points
- * 
- * 
- * 
- */
-
 @ccclass('ScoreManager')
 export class ScoreManager extends SingletonComponent<ScoreManager> {
 
@@ -120,7 +109,12 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
         let baseScore = this.decideBaseScore(currentStackCount,minStackCount);
         console.log("decided base score  ",baseScore);
         if(currentStackCount>minStackCount && combo === 1) baseScore += (this.s_singleCombo * (currentStackCount - minStackCount));
-        if(currentStackCount>minStackCount && combo >= 2) baseScore +=   (this.s_multiCombo  * (currentStackCount - minStackCount));
+        if(currentStackCount>minStackCount && combo >= 2){
+            if(currentStackCount === minStackCount){
+                baseScore += (this.s_multiCombo  * (currentStackCount - (minStackCount/1.5)));
+            }
+            baseScore += (this.s_multiCombo  * (currentStackCount - minStackCount));
+        }
 
         console.log(`current stack count : ${currentStackCount}\ncombo : ${combo}\nadding score : ${baseScore}  `);
         return baseScore;
