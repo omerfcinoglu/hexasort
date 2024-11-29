@@ -27,11 +27,9 @@ export class TileTransferHandler {
                 if(targetTopCluster){
                     await targetTopCluster.transferTiles(transferTiles);
                 }
-                console.log(source , targetGround);
-                
                 // console.log(`Transferring cluster from (${source.gridPosition.row}, ${source.gridPosition.col}) to (${targetGround.gridPosition.row}, ${targetGround.gridPosition.col}) `);
             } else {
-                console.warn('No lastAttachedCluster found on targetGround. Skipping transferTiles.');
+                // console.warn('No lastAttachedCluster found on targetGround. Skipping transferTiles.');
             }
             source.popTileCluster();
         } finally {

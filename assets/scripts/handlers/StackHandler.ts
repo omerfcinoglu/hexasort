@@ -7,10 +7,10 @@ const { ccclass } = _decorator;
 
 @ccclass('StackHandler')
 export class StackHandler {
-    private matchStackCount = 0;
+    private minStackCount = 0;
 
-    constructor(matchStackCount = 5) {
-        this.matchStackCount = matchStackCount;
+    constructor(minStackCount = 5) {
+        this.minStackCount = minStackCount;
     }
 
     async processStacks(grounds: GroundTile[]): Promise<GroundTile[]> {
@@ -20,13 +20,14 @@ export class StackHandler {
             try {
                 const lastCluster = ground.getLastCluster();
                 if (lastCluster) {
-                    console.log(this.matchStackCount);
-                    
-                    if (lastCluster.getLength() >= this.matchStackCount) {
+                    const lastClusterLength = lastCluster.getLength();
+                    if (lastClusterLength >= this.minStackCount) {
 
+                        //! calculate score'a combo bilgisi göndermeliyiz.
+                        const score = ScoreManager.getInstance().calculateScore(1,lastClusterLength, this.minStackCount);
+                        ScoreManager.getInstance().addScore(score);
                         ground.popTileCluster();
                         await TileAnimator.animateTilesToZeroScale(lastCluster.getTiles());
-                        ScoreManager.getInstance().addScore(10);
                         processedGrounds.push(ground);
                     }
                 }

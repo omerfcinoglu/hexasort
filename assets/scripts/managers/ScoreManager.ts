@@ -1,7 +1,15 @@
-import { _decorator, Component, Node, tween, UITransform, Vec3, RichText, EventTarget } from 'cc';
+import { _decorator, Component, Node, tween, UITransform, Vec3, RichText, EventTarget, CylinderCollider } from 'cc';
 import { SingletonComponent } from '../helpers/SingletonComponent';
 
 const { ccclass, property } = _decorator;
+
+/**
+ * !todo
+ * if stack count is 10 give it 10 point
+ * if stack > 10 give it extra 2 point for each tile
+ * if there is combo stacking and stack > 10 give extra 4 point for each tile
+ * if there is current_stack % goal_stack === 0 give stack should give 15 points
+ */
 
 @ccclass('ScoreManager')
 export class ScoreManager extends SingletonComponent<ScoreManager> {
@@ -10,6 +18,12 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
 
     @property(Node)
     private barSprite: Node = null!;
+
+    private s_base = 10;
+    private s_external = 15;
+    private s_singleCombo = 2;
+    private s_multiCombo = 4;
+
 
     private m_score = 0;
     private m_goal = 50;
@@ -22,6 +36,10 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
 
     start() {
         this.updateText();
+        console.log(
+            this.decideBaseScore(14,10)
+        );
+        
     }
 
     updateText() {
@@ -88,4 +106,25 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
             .call(() => node.setPosition(originalPosition))
             .start();
     }
+
+
+    /**
+     * 
+     * @param combo combo count
+     * @param currentStackCount last cluster tile length for current stack count 
+     * @param minStackCount stack handler provides min stack count
+     */
+    calculateScore(combo:number , currentStackCount : number , minStackCount : number){
+        let baseScore = this.decideBaseScore(currentStackCount,minStackCount);
+        console.log("base score : ",baseScore);
+        
+        if(currentStackCount>minStackCount && combo === 1) baseScore += (this.s_singleCombo * (currentStackCount - minStackCount));
+        if(currentStackCount>minStackCount && combo >= 2) baseScore +=   (this.s_multiCombo  * (currentStackCount - minStackCount));
+        return baseScore;
+    }
+
+
+    decideBaseScore(currentStackCount : number , minStackCount : number) : number{
+        return currentStackCount / minStackCount > 2 ?  this.s_external : this.s_base 
+    }   
 }
