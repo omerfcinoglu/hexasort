@@ -13,7 +13,7 @@ export class PlayButton extends Component {
             return;
         }
 
-        button.node.on('click', this.onClick, this); // Butona tıklama olayını bağla
+        button.node.on('click', this.onClick, this); 
     }
 
     onClick() {

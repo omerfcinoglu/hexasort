@@ -11,6 +11,11 @@ export enum Orientation {
     Landscape
 }
 
+enum StoreLinks{
+    ANDROID = 'https://play.google.com/store/apps/details?id=com.gamebrain.hexasort&hl=en_US',
+    IOS =  'https://apps.apple.com/us/app/hexa-sort/id6463127238',
+}
+
 export class DeivceDetector {
     static getDeviceType(): DeviceType {
         const width = view.getCanvasSize().width;
@@ -23,13 +28,12 @@ export class DeivceDetector {
             }
             return DeviceType.Tablet;
         }
-
         return DeviceType.Desktop;
     }
 
     static getOrientation(): Orientation {
-        const width = view.getCanvasSize().width;
-        const height = view.getCanvasSize().height;
+        const width = window.visualViewport.width;
+        const height = window.visualViewport.height;
 
         return width > height ? Orientation.Landscape : Orientation.Portrait;
     }
@@ -39,17 +43,13 @@ export class DeivceDetector {
         return size.width / size.height;
     }
 
-    /**
-     * !todo
-     * urlleler bir providerdan gelsin
-     */
     static redirectToStore(): void {
         if (sys.platform === sys.Platform.ANDROID) {
-            window.location.href = 'https://play.google.com/store/apps/details?id=com.gamebrain.hexasort&hl=en_US';
+            window.location.href = StoreLinks.ANDROID;
         } else if (sys.platform === sys.Platform.IOS) {
-            window.location.href = 'https://apps.apple.com/us/app/hexa-sort/id6463127238';
+            window.location.href = StoreLinks.IOS
         } else {
-            window.location.href = 'https://play.google.com/store/apps/details?id=com.gamebrain.hexasort&hl=en_US';
+            window.location.href = StoreLinks.ANDROID;
         }
     }
     

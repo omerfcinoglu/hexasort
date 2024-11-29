@@ -13,6 +13,7 @@ export class StackHandler {
         this.minStackCount = minStackCount;
     }
 
+
     async processStacks(grounds: GroundTile[]): Promise<GroundTile[]> {
         const processedGrounds: GroundTile[] = [];
         for (const ground of grounds) {
@@ -22,10 +23,9 @@ export class StackHandler {
                 if (lastCluster) {
                     const lastClusterLength = lastCluster.getLength();
                     if (lastClusterLength >= this.minStackCount) {
-
+                        console.log(grounds.length);
                         //! calculate score'a combo bilgisi göndermeliyiz.
-                        const combo = ground.Combo;
-                        const score = ScoreManager.getInstance().calculateScore(combo,lastClusterLength, this.minStackCount);
+                        const score = ScoreManager.getInstance().calculateScore(1,lastClusterLength, this.minStackCount);
                         ScoreManager.getInstance().addScore(score);
                         ground.popTileCluster();
                         await TileAnimator.animateTilesToZeroScale(lastCluster.getTiles());
@@ -33,7 +33,6 @@ export class StackHandler {
                     }
                 }
             } finally {
-                ground.resetCombo();
                 ground.unlock();
             }
         }
