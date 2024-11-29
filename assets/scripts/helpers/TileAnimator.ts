@@ -32,7 +32,7 @@ export class TileAnimator {
 		let cumulativeHeight = (targetTileCount) * TileConfig.spacingY;
 	 
 		const baseDuration = 0.35;
-		const delayBetweenTiles = 0.09;
+		const delayBetweenTiles = 0.06;
 		const peakHeightFactor = 0.9;
 		const down_easingFunction = 'quartOut';
 		const lift_easingFunction = 'linear';

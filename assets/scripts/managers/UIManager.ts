@@ -28,11 +28,11 @@ export class UIManager extends SingletonComponent<UIManager> {
     }
 
     setItemsPortrait(){
-        this.barLogic.setPosition(new Vec3(0,0,0));
+        // this.barLogic.setPosition(new Vec3(0,0,0));
     }
 
     setItemsLandscape(){
-        this.barLogic.setPosition(new Vec3(0,-10,0));
+        // this.barLogic.setPosition(new Vec3(0,0,0));
     }
 }
 
