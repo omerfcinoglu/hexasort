@@ -37,7 +37,6 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
     start() {
         this.updateText();
         console.log(
-            this.decideBaseScore(14,10)
         );
         
     }
@@ -62,6 +61,8 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
         const targetX = minX + targetProgress * (maxX - minX);
 
         const initialX = this.barSprite.position.x;
+        this.m_score = newScore;
+        this.updateText();
 
         tween({ value: initialX })
             .to(
@@ -71,13 +72,11 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
                     easing: 'quadOut',
                     onUpdate: (obj: any) => {
                         this.barSprite.setPosition(new Vec3(obj.value, this.barSprite.position.y, this.barSprite.position.z));
+
                     },
                 }
             )
             .call(() => {
-                this.m_score = newScore;
-                this.updateText();
-
                 if (this.m_score >= this.m_goal) {
                      ScoreManager.goalReached.emit('goalReached');
                 }
