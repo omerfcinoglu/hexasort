@@ -2,7 +2,6 @@ import { Node, Vec3, tween, Quat } from 'cc';
 import { Tile } from '../entity/Tile';
 import { TileCluster } from '../core/TileCluster';
 import { GroundTile } from '../entity/GroundTile';
-import { ScoreManager } from '../managers/ScoreManager';
 import { SoundManager } from '../managers/SoundManager';
 import { Sounds } from '../core/Sounds';
 import { TileConfig } from '../core/TileConfig';

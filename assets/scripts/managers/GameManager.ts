@@ -68,48 +68,65 @@ export class GameManager extends Component {
 
     private async processPlacement(initialGround: GroundTile) {
         const processingQueue: GroundTile[] = [initialGround];
-
+        let popedTilesCount : number = 0;
         while (processingQueue.length > 0) {
             const currentGround = processingQueue.shift();
             if (!currentGround || !currentGround.tryLock()) continue;
-
+    
             try {
                 const transferedGrounds = await this.neighborHandler?.processNeighbors(currentGround) || [];
                 if (transferedGrounds.length > 0) {
                     ComboCounter.getInstance().startCombo();
                 }
-
-                const stackedGrounds = await this.stackHandler?.processStacks(transferedGrounds) || [];
-                if (stackedGrounds.length > 0) {
+    
+                const stackedGroundInfo = await this.stackHandler?.processStacks(transferedGrounds) || [];
+                if (stackedGroundInfo.length > 0) {
                     ComboCounter.getInstance().incrementCombo();
+    
+                    for (const info of stackedGroundInfo) {
+                        popedTilesCount += info.stackedCount
+                    }
                 }
-
-                const allGroundsToCheck = new Set([...transferedGrounds, ...stackedGrounds]);
+    
+                const allGroundsToCheck = new Set(
+                    [...transferedGrounds, ...stackedGroundInfo.map(info => info.groundTile)]
+                );
+    
                 for (const ground of allGroundsToCheck) {
                     if (!processingQueue.includes(ground)) {
                         processingQueue.push(ground);
                     }
                 }
-
-                const selfStackedGrounds = await this.stackHandler?.processStacks([currentGround]) || [];
-                if (selfStackedGrounds.length > 0) {
+    
+                const selfStackedGroundInfo = await this.stackHandler?.processStacks([currentGround]) || [];
+                if (selfStackedGroundInfo.length > 0) {
                     ComboCounter.getInstance().incrementCombo();
+                    
+                    for (const info of stackedGroundInfo) {
+                        popedTilesCount += info.stackedCount
+                    }                    
                 }
-                for (const ground of selfStackedGrounds) {
-                    if (!processingQueue.includes(ground)) {
-                        processingQueue.push(ground);
+    
+                for (const info of selfStackedGroundInfo) {
+                    if (!processingQueue.includes(info.groundTile)) {
+                        processingQueue.push(info.groundTile);
                     }
                 }
             } finally {
-
-
                 currentGround.unlock();
             }
         }
+    
+        this.AddScoreAndCheckGameStatus();
+    }
 
+    private AddScoreAndCheckGameStatus(){
         console.log("her şey bitti puan ekleyeceğiz");
         console.log(ComboCounter.getInstance().getComboCount());
         ComboCounter.getInstance().endCombo();
+
+        // const score = ScoreManager.getInstance().calculateScore(1,lastClusterLength, this.minStackCount);
+        // ScoreManager.getInstance().addScore(score);
     }
 
 }

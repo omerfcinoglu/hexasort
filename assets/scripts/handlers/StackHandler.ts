@@ -1,9 +1,13 @@
 import { _decorator,  } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
 import { TileAnimator } from '../helpers/TileAnimator';
-import { ScoreManager } from '../managers/ScoreManager';
 
 const { ccclass } = _decorator;
+
+interface StackedGroundInfo {
+    groundTile: GroundTile;
+    stackedCount: number;
+}
 
 @ccclass('StackHandler')
 export class StackHandler {
@@ -12,8 +16,9 @@ export class StackHandler {
         this.minStackCount = minStackCount;
     }
 
-    async processStacks(grounds: GroundTile[]): Promise<GroundTile[]> {
-        const processedGrounds: GroundTile[] = [];
+    async processStacks(grounds: GroundTile[]): Promise<StackedGroundInfo[]> {
+        const processedInfo: StackedGroundInfo[] = [];
+
         for (const ground of grounds) {
             if (!ground.tryLock()) continue;
             try {
@@ -24,17 +29,17 @@ export class StackHandler {
                         ground.popTileCluster();
                         await TileAnimator.animateTilesToZeroScale(lastCluster.getTiles());
                         
-                        // const score = ScoreManager.getInstance().calculateScore(1,lastClusterLength, this.minStackCount);
-                        // ScoreManager.getInstance().addScore(score);
-                        
-                        processedGrounds.push(ground);
+                        processedInfo.push({
+                            groundTile: ground,
+                            stackedCount: lastClusterLength,
+                        });
                     }
                 }
             } finally {
                 ground.unlock();
             }
         }
-        return processedGrounds;
+        return processedInfo;
     }
     
 }

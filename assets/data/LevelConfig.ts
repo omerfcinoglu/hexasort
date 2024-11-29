@@ -1,25 +1,27 @@
 export class LevelConfig {
     private static data = {
         1: {
-            matrix: [
-                [0, 1, 0, 3, 0],
-                [0, 0, 0, 3, 3],
-                [1, 4, 5, 0, 0],
-                [1, 0, 1, 0, 1],
-                [0, 1, 0, 0, 0],
-            ],
             // matrix: [
-            //     [0, 0, 0, 0, 0],
+            //     [0, 1, 0, 3, 0],
+            //     [0, 0, 0, 3, 3],
+            //     [1, 4, 5, 0, 0],
+            //     [1, 0, 1, 0, 1],
             //     [0, 1, 0, 0, 0],
-            //     [0, 0, 1, 0, 0],
-            //     [0, 1, 0, 0, 0],
-            //     [0, 0, 0, 0, 0],
             // ],
-            isSpecial: true,
+            matrix: [
+                [-1, -1, 0, -1, -1],
+                [ 0,  0, 0,  0,  0],
+                [ 0,  0, 0,  0,  0],
+                [ 0,  0, 0,  0,  0],
+                [-1,  0, 0,  0, -1],
+
+
+            ],
+        isSpecial: true,
             startTiles: {
                 1: [
-                    { tileType: 2, tileCount: 2 },
-                    { tileType: 1, tileCount: 2 },
+                    { tileType: 2, tileCount: 7 },
+                    { tileType: 1, tileCount: 7 },
                 ],
                 2: [
                     { tileType: 2, tileCount: 2 },
