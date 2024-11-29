@@ -25,6 +25,7 @@ export class TileTransferHandler {
                 const targetTopCluster = targetGround.getLastCluster();
                 const transferTiles = [...cluster.getTiles()].reverse();
                 if(targetTopCluster){
+                    targetGround.addCombo();
                     await targetTopCluster.transferTiles(transferTiles);
                 }
                 // console.log(`Transferring cluster from (${source.gridPosition.row}, ${source.gridPosition.col}) to (${targetGround.gridPosition.row}, ${targetGround.gridPosition.col}) `);

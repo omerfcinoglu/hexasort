@@ -26,7 +26,7 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
 
 
     private m_score = 0;
-    private m_goal = 50;
+    private m_goal = 100;
 
     public static goalReached = new EventTarget(); // EventTarget for managing events
 
@@ -115,11 +115,15 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
      */
     calculateScore(combo:number , currentStackCount : number , minStackCount : number){
         let baseScore = this.decideBaseScore(currentStackCount,minStackCount);
-        console.log("base score : ",baseScore);
-        
+        console.log(combo , baseScore);
         if(currentStackCount>minStackCount && combo === 1) baseScore += (this.s_singleCombo * (currentStackCount - minStackCount));
         if(currentStackCount>minStackCount && combo >= 2) baseScore +=   (this.s_multiCombo  * (currentStackCount - minStackCount));
+
+        
+        console.log("calculated score is : ",baseScore);
+        
         return baseScore;
+
     }
 
 

@@ -29,6 +29,12 @@ export class GroundTile extends LockableComponent {
     private defaultColor: Color = null;
     private highlightColor: Color = null;
 
+    private comboCounter = 0;
+
+    get Combo() {
+        return this.comboCounter
+    }
+    
     onLoad() {
         this.mesh = this.node.getComponentInChildren(MeshRenderer);
         this.highlightColor = ColorProvider.getInstance().getColor(7);
@@ -91,4 +97,14 @@ export class GroundTile extends LockableComponent {
             TileAnimator.animateTilesToZeroScale(cluster.getTiles(),twenDuration);
         })
     }
+
+    addCombo(){
+        this.comboCounter ++;
+    }
+
+    resetCombo(){
+        this.comboCounter = 0;
+    }
+
+
 }

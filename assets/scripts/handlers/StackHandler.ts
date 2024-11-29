@@ -1,4 +1,4 @@
-import { _decorator } from 'cc';
+import { _decorator, getWorldTransformUntilRoot } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
 import { TileAnimator } from '../helpers/TileAnimator';
 import { ScoreManager } from '../managers/ScoreManager';
@@ -24,7 +24,8 @@ export class StackHandler {
                     if (lastClusterLength >= this.minStackCount) {
 
                         //! calculate score'a combo bilgisi göndermeliyiz.
-                        const score = ScoreManager.getInstance().calculateScore(1,lastClusterLength, this.minStackCount);
+                        const combo = ground.Combo;
+                        const score = ScoreManager.getInstance().calculateScore(combo,lastClusterLength, this.minStackCount);
                         ScoreManager.getInstance().addScore(score);
                         ground.popTileCluster();
                         await TileAnimator.animateTilesToZeroScale(lastCluster.getTiles());
@@ -32,6 +33,7 @@ export class StackHandler {
                     }
                 }
             } finally {
+                ground.resetCombo();
                 ground.unlock();
             }
         }
