@@ -20,8 +20,6 @@ export class SceneManager extends Component {
     @property(Node)
     private HexasortPlay: Node = null!;
 
-    @property(Node)
-    private ProgressBar: Node = null!;
 
     onLoad(): void {
         ScoreManager.goalReached.on('goalReached', this.onGoalReached, this);
@@ -35,7 +33,6 @@ export class SceneManager extends Component {
         if (!this.particle || !this.gridContainer || !this.EndCard) return;
     
         this.particle.active = true;
-        this.ProgressBar.active = false;
         CameraManager.getInstance().zoom(false, 1.5);
         GridManager.getInstance().ClearStack();
         InputManager.getInstance().lockInputs();

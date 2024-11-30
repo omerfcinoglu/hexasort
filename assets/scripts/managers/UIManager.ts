@@ -1,18 +1,20 @@
 import { _decorator, Component, Node, tween, UITransform, Vec2, Vec3, Widget } from 'cc';
 import { SingletonComponent } from '../helpers/SingletonComponent';
 import { CameraManager } from './CameraManager';
+import { ProgressBarContainer } from '../entity/ProgressBarContainer';
+import { Orientation } from '../core/Orientation';
 const { ccclass, property } = _decorator;
 
-export enum Orientation {
-    Portrait,
-    Landscape
-}
+
 
 @ccclass('UIManager')
 export class UIManager extends SingletonComponent<UIManager> {
 
+    @property(ProgressBarContainer)
+    public progressBarContainer: ProgressBarContainer | null = null;
+
     @property(Node)
-    public progressBarContainer: Node = null!;
+    public canvas: Node = null!;
 
     @property(Node)
     public barLogic: Node = null!;
@@ -22,8 +24,6 @@ export class UIManager extends SingletonComponent<UIManager> {
 
     private transform: UITransform = null;
 
-    private progressBarInitPos : Vec3 ;
-    private progressBarLandscapePos : Vec3;
     protected onLoad(): void {
         super.onLoad();
         window.addEventListener("orientationchange", this.orientationChange.bind(this));
@@ -31,9 +31,7 @@ export class UIManager extends SingletonComponent<UIManager> {
     }
 
     start() {
-        this.progressBarInitPos = this.progressBarContainer.getPosition();
-        this.progressBarLandscapePos = this.progressBarInitPos.clone().add3f(-300,-300,0)
-        this.transform = this.node.getComponent(UITransform);
+        this.transform = this.canvas.getComponent(UITransform);
         this.orientationChange();
     }
 
@@ -48,12 +46,12 @@ export class UIManager extends SingletonComponent<UIManager> {
     }
 
     setItemsPortrait() {
-        this.progressBarContainer.setPosition(this.progressBarInitPos)
+        this.progressBarContainer.changeOrientation(Orientation.Portrait)
         CameraManager.getInstance().changePosition(Orientation.Portrait);
     }
 
     setItemsLandscape() {
-        this.progressBarContainer.setPosition(this.progressBarLandscapePos)
+        this.progressBarContainer.changeOrientation(Orientation.Landscape)
         CameraManager.getInstance().changePosition(Orientation.Landscape);
     }
 

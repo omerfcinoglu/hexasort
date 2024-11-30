@@ -1,6 +1,6 @@
 import { _decorator, Component, Camera, tween, Vec3 } from 'cc';
 import { SingletonComponent } from '../helpers/SingletonComponent';
-import { Orientation } from './UIManager';
+import { Orientation } from '../core/Orientation';
 const { ccclass, property } = _decorator;
 
 @ccclass('CameraManager')
