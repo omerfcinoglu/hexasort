@@ -10,7 +10,7 @@ export class Responsive extends Component {
 
     protected onLoad(): void {
         window.addEventListener("resize", this.resize.bind(this));
-        window.addEventListener("orientationchange",this.resize.bind(this));
+        window.addEventListener("orientationchange",this.orationChange.bind(this));
     }
 
     start() {
@@ -21,6 +21,11 @@ export class Responsive extends Component {
         const orientation = DeivceDetector.getOrientation();
         if(orientation !== this.currentOrientation) this.currentOrientation = orientation;
         UIManager.getInstance().alingItems(this.currentOrientation);
+    }
+
+    orationChange(){
+        console.log("kamera");
+        
     }
 }
 

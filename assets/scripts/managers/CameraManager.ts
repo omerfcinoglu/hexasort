@@ -25,8 +25,8 @@ export class CameraManager extends SingletonComponent<CameraManager> {
 
         const currentOrthoHeight = this.mainCamera.orthoHeight;
         const targetOrthoHeight = inOrOut
-            ? 15 // Zoom In
-            : 8 // Zoom Out
+            ? 11 // Zoom In
+            : 15 // Zoom Out
 
         tween(this.mainCamera)
             .to(
