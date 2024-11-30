@@ -1,5 +1,6 @@
 import { _decorator, Component, Camera, tween, Vec3 } from 'cc';
 import { SingletonComponent } from '../helpers/SingletonComponent';
+import { Orientation } from './UIManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('CameraManager')
@@ -13,9 +14,19 @@ export class CameraManager extends SingletonComponent<CameraManager> {
     @property
     public maxOrthoHeight: number = 20;
 
+    private startPos : Vec3;
+    private orientationChangePos : Vec3;
+
+    
     protected onLoad(): void {
         super.onLoad();
     }
+
+    protected start(): void {
+        this.startPos = this.mainCamera.node.getPosition()
+        this.orientationChangePos = this.mainCamera.node.getPosition().add3f(-10,0,0)
+    }
+
 
     public zoom(inOrOut: boolean, duration: number) {
         if (!this.mainCamera) {
@@ -36,11 +47,14 @@ export class CameraManager extends SingletonComponent<CameraManager> {
             )
             .start();
 
-    console.log(targetOrthoHeight);
-    
     }
 
-    setCameraPosition(position : Vec3){
-        
+    changePosition(orientation: Orientation) {
+        const targetPosition = 
+            orientation == Orientation.Portrait 
+                ? this.startPos 
+                : this.orientationChangePos;
+    
+        this.mainCamera.node.setPosition(targetPosition);
     }
 }

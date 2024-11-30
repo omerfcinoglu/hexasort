@@ -6,10 +6,7 @@ export enum DeviceType {
     Desktop
 }
 
-export enum Orientation {
-    Portrait,
-    Landscape
-}
+
 
 enum StoreLinks{
     ANDROID = 'https://play.google.com/store/apps/details?id=com.gamebrain.hexasort&hl=en_US',
@@ -18,8 +15,8 @@ enum StoreLinks{
 
 export class DeivceDetector {
     static getDeviceType(): DeviceType {
-        const width = view.getCanvasSize().width;
-        const height = view.getCanvasSize().height;
+        const width = window.visualViewport.width;
+        const height = window.visualViewport.height;
 
         if (sys.isMobile) {
             const minDimension = Math.min(width, height);
@@ -31,18 +28,6 @@ export class DeivceDetector {
         return DeviceType.Desktop;
     }
 
-    static getOrientation(): Orientation {
-        const width = window.visualViewport.width;
-        const height = window.visualViewport.height;
-
-        return width > height ? Orientation.Landscape : Orientation.Portrait;
-    }
-
-    static getAspectRatio(): number {
-        const size = view.getCanvasSize();
-    
-        return size.width / size.height;
-    }
 
     static redirectToStore(): void {
         if (sys.platform === sys.Platform.ANDROID) {
