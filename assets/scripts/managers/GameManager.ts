@@ -19,6 +19,9 @@ const { ccclass, property } = _decorator;
 /**
  * !TODO
  * REFACTOR HERE PLEASE!
+ * tile transfer olup altındaki tile da transfer olunca stack işlemi gerçekleşmiyor.
+ * score bazen geriye gidebiliyor.
+ * buildde ekran ayarlamaları doğru çalışıyor mu?
  */
 
 
@@ -132,14 +135,13 @@ export class GameManager extends Component {
     private AddScoreAndCheckGameStatus(popedTilesCounts : number[]){
         let totalScore = 0;
         const comboCount = ComboCounter.getInstance().getComboCount();
-        console.log(comboCount);
         
         popedTilesCounts.forEach(tilesCount => {
             const calculatedScore = ScoreManager.getInstance().calculateScore(comboCount,tilesCount , this.MIN_MATCH_STACK_COUNT)
             totalScore +=calculatedScore;
         });
 
-        ScoreManager.getInstance().addScore(totalScore , comboCount >= 1)
+        ScoreManager.getInstance().addScore(totalScore , popedTilesCounts.length >= 2)
         ComboCounter.getInstance().endCombo();
     }
 }

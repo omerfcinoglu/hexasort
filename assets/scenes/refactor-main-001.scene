@@ -157,7 +157,7 @@
       "b": 255,
       "a": 255
     },
-    "_useColorTemperature": false,
+    "_useColorTemperature": true,
     "_colorTemperature": 15000,
     "_staticSettings": {
       "__id__": 4
@@ -491,9 +491,9 @@
     },
     "ground": {
       "__type__": "cc.Color",
-      "r": 141,
-      "g": 141,
-      "b": 141,
+      "r": 68,
+      "g": 68,
+      "b": 68,
       "a": 255
     },
     "highlight": {
@@ -3583,8 +3583,8 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 1.701,
-      "y": -3.402,
+      "x": 3.322,
+      "y": -4.213,
       "z": 0
     },
     "_lrot": {
@@ -3620,8 +3620,8 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 147.93,
-      "height": 50.4
+      "width": 267.77,
+      "height": 90.72
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -3639,11 +3639,11 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "_lineHeight": 40,
+    "_lineHeight": 72,
     "_string": "<color=#ff0000>COMBO</color>",
     "_horizontalAlign": 0,
     "_verticalAlign": 0,
-    "_fontSize": 39.5,
+    "_fontSize": 71.5,
     "_maxWidth": 0,
     "_fontFamily": "Arial",
     "_font": {
@@ -3671,8 +3671,8 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 149.8,
-      "height": 50.4
+      "width": 269.64,
+      "height": 90.72
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -3690,11 +3690,11 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "_lineHeight": 40,
+    "_lineHeight": 72,
     "_string": "<color=#ffffff>COMBO</color>",
     "_horizontalAlign": 0,
     "_verticalAlign": 0,
-    "_fontSize": 40,
+    "_fontSize": 72,
     "_maxWidth": 0,
     "_fontFamily": "Arial",
     "_font": {
@@ -6922,17 +6922,17 @@
       "x": 1,
       "y": 1,
       "z": 1,
-      "w": 0.02604165625
+      "w": 0.520833125
     },
     "_skyColor": {
       "__type__": "cc.Vec4",
       "x": 1,
       "y": 1,
       "z": 1,
-      "w": 0.02604165625
+      "w": 0.520833125
     },
-    "_skyIllumHDR": 1000,
-    "_skyIllum": 1000,
+    "_skyIllumHDR": 20000,
+    "_skyIllum": 20000,
     "_groundAlbedoHDR": {
       "__type__": "cc.Vec4",
       "x": 1,
@@ -7006,7 +7006,7 @@
     "_diffuseMapHDR": null,
     "_diffuseMapLDR": null,
     "_enabled": false,
-    "_useHDR": false,
+    "_useHDR": true,
     "_editableMaterial": null,
     "_reflectionHDR": null,
     "_reflectionLDR": null
