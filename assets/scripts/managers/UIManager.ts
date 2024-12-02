@@ -22,6 +22,10 @@ export class UIManager extends SingletonComponent<UIManager> {
     @property(Node)
     public barSprite: Node = null!;
 
+
+    @property(Node)
+    public combo: Node = null!;
+
     private transform: UITransform = null;
 
     protected onLoad(): void {
@@ -33,10 +37,6 @@ export class UIManager extends SingletonComponent<UIManager> {
     start() {
         this.transform = this.canvas.getComponent(UITransform);
         this.orientationChange();
-    }
-
-    update(deltaTime: number) {
-
     }
 
     alingItems(orientation: Orientation) {
@@ -61,9 +61,15 @@ export class UIManager extends SingletonComponent<UIManager> {
 
     getOrientation() : Orientation{
         const contentSize = this.transform.contentSize
+        console.log(contentSize);
+        
         return contentSize.width > contentSize.height
             ?  Orientation.Landscape
             :  Orientation.Portrait;
+    }
+
+    public AnimateCombo(){
+        this.combo.active = true;
     }
 }
 

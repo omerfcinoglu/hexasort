@@ -6,6 +6,7 @@ const { ccclass, property } = _decorator;
 /**
  * !TODO
  * her ekran değişiminde yeniden konumlandırabiliriz
+ * bazen bar geriye hareket ediyor
  */
 
 

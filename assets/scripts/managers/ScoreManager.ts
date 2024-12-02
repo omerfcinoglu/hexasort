@@ -37,7 +37,7 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
         this.progressBar_progress.getComponentInChildren(RichText).string = `<color=#ffffff>${this.m_score}</color>/<color=#ffffff>${this.m_goal}</color>`;
     }
 
-    addScore(score: number) {
+    addScore(score: number , isCombo : boolean = false) {
         if (!this.progressBar_progress || !this.progressBar_sprite) {
             console.error("BarLogic or BarSprite node is missing in the hierarchy.");
             return;
@@ -52,7 +52,9 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
         const targetX = minX + targetProgress * (maxX - minX);
 
         const initialX = this.progressBar_sprite.position.x;
-
+        console.log(isCombo);
+        
+        if(isCombo) UIManager.getInstance().AnimateCombo();
 
         tween({ value: initialX })
             .to(
