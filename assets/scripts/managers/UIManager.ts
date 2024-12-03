@@ -71,5 +71,14 @@ export class UIManager extends SingletonComponent<UIManager> {
     public AnimateCombo(){
         this.combo.active = true;
     }
+
+
+    /**
+     * 
+     * @param display acitevate or deactivate progress bar node
+     */
+    displayProgressBar(display : boolean){
+        this.progressBarContainer.node.active = false;
+    }
 }
 

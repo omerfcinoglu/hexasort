@@ -42,7 +42,6 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
             console.error("BarLogic or BarSprite node is missing in the hierarchy.");
             return;
         }
-
         const barLogicWidth = this.progressBar_progress.getComponent(UITransform).width;
         const minX = -barLogicWidth;
         const maxX = 0;

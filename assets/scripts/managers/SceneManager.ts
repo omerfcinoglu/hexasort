@@ -4,6 +4,7 @@ import { ScoreManager } from './ScoreManager';
 import { GridManager } from './GridManager';
 import { InputManager } from './InputManager';
 import { SelectableManager } from './SelectableManager';
+import { UIManager } from './UIManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('SceneManager')
@@ -37,7 +38,7 @@ export class SceneManager extends Component {
         GridManager.getInstance().ClearStack();
         InputManager.getInstance().lockInputs();
         SelectableManager.getInstance().clear();
-
+        UIManager.getInstance().displayProgressBar(false);
         try {
             await Promise.all([
                 this.rotateGridContainerY(),

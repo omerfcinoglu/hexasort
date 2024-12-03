@@ -99,31 +99,31 @@ export class GameManager extends Component {
                     }
                 }
     
-                const allGroundsToCheck = new Set(
-                    [...transferedGrounds, ...stackedGroundInfo.map(info => info.groundTile)]
-                );
+                // const allGroundsToCheck = new Set(
+                //     [...transferedGrounds, ...stackedGroundInfo.map(info => info.groundTile)]
+                // );
     
-                for (const ground of allGroundsToCheck) {
-                    if (!processingQueue.includes(ground)) {
-                        processingQueue.push(ground);
-                    }
-                }
+                // for (const ground of allGroundsToCheck) {
+                //     if (!processingQueue.includes(ground)) {
+                //         processingQueue.push(ground);
+                //     }
+                // }
     
-                const selfStackedGroundInfo = await this.stackHandler?.processStacks([currentGround]) || [];
-                if (selfStackedGroundInfo.length > 0) {
-                    ComboCounter.getInstance().incrementCombo();
-                    for (const info of stackedGroundInfo) {
-                        popedTilesCounts.push(info.stackedCount)
-                    }
+                // const selfStackedGroundInfo = await this.stackHandler?.processStacks([currentGround]) || [];
+                // if (selfStackedGroundInfo.length > 0) {
+                //     ComboCounter.getInstance().incrementCombo();
+                //     for (const info of stackedGroundInfo) {
+                //         popedTilesCounts.push(info.stackedCount)
+                //     }
                         
                     
-                }
+                // }
     
-                for (const info of selfStackedGroundInfo) {
-                    if (!processingQueue.includes(info.groundTile)) {
-                        processingQueue.push(info.groundTile);
-                    }
-                }
+                // for (const info of selfStackedGroundInfo) {
+                //     if (!processingQueue.includes(info.groundTile)) {
+                //         processingQueue.push(info.groundTile);
+                //     }
+                // }
             } finally {
                 currentGround.unlock();
             }
