@@ -1,10 +1,10 @@
 import { _decorator, Component } from "cc";
 import { GridManager } from "./GridManager";
-import { TileSelectionHandler } from "../handlers/TileSelectionHandler";
 import { SelectableManager } from "./SelectableManager";
-import { SelectableTiles } from "../entity/SelectableTiles";
-import { LevelConfig } from "../../data/LevelConfig";
 import { TilePlacementHandler } from "../handlers/TilePlacementHandler";
+import { LevelConfig } from "../../data/LevelConfig";
+import { TileSelectionHandler } from "../handlers/TileSelectionHandler";
+import { SelectableTiles } from "../entity/SelectableTiles";
 
 const { ccclass, property } = _decorator;
 

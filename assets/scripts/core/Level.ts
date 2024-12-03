@@ -5,7 +5,7 @@ interface LevelData {
     isSpecial: boolean;
 }
 
-class Level {
+export class Level {
     id: number;
     matrix: number[][];
     startTiles: { [key: number]: { tileType: number; tileCount: number }[] };
