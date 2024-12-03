@@ -18,7 +18,7 @@ export class TilePlacementHandler {
         selectableManager: SelectableManager): Promise<GroundTile> {
         const targetGround = selectedTile.attachedGround;
         if (!targetGround || !selectedTile) return null;
-
+            
         // selectedTile.grounded();
 
         for (const cluster of selectedTile.tileClusters) {

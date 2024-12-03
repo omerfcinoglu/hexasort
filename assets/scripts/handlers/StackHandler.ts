@@ -18,9 +18,11 @@ export class StackHandler {
 
     async processStacks(grounds: GroundTile[]): Promise<StackedGroundInfo[]> {
         const processedInfo: StackedGroundInfo[] = [];
-
+        console.log(grounds);
+        
         for (const ground of grounds) {
             if (!ground.tryLock()) continue;
+            if(!ground.isPlacedGround) continue;
             try {
                 const lastCluster = ground.getLastCluster();
                 if (lastCluster) {
@@ -28,7 +30,6 @@ export class StackHandler {
                     if (lastClusterLength >= this.minStackCount) {
                         ground.popTileCluster();
                         await TileAnimator.animateTilesToZeroScale(lastCluster.getTiles());
-                        
                         processedInfo.push({
                             groundTile: ground,
                             stackedCount: lastClusterLength,

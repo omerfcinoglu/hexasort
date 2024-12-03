@@ -1,152 +1,78 @@
 import { _decorator, Component } from "cc";
 import { GridManager } from "./GridManager";
 import { TileSelectionHandler } from "../handlers/TileSelectionHandler";
-import { TilePlacementHandler } from "../handlers/TilePlacementHandler";
-import { GroundTile } from "../entity/GroundTile";
-import { SelectableTiles } from "../entity/SelectableTiles";
 import { SelectableManager } from "./SelectableManager";
-import { NeighborHandler } from "../handlers/NeighborHandler";
-import { StackHandler } from "../handlers/StackHandler";
-import { TaskQueue } from "../core/TaskQueue";
+import { SelectableTiles } from "../entity/SelectableTiles";
 import { LevelConfig } from "../../data/LevelConfig";
-import { ComboCounter } from "../helpers/ComboCounter";
-import { ScoreInfo, ScoreManager } from "./ScoreManager";
+import { TilePlacementHandler } from "../handlers/TilePlacementHandler";
+
 const { ccclass, property } = _decorator;
-
-
-
-
-/**
- * !TODO
- * REFACTOR HERE PLEASE!
- *  tile transfer olup altındaki tile da transfer olunca stack işlemi gerçekleşmiyor.
- * 
- * 
- *  score bazen geriye gidebiliyor.
- *      score için bir sıra yapıp sıradaki her şeyi ekleyip sıradan çıkartmalıyız.
- *      tam anlamıyla düzgün çalışmıyor.
- *  
- * 
- *  buildde ekran ayarlamaları doğru çalışıyor mu?
- */
-
-
 
 @ccclass("GameManager")
 export class GameManager extends Component {
-
     @property(GridManager)
     gridManager: GridManager | null = null;
 
     @property(SelectableManager)
     selectableManager: SelectableManager | null = null;
 
-    private taskQueue: TaskQueue = new TaskQueue();
-    private MIN_MATCH_STACK_COUNT: number = 10;
+    private tilePlacementHandler : TilePlacementHandler;
     private level_id = 1;
 
-    tilePlacementHandler: TilePlacementHandler | null = null;
-    neighborHandler: NeighborHandler | null = null;
-    stackHandler: StackHandler | null = null;
+    start() {
+        this.initializeHandlers();
+        this.initializeGame();
+    }
 
-    onLoad(): void {
-        this.neighborHandler = new NeighborHandler();
+    private initializeHandlers(){
         this.tilePlacementHandler = new TilePlacementHandler();
-        this.stackHandler = new StackHandler(this.MIN_MATCH_STACK_COUNT);
+    }
 
-        const levelMatrix = LevelConfig.getLevelMatrix(this.level_id);
-        if (levelMatrix) this.gridManager?.setGrid(levelMatrix);
+    private initializeGame() {
+        this.setupLevel();
+        this.setupEventListeners();
+        console.log("Game initialized");
+    }
+
+    private setupLevel() {
+        const levelMatrix = this.getLevelMatrix();
+        if (this.gridManager) {
+            this.gridManager.setGrid(levelMatrix);
+        }
+
 
         const startTiles = LevelConfig.getStartTiles(this.level_id);
         if (this.selectableManager && startTiles) this.selectableManager.init(startTiles);
+    }
 
+    private setupEventListeners() {
         TileSelectionHandler.placementEvent.on("placement", this.onPlacementTriggered, this);
     }
 
-    onDestroy() {
-        TileSelectionHandler.placementEvent.off("placement", this.onPlacementTriggered, this);
-
+    private getLevelMatrix(): number[][] {
+        // Örnek seviye matrisi
+        return [
+            [0, 2, 0],
+            [0, 0, 0],
+            [1, 3, 1],
+        ];
     }
 
-
-
+    private getStartTiles(): number[] {
+        // Örnek başlangıç taşları
+        return [1, 2, 3];
+    }
 
     async onPlacementTriggered(selectedTile: SelectableTiles) {
-        // const task = async () => {
-
-        // };
-        // this.taskQueue.add(task);
         const placedGround = await this.tilePlacementHandler?.place(selectedTile, this.selectableManager);
         if (placedGround) {
-            placedGround.highlight(false);
+            console.log(`Tile placed on: ${placedGround.gridPosition}`);
             await this.processPlacement(placedGround);
         }
     }
 
-    private async processPlacement(initialGround: GroundTile) {
-        const processingQueue: GroundTile[] = [initialGround];
-        let popedTilesCounts : number[] = [];
-        while (processingQueue.length > 0) {
-            const currentGround = processingQueue.shift();
-            if (!currentGround || !currentGround.tryLock()) continue;
-    
-            try {
-                const transferedGrounds = await this.neighborHandler?.processNeighbors(currentGround) || [];
-                if (transferedGrounds.length > 0) {
-                    ComboCounter.getInstance().startCombo();
-                }
-    
-                const stackedGroundInfo = await this.stackHandler?.processStacks(transferedGrounds) || [];
-                if (stackedGroundInfo.length > 0) {
-                    ComboCounter.getInstance().incrementCombo();
-                    for (const info of stackedGroundInfo) {
-                        popedTilesCounts.push(info.stackedCount)
-                    }
-                    this.AddScoreAndCheckGameStatus(popedTilesCounts)
-                }
-    
-                const allGroundsToCheck = new Set(
-                    [...transferedGrounds, ...stackedGroundInfo.map(info => info.groundTile)]
-                );
-    
-                for (const ground of allGroundsToCheck) {
-                    if (!processingQueue.includes(ground)) {
-                        processingQueue.push(ground);
-                    }
-                }
-    
-                const selfStackedGroundInfo = await this.stackHandler?.processStacks([currentGround]) || [];
-                if (selfStackedGroundInfo.length > 0) {
-                    ComboCounter.getInstance().incrementCombo();
-                    for (const info of stackedGroundInfo) {
-                        popedTilesCounts.push(info.stackedCount)
-                    }
-                    this.AddScoreAndCheckGameStatus(popedTilesCounts)                    
-                }
-                for (const info of selfStackedGroundInfo) {
-                    if (!processingQueue.includes(info.groundTile)) {
-                        processingQueue.push(info.groundTile);
-                    }
-                }
-            } finally {
-                currentGround.unlock();
-            }
-        }
-    }
-
-    async AddScoreAndCheckGameStatus(popedTilesCounts : number[]){
-        console.log(popedTilesCounts);
-        
-        //isCombo calculating by popedtilescount
-        let calculatedScore = 0;
-        const comboCount = ComboCounter.getInstance().getComboCount();
-        popedTilesCounts.forEach((tilesCount,index) => {
-            calculatedScore = ScoreManager.getInstance().calculateScore(comboCount,tilesCount , this.MIN_MATCH_STACK_COUNT)
-            let scoreInfo : ScoreInfo = { score : calculatedScore , isCombo : index + 1  >= 2}
-            ScoreManager.getInstance().addScoreToQueue(scoreInfo)
-            // totalScore +=calculatedScore;
-        });
-        // ScoreManager.getInstance().addScore(totalScore , popedTilesCounts.length >= 2)
-        ComboCounter.getInstance().endCombo();
+    private async processPlacement(placedGround) {
+        console.log("Processing placement for ground:", placedGround.gridPosition);
+        // İşlem sırası burada devam edecek
     }
 }

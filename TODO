@@ -1,0 +1,6 @@
+
+Todo:
+  ☐ When tile transfer occurs, the source and target are not processed @started(24-12-03 22:48)
+  ☐ Score sometimes decreases
+  ☐ We need to create a queue for the score, add everything to the queue, and remove them once processed.
+  ☐ Check if screen adjustments work correctly in the build.

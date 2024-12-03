@@ -138,7 +138,6 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
             baseScore += (this.s_multiCombo  * (currentStackCount - minStackCount));
         }
 
-        // console.log(`current stack count : ${currentStackCount}\ncombo : ${combo}\nadding score : ${baseScore}  `);
         return baseScore;
 
     }
