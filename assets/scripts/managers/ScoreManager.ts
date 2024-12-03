@@ -4,6 +4,11 @@ import { UIManager } from './UIManager';
 
 const { ccclass, property } = _decorator;
 
+export interface ScoreInfo{
+    score : number,
+    isCombo : boolean
+}
+
 @ccclass('ScoreManager')
 export class ScoreManager extends SingletonComponent<ScoreManager> {
 
@@ -15,9 +20,10 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
     private s_singleCombo = 2;
     private s_multiCombo = 4;
 
-
     private m_score = 0;
     private m_goal = 100;
+
+    private scoreQueue : ScoreInfo[] = [];
 
     public static goalReached = new EventTarget(); // EventTarget for managing events
 
@@ -37,7 +43,19 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
         this.progressBar_progress.getComponentInChildren(RichText).string = `<color=#ffffff>${this.m_score}</color>/<color=#ffffff>${this.m_goal}</color>`;
     }
 
-    addScore(score: number , isCombo : boolean = false) {
+    addScoreToQueue(scoreInfo : ScoreInfo){
+        this.scoreQueue.push(scoreInfo);
+        
+        if(this.scoreQueue.length>1){
+            const addingScore = this.scoreQueue[0]
+            this.addScore(addingScore)
+        }
+    } 
+
+    async addScore(scoreInfo : ScoreInfo) {
+        const isCombo = scoreInfo.isCombo;
+        const score = scoreInfo.score;
+        console.log(score , isCombo);
         if (!this.progressBar_progress || !this.progressBar_sprite) {
             console.error("BarLogic or BarSprite node is missing in the hierarchy.");
             return;
@@ -51,11 +69,12 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
         const targetX = minX + targetProgress * (maxX - minX);
 
         const initialX = this.progressBar_sprite.position.x;
-        console.log(isCombo);
+        // console.log(isCombo);
         
         if(isCombo) UIManager.getInstance().AnimateCombo();
 
-        tween({ value: initialX })
+        await new Promise<void>((resolve)=>{
+            tween({ value: initialX })
             .to(
                 0.5,
                 { value: targetX },
@@ -73,8 +92,10 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
                 if (this.m_score >= this.m_goal) {
                      ScoreManager.goalReached.emit('goalReached');
                 }
+                resolve();
             })
             .start();
+        })
     }
 
     shakeUI(node: Node, shakeIntensity: number = 3, shakeDuration: number = 0.3) {
@@ -108,7 +129,7 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
      */
     calculateScore(combo:number , currentStackCount : number , minStackCount : number){
         let baseScore = this.decideBaseScore(currentStackCount,minStackCount);
-        console.log("decided base score  ",baseScore);
+        // console.log("decided base score  ",baseScore);
         if(currentStackCount>minStackCount && combo === 1) baseScore += (this.s_singleCombo * (currentStackCount - minStackCount));
         if(currentStackCount>minStackCount && combo >= 2){
             if(currentStackCount === minStackCount){
@@ -117,7 +138,7 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
             baseScore += (this.s_multiCombo  * (currentStackCount - minStackCount));
         }
 
-        console.log(`current stack count : ${currentStackCount}\ncombo : ${combo}\nadding score : ${baseScore}  `);
+        // console.log(`current stack count : ${currentStackCount}\ncombo : ${combo}\nadding score : ${baseScore}  `);
         return baseScore;
 
     }

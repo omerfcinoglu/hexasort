@@ -10,7 +10,7 @@ import { StackHandler } from "../handlers/StackHandler";
 import { TaskQueue } from "../core/TaskQueue";
 import { LevelConfig } from "../../data/LevelConfig";
 import { ComboCounter } from "../helpers/ComboCounter";
-import { ScoreManager } from "./ScoreManager";
+import { ScoreInfo, ScoreManager } from "./ScoreManager";
 const { ccclass, property } = _decorator;
 
 
@@ -19,9 +19,15 @@ const { ccclass, property } = _decorator;
 /**
  * !TODO
  * REFACTOR HERE PLEASE!
- * tile transfer olup altındaki tile da transfer olunca stack işlemi gerçekleşmiyor.
- * score bazen geriye gidebiliyor.
- * buildde ekran ayarlamaları doğru çalışıyor mu?
+ *  tile transfer olup altındaki tile da transfer olunca stack işlemi gerçekleşmiyor.
+ * 
+ * 
+ *  score bazen geriye gidebiliyor.
+ *      score için bir sıra yapıp sıradaki her şeyi ekleyip sıradan çıkartmalıyız.
+ *      tam anlamıyla düzgün çalışmıyor.
+ *  
+ * 
+ *  buildde ekran ayarlamaları doğru çalışıyor mu?
  */
 
 
@@ -93,55 +99,54 @@ export class GameManager extends Component {
                 const stackedGroundInfo = await this.stackHandler?.processStacks(transferedGrounds) || [];
                 if (stackedGroundInfo.length > 0) {
                     ComboCounter.getInstance().incrementCombo();
-    
                     for (const info of stackedGroundInfo) {
                         popedTilesCounts.push(info.stackedCount)
                     }
+                    this.AddScoreAndCheckGameStatus(popedTilesCounts)
                 }
     
-                // const allGroundsToCheck = new Set(
-                //     [...transferedGrounds, ...stackedGroundInfo.map(info => info.groundTile)]
-                // );
+                const allGroundsToCheck = new Set(
+                    [...transferedGrounds, ...stackedGroundInfo.map(info => info.groundTile)]
+                );
     
-                // for (const ground of allGroundsToCheck) {
-                //     if (!processingQueue.includes(ground)) {
-                //         processingQueue.push(ground);
-                //     }
-                // }
+                for (const ground of allGroundsToCheck) {
+                    if (!processingQueue.includes(ground)) {
+                        processingQueue.push(ground);
+                    }
+                }
     
-                // const selfStackedGroundInfo = await this.stackHandler?.processStacks([currentGround]) || [];
-                // if (selfStackedGroundInfo.length > 0) {
-                //     ComboCounter.getInstance().incrementCombo();
-                //     for (const info of stackedGroundInfo) {
-                //         popedTilesCounts.push(info.stackedCount)
-                //     }
-                        
-                    
-                // }
-    
-                // for (const info of selfStackedGroundInfo) {
-                //     if (!processingQueue.includes(info.groundTile)) {
-                //         processingQueue.push(info.groundTile);
-                //     }
-                // }
+                const selfStackedGroundInfo = await this.stackHandler?.processStacks([currentGround]) || [];
+                if (selfStackedGroundInfo.length > 0) {
+                    ComboCounter.getInstance().incrementCombo();
+                    for (const info of stackedGroundInfo) {
+                        popedTilesCounts.push(info.stackedCount)
+                    }
+                    this.AddScoreAndCheckGameStatus(popedTilesCounts)                    
+                }
+                for (const info of selfStackedGroundInfo) {
+                    if (!processingQueue.includes(info.groundTile)) {
+                        processingQueue.push(info.groundTile);
+                    }
+                }
             } finally {
                 currentGround.unlock();
             }
         }
-    
-        this.AddScoreAndCheckGameStatus(popedTilesCounts);
     }
 
-    private AddScoreAndCheckGameStatus(popedTilesCounts : number[]){
-        let totalScore = 0;
-        const comboCount = ComboCounter.getInstance().getComboCount();
+    async AddScoreAndCheckGameStatus(popedTilesCounts : number[]){
+        console.log(popedTilesCounts);
         
-        popedTilesCounts.forEach(tilesCount => {
-            const calculatedScore = ScoreManager.getInstance().calculateScore(comboCount,tilesCount , this.MIN_MATCH_STACK_COUNT)
-            totalScore +=calculatedScore;
+        //isCombo calculating by popedtilescount
+        let calculatedScore = 0;
+        const comboCount = ComboCounter.getInstance().getComboCount();
+        popedTilesCounts.forEach((tilesCount,index) => {
+            calculatedScore = ScoreManager.getInstance().calculateScore(comboCount,tilesCount , this.MIN_MATCH_STACK_COUNT)
+            let scoreInfo : ScoreInfo = { score : calculatedScore , isCombo : index + 1  >= 2}
+            ScoreManager.getInstance().addScoreToQueue(scoreInfo)
+            // totalScore +=calculatedScore;
         });
-
-        ScoreManager.getInstance().addScore(totalScore , popedTilesCounts.length >= 2)
+        // ScoreManager.getInstance().addScore(totalScore , popedTilesCounts.length >= 2)
         ComboCounter.getInstance().endCombo();
     }
 }
