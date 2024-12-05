@@ -5,6 +5,7 @@ import { TilePlacementHandler } from "../handlers/TilePlacementHandler";
 import { LevelConfig } from "../../data/LevelConfig";
 import { TileSelectionHandler } from "../handlers/TileSelectionHandler";
 import { SelectableTiles } from "../entity/SelectableTiles";
+import { GroundTile } from "../entity/GroundTile";
 
 const { ccclass, property } = _decorator;
 
@@ -71,8 +72,26 @@ export class GameManager extends Component {
         }
     }
 
-    private async processPlacement(placedGround) {
-        console.log("Processing placement for ground:", placedGround.gridPosition);
-        // İşlem sırası burada devam edecek
+    private async processPlacement(initialGround: GroundTile) {
+        const processingQueue: GroundTile[] = [initialGround];
+    
+        while (processingQueue.length > 0) {
+            const currentGround = processingQueue.shift();
+            if (!currentGround || !currentGround.tryLock()) continue;
+    
+            try {
+                const neighbors = await this.handleNeighborProcessing(currentGround);
+                const stackResults = await this.handleStackProcessing([currentGround, ...neighbors]);
+    
+                const groundsToCheck = new Set([...neighbors, ...stackResults]);
+                for (const ground of groundsToCheck) {
+                    if (!processingQueue.includes(ground)) {
+                        processingQueue.push(ground);
+                    }
+                }
+            } finally {
+                currentGround.unlock();
+            }
+        }
     }
 }
