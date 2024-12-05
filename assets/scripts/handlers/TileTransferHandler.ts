@@ -1,40 +1,47 @@
-import { _decorator } from 'cc';
+import { _decorator, Node, Vec3 } from 'cc';
 import { TileCluster } from '../core/TileCluster';
 import { GroundTile } from '../entity/GroundTile';
-import { Tile } from '../entity/Tile';
 import { TileAnimator } from '../helpers/TileAnimator';
 
 const { ccclass } = _decorator;
 
 @ccclass('TileTransferHandler')
 export class TileTransferHandler {
+
+    /**
+     * Transfers a TileCluster from the source GroundTile to the target GroundTile.
+     * Handles animation, locking, and merging logic.
+     * @param source The GroundTile from which the cluster is transferred.
+     * @param targetGround The GroundTile to which the cluster is transferred.
+     */
     async transferClusterToTarget(source: GroundTile, targetGround: GroundTile): Promise<void> {
         if (!source || !targetGround) return;
 
         const cluster = source.getLastCluster();
         if (!cluster) return;
 
-        if (!source.tryLock()) return;
+        // Attempt to lock source and target GroundTiles
 
         try {
-            if (targetGround) {
-                targetGround.tryLock();
+            // Animate the transfer of the cluster
+            await TileAnimator.animateClusterTransfer(cluster, targetGround, source);
 
-                await TileAnimator.animateClusterTransfer(cluster, targetGround, source);
-
-                const targetTopCluster = targetGround.getLastCluster();
-                const transferTiles: Tile[] = cluster.getTiles(); // Doğru tür dönüşümü
-
-                if (targetTopCluster) {
-                    // Eğer transferTiles bir TileCluster[] ise, uygun adaptasyonu burada yapın
-                    await targetTopCluster.transferTiles(transferTiles); // Tile[] transferi
-                }
-
-                source.popTileCluster();
+            // Handle merging tiles if target has an existing cluster
+            const targetTopCluster = targetGround.getLastCluster();
+            if (targetTopCluster) {
+                const transferTiles = cluster.getTiles();
+                await targetTopCluster.transferTiles(transferTiles);
             }
+
+            // Remove the cluster from the source
+            source.popTileCluster();
+
+        } catch (error) {
+            console.error('Error during cluster transfer:', error);
         } finally {
-            targetGround.unlock();
+            // Ensure locks are released
             source.unlock();
+            targetGround.unlock();
         }
     }
 }

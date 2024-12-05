@@ -16,9 +16,7 @@ export class NeighborHandler {
     }
 
     public async processNeighbors(currentGround: GroundTile): Promise<GroundTile[]> {
-        const typeMatches = await this.neighborChecker.findMatchingNeighbors(currentGround);
-        console.log(typeMatches);
-        
+        const typeMatches : GroundTile[] = await this.neighborChecker.findMatchingNeighbors(currentGround);
         const transferedGrounds: GroundTile[] = [];
     
         for (const match of typeMatches) {
