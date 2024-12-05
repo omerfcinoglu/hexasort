@@ -1,37 +1,37 @@
-import { _decorator, Node, Vec3 } from 'cc';
+import { _decorator } from 'cc';
 import { TileCluster } from '../core/TileCluster';
 import { GroundTile } from '../entity/GroundTile';
+import { Tile } from '../entity/Tile';
 import { TileAnimator } from '../helpers/TileAnimator';
 
 const { ccclass } = _decorator;
 
 @ccclass('TileTransferHandler')
 export class TileTransferHandler {
-
     async transferClusterToTarget(source: GroundTile, targetGround: GroundTile): Promise<void> {
         if (!source || !targetGround) return;
 
         const cluster = source.getLastCluster();
         if (!cluster) return;
 
-        if (!source.tryLock()) {
-            // console.warn('Cluster is already locked. Skipping transfer.');
-        }
+        if (!source.tryLock()) return;
 
         try {
             if (targetGround) {
                 targetGround.tryLock();
-                await TileAnimator.animateClusterTransfer(cluster, targetGround , source);
+
+                await TileAnimator.animateClusterTransfer(cluster, targetGround, source);
+
                 const targetTopCluster = targetGround.getLastCluster();
-                const transferTiles = [...cluster.getTiles()].reverse();
-                if(targetTopCluster){
-                    await targetTopCluster.transferTiles(transferTiles);
+                const transferTiles: Tile[] = cluster.getTiles(); // Doğru tür dönüşümü
+
+                if (targetTopCluster) {
+                    // Eğer transferTiles bir TileCluster[] ise, uygun adaptasyonu burada yapın
+                    await targetTopCluster.transferTiles(transferTiles); // Tile[] transferi
                 }
-                // console.log(`Transferring cluster from (${source.gridPosition.row}, ${source.gridPosition.col}) to (${targetGround.gridPosition.row}, ${targetGround.gridPosition.col}) `);
-            } else {
-                // console.warn('No lastAttachedCluster found on targetGround. Skipping transferTiles.');
+
+                source.popTileCluster();
             }
-            source.popTileCluster();
         } finally {
             targetGround.unlock();
             source.unlock();

@@ -15,30 +15,18 @@ export class NeighborHandler {
         this.transferHandler = new TileTransferHandler();
     }
 
-    async processNeighbors(currentGround: GroundTile): Promise<GroundTile[]> {
-
+    public async processNeighbors(currentGround: GroundTile): Promise<GroundTile[]> {
+        const typeMatches = await this.neighborChecker.findMatchingNeighbors(currentGround);
+        console.log(typeMatches);
+        
         const transferedGrounds: GroundTile[] = [];
-        const typeMatches = await this.neighborChecker?.findAllMatches(currentGround) || [];
-
-        if (typeMatches.length > 0) {
-            if (typeMatches.length > 1) {
-                for (const match of typeMatches) {
-                    transferedGrounds.push(match);
-                    await this.transferHandler?.transferClusterToTarget(match, currentGround);
-                }
-                transferedGrounds.push(currentGround);
-            } else {
-                const { source, target } = this.determineTransferTargets(currentGround, typeMatches[0]);
-                transferedGrounds.push(source);
-                transferedGrounds.push(target);
-                await this.transferHandler?.transferClusterToTarget(source, target);
-            }
-
-            for (const ground of transferedGrounds) {
-                await this.processNeighbors(ground);
-            }
+    
+        for (const match of typeMatches) {
+            const { source, target } = this.determineTransferTargets(currentGround, match);
+            await this.transferHandler.transferClusterToTarget(source, target);
+            transferedGrounds.push(target);
         }
-
+    
         return transferedGrounds;
     }
 

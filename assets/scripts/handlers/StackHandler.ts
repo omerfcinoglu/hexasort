@@ -18,8 +18,6 @@ export class StackHandler {
 
     async processStacks(grounds: GroundTile[]): Promise<StackedGroundInfo[]> {
         const processedInfo: StackedGroundInfo[] = [];
-        console.log(grounds);
-        
         for (const ground of grounds) {
             if (!ground.tryLock()) continue;
             if(!ground.isPlacedGround) continue;

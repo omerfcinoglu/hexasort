@@ -31,46 +31,34 @@ export class NeighborChecker {
      * @returns An array of neighboring GroundTiles.
      */
     public async findNeighbors(placedGround: GroundTile): Promise<GroundTile[]> {
-        const neighborGrounds: GroundTile[] = [];
-        const { row, col } = placedGround.gridPosition;
-
-        // Select directions based on column parity
-        const directions = col % 2 === 0 ? this.evenColmDirections : this.oddColmDirections;
-
-        for (const { dRow, dCol } of directions) {
-            const neighborRow = row + dRow;
-            const neighborCol = col + dCol;
-
-            // Access GroundTile from GridManager
-            const neighborGround = GridManager.getInstance().getGroundTile(neighborRow, neighborCol);
-            if (neighborGround && !neighborGround.isLocked && neighborGround.getLastCluster()) {
-                neighborGround.lock();
-                neighborGrounds.push(neighborGround);
-            }
-        }
-        return neighborGrounds;
+        const directions = placedGround.gridPosition.col % 2 === 0
+            ? this.evenColmDirections
+            : this.oddColmDirections;
+    
+        return directions
+            .map(({ dRow, dCol }) => {
+                const row = placedGround.gridPosition.row + dRow;
+                const col = placedGround.gridPosition.col + dCol;
+                return GridManager.getInstance().getGroundTile(row, col);
+            })
+            .filter(neighbor => neighbor && !neighbor.isLocked && neighbor.getLastCluster());
     }
+    
 
     /**
      * Finds all neighboring GroundTiles that have the same type as the last TileCluster of the target GroundTile.
      * @param placedGround The GroundTile whose last TileCluster's type is used for matching.
      * @returns An array of neighboring GroundTiles with matching cluster types.
      */
-    public async findAllMatches(placedGround: GroundTile): Promise<GroundTile[]> {
-        const lastCluster = placedGround.getLastCluster();
-        if (!lastCluster) return []; // Return empty if no last cluster exists
-
+    public async findMatchingNeighbors(placedGround: GroundTile): Promise<GroundTile[]> {
         const neighbors = await this.findNeighbors(placedGround);
-        const matchingNeighbors: GroundTile[] = [];
-
-        for (const neighbor of neighbors) {
-            if (neighbor.getLastCluster()?.type === lastCluster.type) {
-                matchingNeighbors.push(neighbor);
-            }
-            else{
-                neighbor.unlock();
-            }
-        }
+        const lastCluster = placedGround.getLastCluster();
+        if (!lastCluster) return [];
+        const matchingNeighbors = neighbors.filter(
+            neighbor => neighbor.getLastCluster()?.type === lastCluster.type
+        );
+    
+        matchingNeighbors.forEach(neighbor => neighbor.lock());
         return matchingNeighbors;
     }
 }
