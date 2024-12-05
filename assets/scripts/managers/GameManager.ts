@@ -6,6 +6,8 @@ import { LevelConfig } from "../../data/LevelConfig";
 import { TileSelectionHandler } from "../handlers/TileSelectionHandler";
 import { SelectableTiles } from "../entity/SelectableTiles";
 import { GroundTile } from "../entity/GroundTile";
+import { StackHandler } from "../handlers/StackHandler";
+import { NeighborHandler } from "../handlers/NeighborHandler";
 
 const { ccclass, property } = _decorator;
 
@@ -17,7 +19,12 @@ export class GameManager extends Component {
     @property(SelectableManager)
     selectableManager: SelectableManager | null = null;
 
+    /**  HANDLERS **/
     private tilePlacementHandler : TilePlacementHandler;
+    private stackHandler : StackHandler;
+    private neighborHandler: NeighborHandler;
+
+    /**  GAME INFO **/
     private level_id = 1;
 
     start() {
@@ -27,6 +34,9 @@ export class GameManager extends Component {
 
     private initializeHandlers(){
         this.tilePlacementHandler = new TilePlacementHandler();
+        this.stackHandler = new StackHandler();
+        this.neighborHandler = new NeighborHandler();
+        
     }
 
     private initializeGame() {
@@ -94,4 +104,14 @@ export class GameManager extends Component {
             }
         }
     }
+
+    private async handleNeighborProcessing(currentGround: GroundTile): Promise<GroundTile[]> {
+        return await this.neighborHandler.processNeighbors(currentGround);
+    }
+
+    private async handleStackProcessing(grounds: GroundTile[]): Promise<GroundTile[]> {
+        const stackedInfo = await this.stackHandler.processStacks(grounds);
+        return stackedInfo.map(info => info.groundTile);
+    }
+    
 }
