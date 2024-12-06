@@ -99,32 +99,13 @@ export class GameManager extends Component {
         const processingQueue: GroundTile[] = [initialGround];
         const alreadyProcessed = new Set<GroundTile>();
         let groundsToStackCheck: GroundTile[] = [];
-    
-        while (processingQueue.length > 0) {
-            const currentGround = processingQueue.shift();
-            if (!currentGround || alreadyProcessed.has(currentGround) || !currentGround.tryLock()) continue;
-    
-            try {
-                // Komşuluk kontrolü yap
-                const neighbors = await this.handleNeighborProcessing(currentGround);
-    
-                // Komşuları sıraya ekle
-                for (const neighbor of neighbors) {
-                    if (!alreadyProcessed.has(neighbor)) {
-                        processingQueue.push(neighbor);
-                    }
-                }
-    
-                // Bu ground'u stack kontrolü listesine ekle
-                groundsToStackCheck.push(currentGround);
-            } finally {
-                alreadyProcessed.add(currentGround);
-                currentGround.unlock();
+        
+        const neighbors = await this.handleNeighborProcessing(initialGround);
+        neighbors.forEach((groundTile)=> {
+            if(groundTile.attachedClusters.length>0){
+                this.handleNeighborProcessing(groundTile);
             }
-        }
-    
-        // Stack kontrolü
-        await this.processStack(groundsToStackCheck);
+        });
     }
     
     private async handleNeighborProcessing(currentGround: GroundTile): Promise<GroundTile[]> {
