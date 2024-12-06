@@ -1,4 +1,6 @@
-import { _decorator, Component, Graphics, math, UITransform, view, Vec2 } from 'cc';
+import { _decorator, Component, Graphics, math, UITransform, view } from 'cc';
+import { DeivceDetector } from '../helpers/DeviceDetector';
+
 const { ccclass, property } = _decorator;
 
 @ccclass('Snowfall')
@@ -25,11 +27,12 @@ export class Snowfall extends Component {
             this.graphics = this.node.addComponent(Graphics);
         }
 
+        view.on('canvas-resize', this.updateCanvasSize, this);
+
         this.updateCanvasSize();
         this.node.getComponent(UITransform).setContentSize(this.width, this.height);
 
         // Ekran boyutu değişikliklerini dinle
-        view.on('canvas-resize', this.updateCanvasSize, this);
     }
 
     onDestroy() {
@@ -63,9 +66,9 @@ export class Snowfall extends Component {
      * Ekran boyutlarını günceller.
      */
     private updateCanvasSize() {
-        const visibleSize = view.getVisibleSize();
-        this.width = visibleSize.width;
-        this.height = visibleSize.height;
+        const { width, height } = DeivceDetector.getCanvasSize();
+        this.width = width;
+        this.height = height;
 
         if (this.graphics) {
             this.graphics.clear();
@@ -87,8 +90,8 @@ class Snowflake {
         this.width = canvasWidth;
 
         // Başlangıç değerlerini ayarla
-        this.posX = 0;
-        this.posY = math.randomRange(-50, 0);
+        this.posX = -220;
+        this.posY = math.randomRange(-50, 50);
         this.initialAngle = math.randomRange(0, 2 * Math.PI);
         this.size = math.randomRange(minSize, maxSize);
 
