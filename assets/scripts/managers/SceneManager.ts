@@ -42,12 +42,12 @@ export class SceneManager extends Component {
         try {
             await Promise.all([
                 this.rotateGridContainerY(),
-                this.fadeInEndCard(150, 1),
+                this.fadeInEndCard(255, 1),
             ]);
         } catch (error) {
             console.error("Error in onGoalReached:", error);
         } finally {
-            this.HexasortPlay.active = true;
+            // this.HexasortPlay.active = true;
             InputManager.getInstance().unlockInputs();
         }
     }

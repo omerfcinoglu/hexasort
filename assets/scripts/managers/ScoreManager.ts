@@ -35,7 +35,6 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
         this.progressBar_progress = UIManager.getInstance().barLogic;
         this.progressBar_sprite = UIManager.getInstance().barSprite; 
         this.updateText();
-        
     }
 
     updateText() {
@@ -55,7 +54,6 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
     async addScore(scoreInfo : ScoreInfo) {
         const isCombo = scoreInfo.isCombo;
         const score = scoreInfo.score;
-        console.log(score , isCombo);
         if (!this.progressBar_progress || !this.progressBar_sprite) {
             console.error("BarLogic or BarSprite node is missing in the hierarchy.");
             return;
