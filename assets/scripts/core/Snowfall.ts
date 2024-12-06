@@ -1,4 +1,4 @@
-import { _decorator, Component, Graphics, math, UITransform, view } from 'cc';
+import { _decorator, Component, Graphics, math, UITransform, view, Color } from 'cc';
 import { DeivceDetector } from '../helpers/DeviceDetector';
 
 const { ccclass, property } = _decorator;
@@ -31,12 +31,9 @@ export class Snowfall extends Component {
 
         this.updateCanvasSize();
         this.node.getComponent(UITransform).setContentSize(this.width, this.height);
-
-        // Ekran boyutu değişikliklerini dinle
     }
 
     onDestroy() {
-        // Ekran boyutu değişikliklerini temizle
         view.off('canvas-resize', this.updateCanvasSize, this);
     }
 
@@ -55,9 +52,9 @@ export class Snowfall extends Component {
             flake.update(deltaTime);
             flake.display(this.graphics);
 
-            // Eğer kar tanesi ekranın dışına çıktıysa kaldır
-            if (flake.posY > this.height) {
-                this.snowflakes.splice(i, 1);
+            // Eğer kar tanesi boyutu < 0 ise yukarıya yeniden konumlandır
+            if (flake.size <= 0) {
+                flake.reset();
             }
         }
     }
@@ -85,33 +82,52 @@ class Snowflake {
     size: number;
     radius: number;
     width: number;
-
+    opacity: number;
+    opacityDecreaser : number;
     constructor(canvasWidth: number, canvasHeight: number, minSize: number, maxSize: number) {
         this.width = canvasWidth;
+        const max = 0.1
+        const min = 0.001
+        this.opacityDecreaser =  Math.random() * (max - min) + min;
 
         // Başlangıç değerlerini ayarla
-        this.posX = -220;
-        this.posY = math.randomRange(-50, 50);
-        this.initialAngle = math.randomRange(0, 2 * Math.PI);
-        this.size = math.randomRange(minSize, maxSize);
-
-        // Spiral yarıçapını ayarla
-        this.radius = Math.sqrt(math.randomRange(0, Math.pow(canvasWidth / 2, 2)));
+        this.reset(canvasWidth, canvasHeight, minSize, maxSize);
     }
 
-    update(time: number) {
+    /**
+     * Kar tanesinin başlangıç pozisyonunu ve özelliklerini sıfırlar.
+     */
+    reset(canvasWidth = this.width, canvasHeight = 0, minSize = 4, maxSize = 7) {
+        this.posX = math.randomRange(0, canvasWidth); // Ekranın herhangi bir X pozisyonu
+        this.posY = math.randomRange(-50, 0); // Yukarıdan başlar
+        this.initialAngle = math.randomRange(0, 2 * Math.PI);
+        this.size = math.randomRange(5, 8);
+        this.radius = Math.sqrt(math.randomRange(0, Math.pow(canvasWidth / 2, 2)));
+        this.opacity = 255; // Tamamen opak başlar
+    }
+
+    update(deltaTime: number) {
         // X pozisyonu bir dairenin hareketini takip eder
         const w = 0.6; // Açısal hız
-        const angle = w * time + this.initialAngle;
+        const angle = w * deltaTime + this.initialAngle;
         this.posX = this.width / 2 + this.radius * Math.sin(angle);
 
         // Kar tanesi düşüş hızı
         this.posY += Math.pow(this.size, 0.5);
+
+        // Opaklık ve boyutu küçült
+        this.opacity -= this.opacityDecreaser; // Her karede biraz daha şeffaflaşır
+        this.size -= 0.02; // Boyutu küçülür
     }
 
     display(graphics: Graphics) {
+        // Opaklığı ayarla
+        graphics.fillColor = new Color(255, 255, 255, math.clamp(this.opacity, 0, 255));
+
         // Kar tanesini çiz
-        graphics.circle(this.posX, this.posY, this.size);
-        graphics.fill();
+        if (this.size > 0) {
+            graphics.circle(this.posX, this.posY, this.size);
+            graphics.fill();
+        }
     }
 }
