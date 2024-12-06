@@ -2,7 +2,8 @@
 Todo:
   ☐ When tile transfer occurs, the source and target are not processed
       ☐ refactoring game manager @started(24-12-06 19:09)
-      ☐ transfer yerleşince olsa da transferlerden sonra yeni transferler hesaplanmıyor
+      ☐ !!!! transfer yerleşince olsa da transferlerden sonra yeni transferler hesaplanmıyor
+
   ☐ Score sometimes decreases
   ☐ We need to create a queue for the score, add everything to the queue, and remove them once processed.
   ☐ Check if screen adjustments work correctly in the build.
