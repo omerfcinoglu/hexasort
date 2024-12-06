@@ -97,15 +97,28 @@ export class GameManager extends Component {
 
     private async processPlacement(initialGround: GroundTile) {
         const processingQueue: GroundTile[] = [initialGround];
-        const alreadyProcessed = new Set<GroundTile>();
         let groundsToStackCheck: GroundTile[] = [];
         
-        const neighbors = await this.handleNeighborProcessing(initialGround);
-        neighbors.forEach((groundTile)=> {
-            if(groundTile.attachedClusters.length>0){
-                this.handleNeighborProcessing(groundTile);
+        while (processingQueue.length > 0) {
+            const currentGround = processingQueue.shift();
+            if (!currentGround || !currentGround.tryLock()) continue;
+            try{
+                const transferedGrounds = await this.neighborHandler?.processNeighbors(currentGround);
+                if(transferedGrounds.length>0){
+                    for (const ground of transferedGrounds) {
+                        processingQueue.push(ground);
+                        groundsToStackCheck.push(ground)
+                    }
+                }
+                else{
+                    this.processStack(groundsToStackCheck)
+                    break;
+                }
             }
-        });
+            finally{
+                currentGround.unlock();
+            }
+        }
     }
     
     private async handleNeighborProcessing(currentGround: GroundTile): Promise<GroundTile[]> {
@@ -123,7 +136,7 @@ export class GameManager extends Component {
     }
     
     private async processStack(groundsToStackCheck: GroundTile[]) {
-        const stackQueue: GroundTile[] = [...groundsToStackCheck];
+        const stackQueue: GroundTile[] = [...groundsToStackCheck].reverse();
         const alreadyProcessed = new Set<GroundTile>();
     
         while (stackQueue.length > 0) {
