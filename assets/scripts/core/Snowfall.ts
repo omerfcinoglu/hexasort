@@ -11,8 +11,8 @@ export class Snowfall extends Component {
     @property({ type: Number, tooltip: "Kar tanesi boyut aralığı (max)" })
     maxSize: number = 5;
 
-    @property({ type: Number, tooltip: "Her karede oluşturulacak kar tanesi sayısı" })
-    flakeRate: number = 5;
+    @property({ type: Number, tooltip: "Kar tanesi sayısı" })
+    totalFlakes: number = 1200;
 
     private snowflakes: Snowflake[] = [];
     private graphics: Graphics | null = null;
@@ -21,7 +21,6 @@ export class Snowfall extends Component {
     private height: number = 0;
 
     onLoad() {
-        // Graphics bileşenini al veya oluştur
         this.graphics = this.node.getComponent(Graphics);
         if (!this.graphics) {
             this.graphics = this.node.addComponent(Graphics);
@@ -31,6 +30,13 @@ export class Snowfall extends Component {
 
         this.updateCanvasSize();
         this.node.getComponent(UITransform).setContentSize(this.width, this.height);
+
+        // Kar tanelerini başlangıçta rastgele ekranın üstünde oluştur
+        for (let i = 0; i < this.totalFlakes; i++) {
+            const startHeight = math.randomRange(-this.height, this.height); // Y'nin ekrandan yukarıya çıkışını hesapla
+            const startX = math.randomRange(0, this.width); // Rastgele X pozisyonu
+            this.snowflakes.push(new Snowflake(this.width, this.height, this.minSize, this.maxSize, startHeight, startX));
+        }
     }
 
     onDestroy() {
@@ -40,28 +46,20 @@ export class Snowfall extends Component {
     update(deltaTime: number) {
         if (!this.graphics) return;
 
-        // Her karede rastgele kar tanesi oluştur
-        for (let i = 0; i < math.randomRangeInt(1, this.flakeRate); i++) {
-            this.snowflakes.push(new Snowflake(this.width, this.height, this.minSize, this.maxSize));
-        }
-
-        // Ekranı temizle ve tüm kar tanelerini çiz
         this.graphics.clear();
-        for (let i = this.snowflakes.length - 1; i >= 0; i--) {
-            const flake = this.snowflakes[i];
+
+        // Kar tanelerini güncelle ve çiz
+        for (let flake of this.snowflakes) {
             flake.update(deltaTime);
             flake.display(this.graphics);
 
-            // Eğer kar tanesi boyutu < 0 ise yukarıya yeniden konumlandır
-            if (flake.size <= 0) {
-                flake.reset();
+            // Kar tanesi ekranın altına düştüyse yeniden yukarıya yerleştir
+            if (flake.size <= 0 || flake.posY > this.height) {
+                flake.reset(this.width, this.height);
             }
         }
     }
 
-    /**
-     * Ekran boyutlarını günceller.
-     */
     private updateCanvasSize() {
         const { width, height } = DeivceDetector.getCanvasSize();
         this.width = width;
@@ -83,48 +81,40 @@ class Snowflake {
     radius: number;
     width: number;
     opacity: number;
-    opacityDecreaser : number;
-    constructor(canvasWidth: number, canvasHeight: number, minSize: number, maxSize: number) {
-        this.width = canvasWidth;
-        const max = 0.1
-        const min = 0.001
-        this.opacityDecreaser =  Math.random() * (max - min) + min;
+    opacityDecreaser: number;
+    isActive: boolean;
 
-        // Başlangıç değerlerini ayarla
-        this.reset(canvasWidth, canvasHeight, minSize, maxSize);
+    constructor(canvasWidth: number, canvasHeight: number, minSize: number, maxSize: number, startHeight: number, startX: number) {
+        this.width = canvasWidth;
+        this.opacityDecreaser = math.randomRange(0.004, 0.01);
+        this.isActive = false;
+        this.reset(canvasWidth, canvasHeight, minSize, maxSize, startHeight, startX);
     }
 
-    /**
-     * Kar tanesinin başlangıç pozisyonunu ve özelliklerini sıfırlar.
-     */
-    reset(canvasWidth = this.width, canvasHeight = 0, minSize = 4, maxSize = 7) {
-        this.posX = math.randomRange(0, canvasWidth); // Ekranın herhangi bir X pozisyonu
-        this.posY = math.randomRange(-50, 0); // Yukarıdan başlar
+    reset(canvasWidth: number, canvasHeight: number, minSize: number = 4, maxSize: number = 7, startHeight: number = 0, startX: number = 0) {
+        this.posX = startX || math.randomRange(0, canvasWidth); // Rastgele bir X pozisyonu seç
+        this.posY = startHeight || math.randomRange(-canvasHeight, 0); // Y üstünde rastgele bir pozisyon seç
         this.initialAngle = math.randomRange(0, 2 * Math.PI);
-        this.size = math.randomRange(5, 8);
+        this.size = math.randomRange(minSize, maxSize);
         this.radius = Math.sqrt(math.randomRange(0, Math.pow(canvasWidth / 2, 2)));
         this.opacity = 255; // Tamamen opak başlar
+        this.isActive = true;
     }
 
     update(deltaTime: number) {
-        // X pozisyonu bir dairenin hareketini takip eder
-        const w = 0.6; // Açısal hız
+        const w = 0.6;
         const angle = w * deltaTime + this.initialAngle;
         this.posX = this.width / 2 + this.radius * Math.sin(angle);
 
-        // Kar tanesi düşüş hızı
         this.posY += Math.pow(this.size, 0.5);
-
-        // Opaklık ve boyutu küçült
-        this.opacity -= this.opacityDecreaser; // Her karede biraz daha şeffaflaşır
-        this.size -= 0.02; // Boyutu küçülür
+        this.opacity -= this.opacityDecreaser;
+        this.size -= 0.009;
     }
 
     display(graphics: Graphics) {
-        // Opaklığı ayarla
+        if (!this.isActive) return;
         graphics.fillColor = new Color(255, 255, 255, math.clamp(this.opacity, 0, 255));
 
-        // Kar tanesini çiz
         if (this.size > 0) {
             graphics.circle(this.posX, this.posY, this.size);
             graphics.fill();
