@@ -56,7 +56,7 @@ export class UIManager extends SingletonComponent<UIManager> {
     }
 
     orientationChange() {
-        this.alingItems(this.getOrientation());
+        // this.alingItems(this.getOrientation());
     }
 
     getOrientation() : Orientation{
