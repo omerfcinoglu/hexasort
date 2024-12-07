@@ -70,9 +70,11 @@ export class TileCluster extends Component {
      * @param tiles - Array of Tile instances to add.
      */
     async transferTiles(tiles: Tile[]) {
-        const tilesToAddCount = tiles.length;
+		const reversedTiles = [...tiles].reverse()
+        
+        const tilesToAddCount = reversedTiles.length;
         for (let i = 0; i < tilesToAddCount; i++) {
-            const tile = tiles.pop();
+            const tile = reversedTiles.pop();
             const worldPosition = tile!.node.getWorldPosition();
             this.tileCount++;
             tile!.node.removeFromParent();
