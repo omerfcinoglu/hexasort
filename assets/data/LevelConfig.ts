@@ -15,7 +15,7 @@ export class LevelConfig {
             startTiles: {
                 1: [
                     { tileType: 1, tileCount: 5 },
-                    { tileType: 2, tileCount: 2 },
+                    { tileType: 2, tileCount: 5 },
                 ],
                 2: [
                     { tileType: 2, tileCount: 2 },

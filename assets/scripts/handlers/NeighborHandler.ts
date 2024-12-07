@@ -45,6 +45,12 @@ export class NeighborHandler {
         return transferedGrounds;
     }
 
+    public async getNeighbors(currentGround: GroundTile): Promise<GroundTile[]> {
+        // Bu fonksiyon, mevcut ground'un çevresindeki komşuları bulur
+        return this.neighborChecker.findNeighbors(currentGround);
+    }
+    
+
     private determineTransferTargets(currentGround: GroundTile, match: GroundTile): { source: GroundTile, target: GroundTile } {
         const clusterCount1 = currentGround.attachedClusters.length;
         const clusterCount2 = match.attachedClusters.length;
