@@ -16,39 +16,42 @@ export class NeighborHandler {
     }
 
     async processNeighbors(currentGround: GroundTile): Promise<GroundTile[]> {
+
         const transferedGrounds: GroundTile[] = [];
-        const typeMatches = await this.neighborChecker.findAllMatches(currentGround) || [];
+        const typeMatches = await this.neighborChecker?.findAllMatches(currentGround) || [];
 
-        for (const match of typeMatches) {
-            const { source, target } = this.determineTransferTargets(currentGround, match);
-            await this.transferHandler?.transferClusterToTarget(source, target);
-
-            if (!transferedGrounds.includes(source)) {
+        if (typeMatches.length > 0) {
+            if (typeMatches.length > 1) {
+                for (const match of typeMatches) {
+                    transferedGrounds.push(match);
+                    await this.transferHandler?.transferClusterToTarget(match, currentGround);
+                }
+                transferedGrounds.push(currentGround);
+            } else {
+                const { source, target } = this.determineTransferTargets(currentGround, typeMatches[0]);
                 transferedGrounds.push(source);
-            }
-            if (!transferedGrounds.includes(target)) {
                 transferedGrounds.push(target);
+                await this.transferHandler?.transferClusterToTarget(source, target);
+            }
+
+            for (const ground of transferedGrounds) {
+                await this.processNeighbors(ground);
+                // console.log(
+                //     `proccessing (${ground.gridPosition.row}, ${ground.gridPosition.col})`
+                // );
             }
         }
 
         return transferedGrounds;
     }
 
-    public async hasMatchingNeighbor(currentGround: GroundTile): Promise<boolean> {
-        const neighbors = await this.getNeighbors(currentGround);
-        const currentType = currentGround.getTopClusterType();
-
-        for (const neighbor of neighbors) {
-            if (neighbor.getTopClusterType() === currentType) {
-                return true;
-            }
-        }
-        return false;
-    }
+    
 
     public async getNeighbors(currentGround: GroundTile): Promise<GroundTile[]> {
+        // Bu fonksiyon, mevcut ground'un çevresindeki komşuları bulur
         return this.neighborChecker.findNeighbors(currentGround);
     }
+    
 
     private determineTransferTargets(currentGround: GroundTile, match: GroundTile): { source: GroundTile, target: GroundTile } {
         const clusterCount1 = currentGround.attachedClusters.length;

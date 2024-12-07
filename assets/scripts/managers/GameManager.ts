@@ -19,10 +19,12 @@ export class GameManager extends Component {
     @property(SelectableManager)
     selectableManager: SelectableManager | null = null;
 
-    private tilePlacementHandler: TilePlacementHandler;
-    private stackHandler: StackHandler;
+    /**  HANDLERS **/
+    private tilePlacementHandler : TilePlacementHandler;
+    private stackHandler : StackHandler;
     private neighborHandler: NeighborHandler;
 
+    /**  GAME INFO **/
     private level_id = 1;
     private MIN_STACK_COUNT = 10;
 
@@ -31,15 +33,17 @@ export class GameManager extends Component {
         this.initializeGame();
     }
 
-    private initializeHandlers() {
+    private initializeHandlers(){
         this.tilePlacementHandler = new TilePlacementHandler();
         this.stackHandler = new StackHandler(this.MIN_STACK_COUNT);
         this.neighborHandler = new NeighborHandler();
+        
     }
 
     private initializeGame() {
         this.setupLevel();
         this.setupEventListeners();
+        console.log("Game initialized");
     }
 
     private setupLevel() {
@@ -47,6 +51,7 @@ export class GameManager extends Component {
         if (this.gridManager) {
             this.gridManager.setGrid(levelMatrix);
         }
+
 
         const startTiles = LevelConfig.getStartTiles(this.level_id);
         if (this.selectableManager && startTiles) this.selectableManager.init(startTiles);
@@ -57,16 +62,19 @@ export class GameManager extends Component {
     }
 
     private getLevelMatrix(): number[][] {
+        // Örnek seviye matrisi
         return [
-            [0, 2, 0, 0, 0],
-            [0, 0, 0, 0, 0],
-            [1, 3, 1, 0, 0],
-            [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0],
+            [0, 2, 0 , 0 , 0],
+            [0, 0, 0 , 0 , 0],
+            [1, 3, 1 , 0 , 0],
+            [0, 0, 0 , 0 , 0],
+            [0, 0, 0 , 0 , 0],
+
         ];
     }
 
     private getStartTiles(): number[] {
+        // Örnek başlangıç taşları
         return [1, 2, 3];
     }
 
@@ -77,57 +85,78 @@ export class GameManager extends Component {
         }
     }
 
+
+
+
+
     private async handleStackProcessing(grounds: GroundTile[]): Promise<GroundTile[]> {
         const stackedInfo = await this.stackHandler.processStacks(grounds);
-        return stackedInfo.map((info) => info.groundTile);
+        return stackedInfo.map(info => info.groundTile);
     }
 
+
     private async processPlacement(initialGround: GroundTile) {
-        const commonQueue: GroundTile[] = [initialGround];
+        const neighborQueue: GroundTile[] = [initialGround];
+        const stackQueue: GroundTile[] = [];
         const processedGrounds = new Set<GroundTile>();
-
-        while (commonQueue.length > 0) {
-            const currentGround = commonQueue.shift();
+    
+        while (neighborQueue.length > 0) {
+            const currentGround = neighborQueue.shift();
             if (!currentGround || processedGrounds.has(currentGround) || !currentGround.tryLock()) continue;
-
+    
             try {
-                let hasAction = false;
-
+                // Komşu kontrollerini yap ve transfer edilen GroundTile'ları al
                 const transferedGrounds = await this.neighborHandler.processNeighbors(currentGround);
-                if (transferedGrounds.length > 0) {
-                    hasAction = true;
-                    for (const ground of transferedGrounds) {
-                        if (!processedGrounds.has(ground)) {
-                            commonQueue.push(ground);
-                        }
+    
+                // Transfer edilen GroundTile'ları kuyruğa ekle
+                for (const ground of transferedGrounds) {
+                    if (!processedGrounds.has(ground)) {
+                        neighborQueue.push(ground);
+                        stackQueue.push(ground); // Stack işlemleri için ekle
                     }
                 }
-
-                const hasMatchingNeighbor = await this.neighborHandler.hasMatchingNeighbor(currentGround);
-                if (!hasMatchingNeighbor) {
-                    const stackResults = await this.handleStackProcessing([currentGround]);
-                    if (stackResults.length > 0) {
-                        hasAction = true;
-                        for (const stackedGround of stackResults) {
-                            if (!processedGrounds.has(stackedGround)) {
-                                commonQueue.push(stackedGround);
-                            }
-                        }
-                    }
-                }
-
-                if (!hasAction) {
-                    const neighbors = await this.neighborHandler.getNeighbors(currentGround);
-                    for (const neighbor of neighbors) {
-                        if (!processedGrounds.has(neighbor)) {
-                            commonQueue.push(neighbor);
-                        }
-                    }
-                }
-            } finally {
+    
+                // Bu GroundTile işleme alındı
                 processedGrounds.add(currentGround);
+            } finally {
                 currentGround.unlock();
             }
         }
+    
+        // Komşu kontrolleri tamamlandıktan sonra stack işlemini başlat
+        await this.processStack(stackQueue);
     }
+    private async handleNeighborProcessing(currentGround: GroundTile): Promise<GroundTile[]> {
+        const neighbors = await this.neighborHandler.processNeighbors(currentGround);
+        const allAffectedGrounds: GroundTile[] = [];
+    
+        // Transfer edilen GroundTile'ları sıraya ekle
+        for (const ground of neighbors) {
+            if (!allAffectedGrounds.includes(ground)) {
+                allAffectedGrounds.push(ground);
+            }
+        }
+    
+        return allAffectedGrounds;
+    }
+    
+    private async processStack(stackQueue: GroundTile[]) {
+        const processedGrounds = new Set<GroundTile>();
+    
+        while (stackQueue.length > 0) {
+            const currentGround = stackQueue.shift();
+            if (!currentGround || processedGrounds.has(currentGround)) continue;
+    
+            const stackResults = await this.handleStackProcessing([currentGround]);
+            processedGrounds.add(currentGround);
+    
+            for (const stackedGround of stackResults) {
+                if (!processedGrounds.has(stackedGround)) {
+                    this.processPlacement(stackedGround);
+                }
+            }
+        }
+    }
+    
+    
 }
