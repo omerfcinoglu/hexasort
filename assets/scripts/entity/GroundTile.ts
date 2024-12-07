@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Collider, Color, Vec3, MeshRenderer, Mesh } from 'cc';
+import { _decorator, Component, Node, Collider, Color, Vec3, MeshRenderer } from 'cc';
 import { TileCluster } from '../core/TileCluster';
 import { SelectableTiles } from '../entity/SelectableTiles';
 import { ColorProvider } from '../core/ColorProvider';
@@ -34,16 +34,13 @@ export class GroundTile extends LockableComponent {
 
     addTileCluster(tileCluster: TileCluster) {
         this.attachedClusters.push(tileCluster);
-
         const currentWorldPos = tileCluster.node.worldPosition.clone();
         tileCluster.node.parent = this.node.parent;
-        tileCluster.node.setWorldPosition(
-            new Vec3(
-                this.node.position.x,
-                this.getAllTileCount() * TileConfig.spacingY,
-                this.node.position.z
-            )
-        );
+        tileCluster.node.setWorldPosition(new Vec3(
+            this.node.position.x,
+            this.getAllTileCount() * TileConfig.spacingY,
+            this.node.position.z
+        ));
         tileCluster.node.setPosition(currentWorldPos);
     }
 
@@ -58,7 +55,7 @@ export class GroundTile extends LockableComponent {
 
     public getTopClusterType(): number | null {
         const lastCluster = this.getLastCluster();
-        return lastCluster ? lastCluster.type : null; // Eğer bir cluster varsa type'ını döndür, yoksa null
+        return lastCluster ? lastCluster.type : null;
     }
 
     public placeSelectableTile(selectableTile: SelectableTiles, targetGround: GroundTile) {
@@ -70,7 +67,7 @@ export class GroundTile extends LockableComponent {
     }
 
     public popTileCluster() {
-        const lastCluster = this.attachedClusters.pop();
+        this.attachedClusters.pop();
         if (this.attachedClusters.length === 0) {
             this.isPlacedGround = false;
             this.setActiveCollider(true);
