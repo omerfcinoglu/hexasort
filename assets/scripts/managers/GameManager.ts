@@ -114,7 +114,21 @@ export class GameManager extends Component {
                         }
                     }
                 }
-
+    
+                // Eğer komşuluğunda type eşleşmesi yoksa stack işlemi yap
+                const hasMatchingNeighbor = await this.neighborHandler.hasMatchingNeighbor(currentGround);
+                if (!hasMatchingNeighbor) {
+                    const stackResults = await this.handleStackProcessing([currentGround]);
+                    if (stackResults.length > 0) {
+                        hasAction = true; // Stack tetiklendi
+                        for (const stackedGround of stackResults) {
+                            if (!processedGrounds.has(stackedGround)) {
+                                commonQueue.push(stackedGround); // Stack sonrası tekrar kuyruğa ekle
+                            }
+                        }
+                    }
+                }
+    
                 // Eğer hiçbir işlem yapılmadıysa, komşulara devam et
                 if (!hasAction) {
                     const neighbors = await this.neighborHandler.getNeighbors(currentGround);
@@ -133,7 +147,6 @@ export class GameManager extends Component {
         // Kuyruk tamamen boşaldığında oyun yeni bir yerleştirme bekler
         console.log("Processing completed. Waiting for new placement...");
     }
-    
     
 
 
