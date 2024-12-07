@@ -36,7 +36,7 @@ export class UIManager extends SingletonComponent<UIManager> {
 
     start() {
         this.transform = this.canvas.getComponent(UITransform);
-        this.orientationChange();
+        // this.orientationChange();
     }
 
     alingItems(orientation: Orientation) {
@@ -61,11 +61,14 @@ export class UIManager extends SingletonComponent<UIManager> {
 
     getOrientation() : Orientation{
         const contentSize = this.transform.contentSize
-        console.log(contentSize);
         
         return contentSize.width > contentSize.height
             ?  Orientation.Landscape
             :  Orientation.Portrait;
+    }
+
+    getDimensions(){
+        return this.transform.contentSize
     }
 
     public AnimateCombo(){

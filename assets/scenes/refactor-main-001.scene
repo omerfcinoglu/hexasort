@@ -63,16 +63,16 @@
         "__id__": 199
       },
       {
-        "__id__": 200
+        "__id__": 201
       },
       {
-        "__id__": 204
+        "__id__": 202
+      },
+      {
+        "__id__": 206
       },
       {
         "__id__": 16
-      },
-      {
-        "__id__": 205
       },
       {
         "__id__": 207
@@ -867,7 +867,7 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -549.582,
+      "x": -1535.313,
       "y": 950.565,
       "z": 0
     },
@@ -6608,6 +6608,75 @@
   },
   {
     "__type__": "cc.Node",
+    "_name": "UIManager",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 1
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 200
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_layer": 1073741824,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "63JFvd14JBqqHlcCnXpyLW"
+  },
+  {
+    "__type__": "e5468iKgmVBHL62K1a2uiYt",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 199
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "progressBarContainer": {
+      "__id__": 147
+    },
+    "canvas": {
+      "__id__": 16
+    },
+    "barLogic": {
+      "__id__": 14
+    },
+    "barSprite": {
+      "__id__": 149
+    },
+    "combo": {
+      "__id__": 108
+    },
+    "_id": "5cBgc1+2VE7KjeEpopyp1P"
+  },
+  {
+    "__type__": "cc.Node",
     "_name": "===============",
     "_objFlags": 0,
     "_parent": {
@@ -6654,7 +6723,7 @@
     },
     "_children": [
       {
-        "__id__": 201
+        "__id__": 203
       }
     ],
     "_active": true,
@@ -6693,13 +6762,13 @@
     "_name": "Ground",
     "_objFlags": 512,
     "_parent": {
-      "__id__": 200
+      "__id__": 202
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 202
+        "__id__": 204
       }
     ],
     "_prefab": null,
@@ -6736,7 +6805,7 @@
     "_name": "Plane<ModelComponent>",
     "_objFlags": 0,
     "node": {
-      "__id__": 201
+      "__id__": 203
     },
     "_enabled": true,
     "__prefab": null,
@@ -6748,7 +6817,7 @@
     ],
     "_visFlags": 0,
     "lightmapSettings": {
-      "__id__": 203
+      "__id__": 205
     },
     "_mesh": {
       "__uuid__": "1263d74c-8167-4928-91a6-4e2672411f47@2e76e",
@@ -6815,75 +6884,6 @@
       "z": 0
     },
     "_id": "e6rwV59JlBhIKxlRbzpR4S"
-  },
-  {
-    "__type__": "cc.Node",
-    "_name": "UIManager",
-    "_objFlags": 0,
-    "_parent": {
-      "__id__": 1
-    },
-    "_children": [],
-    "_active": true,
-    "_components": [
-      {
-        "__id__": 206
-      }
-    ],
-    "_prefab": null,
-    "_lpos": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "_lrot": {
-      "__type__": "cc.Quat",
-      "x": 0,
-      "y": 0,
-      "z": 0,
-      "w": 1
-    },
-    "_lscale": {
-      "__type__": "cc.Vec3",
-      "x": 1,
-      "y": 1,
-      "z": 1
-    },
-    "_layer": 1073741824,
-    "_euler": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "_id": "63JFvd14JBqqHlcCnXpyLW"
-  },
-  {
-    "__type__": "e5468iKgmVBHL62K1a2uiYt",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 205
-    },
-    "_enabled": true,
-    "__prefab": null,
-    "progressBarContainer": {
-      "__id__": 147
-    },
-    "canvas": {
-      "__id__": 16
-    },
-    "barLogic": {
-      "__id__": 14
-    },
-    "barSprite": {
-      "__id__": 149
-    },
-    "combo": {
-      "__id__": 108
-    },
-    "_id": "5cBgc1+2VE7KjeEpopyp1P"
   },
   {
     "__type__": "cc.Node",

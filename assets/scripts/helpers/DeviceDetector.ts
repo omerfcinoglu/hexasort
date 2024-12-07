@@ -1,3 +1,4 @@
+import { Size } from '@tsparticles/engine';
 import { view, sys } from 'cc';
 
 export enum DeviceType {
@@ -34,13 +35,15 @@ export class DeivceDetector {
      * @returns {width, height} Ekran genişliği ve yüksekliği.
      */
     static getCanvasSize(): { width: number, height: number } {
-        const visibleSize = view.getVisibleSize();
+        
+        const width = view.getVisibleSize().width;
+        const height = view.getVisibleSize().height
+
         return {
-            width: visibleSize.width,
-            height: visibleSize.height
+            width: width,
+            height: height
         };
     }
-
     /**
      * Uygun mağazaya yönlendirir.
      */

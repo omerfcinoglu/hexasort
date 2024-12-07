@@ -1,5 +1,6 @@
 import { _decorator, Component, Graphics, math, UITransform, view, Color } from 'cc';
 import { DeivceDetector } from '../helpers/DeviceDetector';
+import { UIManager } from '../managers/UIManager';
 
 const { ccclass, property } = _decorator;
 
@@ -30,13 +31,12 @@ export class Snowfall extends Component {
 
         this.updateCanvasSize();
         this.node.getComponent(UITransform).setContentSize(this.width, this.height);
-
-        // Kar tanelerini başlangıçta rastgele ekranın üstünde oluştur
         for (let i = 0; i < this.totalFlakes; i++) {
             const startHeight = math.randomRange(-this.height, this.height); // Y'nin ekrandan yukarıya çıkışını hesapla
             const startX = math.randomRange(0, this.width); // Rastgele X pozisyonu
             this.snowflakes.push(new Snowflake(this.width, this.height, this.minSize, this.maxSize, startHeight, startX));
         }
+
     }
 
     onDestroy() {
@@ -48,12 +48,10 @@ export class Snowfall extends Component {
 
         this.graphics.clear();
 
-        // Kar tanelerini güncelle ve çiz
         for (let flake of this.snowflakes) {
             flake.update(deltaTime);
             flake.display(this.graphics);
 
-            // Kar tanesi ekranın altına düştüyse yeniden yukarıya yerleştir
             if (flake.size <= 0 || flake.posY > this.height) {
                 flake.reset(this.width, this.height);
             }
@@ -61,15 +59,15 @@ export class Snowfall extends Component {
     }
 
     private updateCanvasSize() {
-        const { width, height } = DeivceDetector.getCanvasSize();
-        this.width = width;
-        this.height = height;
+        this.width = 3600;
+        this.height = 1920;
 
         if (this.graphics) {
             this.graphics.clear();
         }
 
         this.node.getComponent(UITransform).setContentSize(this.width, this.height);
+        this.snowflakes.forEach(flake => flake.reset(this.width,this.height));
     }
 }
 
@@ -92,7 +90,7 @@ class Snowflake {
     }
 
     reset(canvasWidth: number, canvasHeight: number, minSize: number = 4, maxSize: number = 7, startHeight: number = 0, startX: number = 0) {
-        this.posX = startX || math.randomRange(0, canvasWidth); // Rastgele bir X pozisyonu seç
+        this.posX = math.randomRange(-canvasWidth, canvasWidth); // Rastgele bir X pozisyonu seç
         this.posY = startHeight || math.randomRange(-canvasHeight, 0); // Y üstünde rastgele bir pozisyon seç
         this.initialAngle = math.randomRange(0, 2 * Math.PI);
         this.size = math.randomRange(minSize, maxSize);
@@ -102,9 +100,6 @@ class Snowflake {
     }
 
     update(deltaTime: number) {
-        const w = 0.6;
-        const angle = w * deltaTime + this.initialAngle;
-        this.posX = this.width / 2 + this.radius * Math.sin(angle);
 
         this.posY += Math.pow(this.size, 0.5);
         this.opacity -= this.opacityDecreaser;

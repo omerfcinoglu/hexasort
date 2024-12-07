@@ -47,7 +47,7 @@ export class GameManager extends Component {
     }
 
     private setupLevel() {
-        const levelMatrix = this.getLevelMatrix();
+        const levelMatrix = LevelConfig.getLevelMatrix(this.level_id);
         if (this.gridManager) {
             this.gridManager.setGrid(levelMatrix);
         }
@@ -61,17 +61,6 @@ export class GameManager extends Component {
         TileSelectionHandler.placementEvent.on("placement", this.onPlacementTriggered, this);
     }
 
-    private getLevelMatrix(): number[][] {
-        // Örnek seviye matrisi
-        return [
-            [0, 2, 0 , 0 , 0],
-            [0, 0, 0 , 0 , 0],
-            [1, 3, 1 , 0 , 0],
-            [0, 0, 0 , 0 , 0],
-            [0, 0, 0 , 0 , 0],
-
-        ];
-    }
 
     private getStartTiles(): number[] {
         // Örnek başlangıç taşları
