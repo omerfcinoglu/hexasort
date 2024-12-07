@@ -4,13 +4,14 @@ Todo:
       ✔ refactoring game manager @done(24-12-07 20:12)
       ✔ !!!! transfer yerleşince olsa da transferlerden sonra yeni transferler hesaplanmıyor @done(24-12-07 20:12)
 
-  ☐ Score sometimes decreases
-
-  ☐ We need to create a queue for the score, add everything to the queue, and remove them once processed.
+  ☐ Score system
+      ☐ We need to create a queue for the score, add everything to the queue, and remove them once processed.
   
   ☐ Check if screen adjustments work correctly in the build.
+  
+  ☐ stackten sonra bazen transfer olmuyorlar 
 
-  ☐ snowfall @started(24-12-07 20:13)
+  ✔ snowfall @done(24-12-07 20:47)
 
 Hexasort GUI:
   ☐ end card
