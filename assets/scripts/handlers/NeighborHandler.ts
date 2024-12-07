@@ -15,59 +15,41 @@ export class NeighborHandler {
         this.transferHandler = new TileTransferHandler();
     }
 
-    /**
-     * Komşuları işleyerek transfer işlemlerini gerçekleştirir.
-     * @param currentGround İşlenecek GroundTile
-     * @returns Transfer işlemi yapılan GroundTile'ların listesi
-     */
     async processNeighbors(currentGround: GroundTile): Promise<GroundTile[]> {
         const transferedGrounds: GroundTile[] = [];
         const typeMatches = await this.neighborChecker.findAllMatches(currentGround) || [];
 
-        if (typeMatches.length > 0) {
-            for (const match of typeMatches) {
-                const { source, target } = this.determineTransferTargets(currentGround, match);
+        for (const match of typeMatches) {
+            const { source, target } = this.determineTransferTargets(currentGround, match);
+            await this.transferHandler?.transferClusterToTarget(source, target);
+
+            if (!transferedGrounds.includes(source)) {
                 transferedGrounds.push(source);
+            }
+            if (!transferedGrounds.includes(target)) {
                 transferedGrounds.push(target);
-                await this.transferHandler?.transferClusterToTarget(source, target);
             }
         }
 
         return transferedGrounds;
     }
 
-    /**
-     * Belirtilen GroundTile'ın komşularında aynı type'da bir TileCluster olup olmadığını kontrol eder.
-     * @param currentGround Kontrol edilecek GroundTile
-     * @returns Komşular arasında type eşleşmesi olup olmadığı
-     */
-public async hasMatchingNeighbor(currentGround: GroundTile): Promise<boolean> {
+    public async hasMatchingNeighbor(currentGround: GroundTile): Promise<boolean> {
         const neighbors = await this.getNeighbors(currentGround);
         const currentType = currentGround.getTopClusterType();
 
         for (const neighbor of neighbors) {
             if (neighbor.getTopClusterType() === currentType) {
-                return true; // Eşleşme bulundu
+                return true;
             }
         }
-        return false; // Eşleşme yok
+        return false;
     }
 
-    /**
-     * Belirtilen GroundTile'ın komşularını bulur.
-     * @param currentGround Komşuları bulunacak GroundTile
-     * @returns Komşu GroundTile'ların listesi
-     */
     public async getNeighbors(currentGround: GroundTile): Promise<GroundTile[]> {
         return this.neighborChecker.findNeighbors(currentGround);
     }
 
-    /**
-     * Transfer için kaynak ve hedef GroundTile'ı belirler.
-     * @param currentGround Mevcut GroundTile
-     * @param match Eşleşen GroundTile
-     * @returns Kaynak ve hedef GroundTile
-     */
     private determineTransferTargets(currentGround: GroundTile, match: GroundTile): { source: GroundTile, target: GroundTile } {
         const clusterCount1 = currentGround.attachedClusters.length;
         const clusterCount2 = match.attachedClusters.length;
