@@ -146,6 +146,7 @@ export class GameManager extends Component {
     
         // Kuyruk tamamen boşaldığında oyun yeni bir yerleştirme bekler
         console.log("Processing completed. Waiting for new placement...");
+        
     }
     
 

@@ -5,36 +5,26 @@ import { ColorProvider } from '../core/ColorProvider';
 import { LockableComponent } from '../helpers/LockableComponent';
 import { TileConfig } from '../core/TileConfig';
 import { TileAnimator } from '../helpers/TileAnimator';
-import { TilePlacementHandler } from '../handlers/TilePlacementHandler';
 
 const { ccclass, property } = _decorator;
 
-/**
- * !TODO
- * 
- * Ground Tile'ın içinde transfer olan tilelar kontrol edilip burada pozisyon verilemeli.
- * Bu tile animatorü groundtile'da çağırmayı sağlar
- * 
- */
-
 @ccclass('GroundTile')
 export class GroundTile extends LockableComponent {
-
     public gridPosition: { row: number; col: number } = { row: 0, col: 0 };
     public attachedClusters: TileCluster[] = [];
-    private mesh : MeshRenderer;
+    private mesh: MeshRenderer;
 
     public isPlacedGround: boolean = false;
-    
+
     private defaultColor: Color = null;
     private highlightColor: Color = null;
 
     private comboCounter = 0;
 
     get Combo() {
-        return this.comboCounter
+        return this.comboCounter;
     }
-    
+
     onLoad() {
         this.mesh = this.node.getComponentInChildren(MeshRenderer);
         this.highlightColor = ColorProvider.getInstance().getColor(7);
@@ -47,11 +37,13 @@ export class GroundTile extends LockableComponent {
 
         const currentWorldPos = tileCluster.node.worldPosition.clone();
         tileCluster.node.parent = this.node.parent;
-        tileCluster.node.setWorldPosition(new Vec3(
-            this.node.position.x,
-            this.getAllTileCount() * TileConfig.spacingY,
-            this.node.position.z
-        ));
+        tileCluster.node.setWorldPosition(
+            new Vec3(
+                this.node.position.x,
+                this.getAllTileCount() * TileConfig.spacingY,
+                this.node.position.z
+            )
+        );
         tileCluster.node.setPosition(currentWorldPos);
     }
 
@@ -62,6 +54,11 @@ export class GroundTile extends LockableComponent {
     public getLastCluster(): TileCluster | null {
         if (this.attachedClusters.length === 0) return null;
         return this.attachedClusters[this.attachedClusters.length - 1];
+    }
+
+    public getTopClusterType(): number | null {
+        const lastCluster = this.getLastCluster();
+        return lastCluster ? lastCluster.type : null; // Eğer bir cluster varsa type'ını döndür, yoksa null
     }
 
     public placeSelectableTile(selectableTile: SelectableTiles, targetGround: GroundTile) {
@@ -78,9 +75,6 @@ export class GroundTile extends LockableComponent {
             this.isPlacedGround = false;
             this.setActiveCollider(true);
         }
-        else{
-
-        }
     }
 
     public highlight(flag: boolean) {
@@ -93,19 +87,17 @@ export class GroundTile extends LockableComponent {
         return this.attachedClusters.reduce((count, cluster) => count + cluster.getTiles().length, 0);
     }
 
-    clearAllTiles(twenDuration : number){
-        this.attachedClusters.forEach((cluster)=>{
-            TileAnimator.animateTilesToZeroScale(cluster.getTiles(),twenDuration);
-        })
+    clearAllTiles(tweenDuration: number) {
+        this.attachedClusters.forEach((cluster) => {
+            TileAnimator.animateTilesToZeroScale(cluster.getTiles(), tweenDuration);
+        });
     }
 
-    addCombo(){
-        this.comboCounter ++;
+    addCombo() {
+        this.comboCounter++;
     }
 
-    resetCombo(){
+    resetCombo() {
         this.comboCounter = 0;
     }
-
-
 }
