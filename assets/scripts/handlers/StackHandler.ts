@@ -1,4 +1,4 @@
-import { _decorator,  } from 'cc';
+import { _decorator } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
 import { TileAnimator } from '../helpers/TileAnimator';
 
@@ -12,22 +12,29 @@ interface StackedGroundInfo {
 @ccclass('StackHandler')
 export class StackHandler {
     private minStackCount = 0;
+
     constructor(minStackCount = 5) {
         this.minStackCount = minStackCount;
     }
 
     async processStacks(grounds: GroundTile[]): Promise<StackedGroundInfo[]> {
         const processedInfo: StackedGroundInfo[] = [];
+
         for (const ground of grounds) {
             if (!ground.tryLock()) continue;
-            if(!ground.isPlacedGround) continue;
+            if (!ground.isPlacedGround) continue;
+
             try {
                 const lastCluster = ground.getLastCluster();
                 if (lastCluster) {
                     const lastClusterLength = lastCluster.getLength();
+
                     if (lastClusterLength >= this.minStackCount) {
-                        ground.popTileCluster();
+                        // Stack'i temizle
                         await TileAnimator.animateTilesToZeroScale(lastCluster.getTiles());
+                        ground.popTileCluster();
+
+                        // Stack temizliği bilgisi ekle
                         processedInfo.push({
                             groundTile: ground,
                             stackedCount: lastClusterLength,
@@ -38,7 +45,7 @@ export class StackHandler {
                 ground.unlock();
             }
         }
+
         return processedInfo;
     }
-    
 }
