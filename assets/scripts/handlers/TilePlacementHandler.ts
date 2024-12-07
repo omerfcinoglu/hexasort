@@ -36,6 +36,7 @@ export class TilePlacementHandler {
         const targetGround = selectedTile.attachedGround;
         targetGround.setActiveCollider(false);
         targetGround.isPlacedGround = true;
+        targetGround.highlight(false);
         selectableManager.remove(selectedTile);
     }
 }

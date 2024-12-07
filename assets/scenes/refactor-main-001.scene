@@ -964,7 +964,7 @@
     "__prefab": null,
     "minSize": 2,
     "maxSize": 5,
-    "flakeRate": 5,
+    "totalFlakes": 500,
     "_id": "1dAKIFbABK+a7mZyu20pYA"
   },
   {
