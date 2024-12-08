@@ -16,6 +16,7 @@ export class Tile extends Component implements ITile {
 
     init(type:number){
         this.type = type;
+        this.name = this.type.toString();
         this.meshes = this.node.getComponentsInChildren(MeshRenderer)
 
         this.color = ColorProvider.getInstance().getColor(this.type);

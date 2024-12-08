@@ -2,6 +2,7 @@ import { _decorator, Node, Vec3 } from 'cc';
 import { TileCluster } from '../core/TileCluster';
 import { GroundTile } from '../entity/GroundTile';
 import { TileAnimator } from '../helpers/TileAnimator';
+import { sleep } from '../helpers/Promises';
 
 const { ccclass } = _decorator;
 
@@ -23,14 +24,13 @@ export class TileTransferHandler {
         // Attempt to lock source and target GroundTiles
 
         try {
-            // Animate the transfer of the cluster
             await TileAnimator.animateClusterTransfer(cluster, targetGround, source);
-
-            // Handle merging tiles if target has an existing cluster
+            
             const targetTopCluster = targetGround.getLastCluster();
             if (targetTopCluster) {
                 const transferTiles = cluster.getTiles();
                 await targetTopCluster.transferTiles(transferTiles);
+                targetTopCluster.attachedGround = targetGround;
             }
 
             // Remove the cluster from the source

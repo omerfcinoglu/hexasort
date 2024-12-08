@@ -5,5 +5,6 @@
 
 export interface ITile {
     type: number;
+    name : string;
     init(type: number): void; 
 }
