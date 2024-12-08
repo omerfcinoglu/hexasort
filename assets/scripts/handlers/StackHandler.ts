@@ -2,6 +2,7 @@ import { _decorator } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
 import { TileAnimator } from '../helpers/TileAnimator';
 import { ScoreInfo, ScoreManager } from '../managers/ScoreManager';
+import { TaskQueue } from '../core/TaskQueue';
 
 const { ccclass } = _decorator;
 
@@ -21,10 +22,10 @@ export class StackHandler {
     async processStacks(grounds: GroundTile[]): Promise<StackedGroundInfo[]> {
         const processedInfo: StackedGroundInfo[] = [];
 
-        for (const ground of grounds) {
-            if (!ground.tryLock()) continue;
-            console.log(ground.getAllTileCount());
-            
+        // Paralel işlemler için Promise listesi oluştur
+        const stackTasks = grounds.map(async (ground) => {
+            if (!ground.tryLock()) return null; // Eğer kilitlenemiyorsa işleme alma
+
             try {
                 const lastCluster = ground.getLastCluster();
                 if (lastCluster) {
@@ -35,23 +36,23 @@ export class StackHandler {
                         await TileAnimator.animateTilesToZeroScale(lastCluster.getTiles());
                         ground.popTileCluster();
 
-       
                         processedInfo.push({
                             groundTile: ground,
                             stackedCount: lastClusterLength,
                         });
-                        ScoreManager.getInstance().addScore(
-                            {
-                                score : lastClusterLength,
-                                isCombo : false
-                            }
-                        )
+
+                        // Skoru güncelle
+                        ScoreManager.getInstance().addScore({
+                            score: lastClusterLength,
+                            isCombo: false,
+                        });
                     }
                 }
             } finally {
-                ground.unlock();
+                ground.unlock(); // Kilidi aç
             }
-        }
+        });
+        await Promise.all(stackTasks);
 
         return processedInfo;
     }

@@ -4,7 +4,7 @@ export class TaskQueue {
     private tasks: (() => Promise<void>)[] = [];
     private isProcessing = false;
 
-    async add(task: () => Promise<void>): Promise<void> {
+    public async add(task: () => Promise<void>): Promise<void> {
         this.tasks.push(task);
         if (!this.isProcessing) {
             await this.processQueue();
@@ -19,6 +19,13 @@ export class TaskQueue {
                 await task();
             }
         }
+        this.isProcessing = false;
+    }
+
+    public async processParallel(): Promise<void> {
+        this.isProcessing = true;
+        await Promise.all(this.tasks);
+        this.tasks = [];
         this.isProcessing = false;
     }
 }
