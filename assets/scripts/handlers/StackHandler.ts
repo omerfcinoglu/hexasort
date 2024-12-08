@@ -23,8 +23,8 @@ export class StackHandler {
 
         for (const ground of grounds) {
             if (!ground.tryLock()) continue;
-            if (!ground.isPlacedGround) continue;
-
+            console.log(ground.getAllTileCount());
+            
             try {
                 const lastCluster = ground.getLastCluster();
                 if (lastCluster) {

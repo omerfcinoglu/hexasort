@@ -78,12 +78,6 @@ export class GameManager extends Component {
 
 
 
-    private async handleStackProcessing(grounds: GroundTile[]): Promise<GroundTile[]> {
-        const stackedInfo = await this.stackHandler.processStacks(grounds);
-        return stackedInfo.map(info => info.groundTile);
-    }
-
-
     private async processPlacement(initialGround: GroundTile) {
         const neighborQueue: GroundTile[] = [initialGround];
         const stackQueue: GroundTile[] = [];
@@ -95,7 +89,7 @@ export class GameManager extends Component {
     
             try {
                 // Komşu kontrollerini yap ve transfer edilen GroundTile'ları al
-                const transferedGrounds = await this.neighborHandler.processNeighbors(currentGround);
+                const transferedGrounds = await this.handleNeighborProcessing(currentGround);
     
                 // Transfer edilen GroundTile'ları kuyruğa ekle
                 for (const ground of transferedGrounds) {
@@ -112,7 +106,7 @@ export class GameManager extends Component {
             }
         }
     
-        // Komşu kontrolleri tamamlandıktan sonra stack işlemini başlat
+        
         await this.processStack(stackQueue);
     }
     private async handleNeighborProcessing(currentGround: GroundTile): Promise<GroundTile[]> {
@@ -129,6 +123,14 @@ export class GameManager extends Component {
         return allAffectedGrounds;
     }
     
+
+
+
+    private async handleStackProcessing(grounds: GroundTile[]): Promise<GroundTile[]> {
+        const stackedInfo = await this.stackHandler.processStacks(grounds);
+        return stackedInfo.map(info => info.groundTile);
+    }
+
     private async processStack(stackQueue: GroundTile[]) {
         const processedGrounds = new Set<GroundTile>();
     
