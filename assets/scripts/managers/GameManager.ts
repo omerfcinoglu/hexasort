@@ -61,9 +61,11 @@ export class GameManager extends Component {
     private async processPlacement(initialGround: GroundTile) {
         const processingQueue: GroundTile[] = [initialGround];
         let processTransferedGrounds : GroundTile[] = [];
-        let processStackedGrounds
+        let processStackedGrounds: GroundTile[] = [];
         while (processingQueue.length > 0) {
             const currentGround = processingQueue.shift();
+            console.log(currentGround.gridPosition);
+            
             if (!currentGround || !currentGround.tryLock()) continue;
 
             try {
@@ -72,9 +74,10 @@ export class GameManager extends Component {
                         if (!processingQueue.includes(ground)) {
                             processingQueue.push(ground);
                         }
+                        processStackedGrounds.push(ground);
                 }
             } finally {
-                // const stackedGrounds = await this.stackHandler?.processStacks(transferedGrounds);
+                const stackedGrounds = await this.stackHandler?.processStacks(processStackedGrounds);
                 currentGround.unlock();
             }
         }

@@ -23,7 +23,6 @@ export class NeighborHandler {
         if (typeMatches.length > 0) {
             if (typeMatches.length > 1) {
                 for (const match of typeMatches) {
-                    transferedGrounds.push(match);
                     await this.transferHandler?.transferClusterToTarget(match, currentGround);
                 }
                 transferedGrounds.push(currentGround);
@@ -33,24 +32,11 @@ export class NeighborHandler {
                 transferedGrounds.push(target);
                 await this.transferHandler?.transferClusterToTarget(source, target);
             }
-
-            for (const ground of transferedGrounds) {
-                await this.processNeighbors(ground);
-                // console.log(
-                //     `proccessing (${ground.gridPosition.row}, ${ground.gridPosition.col})`
-                // );
-            }
         }
 
         return transferedGrounds;
     }
 
-    
-
-    public async getNeighbors(currentGround: GroundTile): Promise<GroundTile[]> {
-        // Bu fonksiyon, mevcut ground'un çevresindeki komşuları bulur
-        return this.neighborChecker.findNeighbors(currentGround);
-    }
     
 
     private determineTransferTargets(currentGround: GroundTile, match: GroundTile): { source: GroundTile, target: GroundTile } {
