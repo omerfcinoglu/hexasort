@@ -13,7 +13,6 @@ const package_json_1 = __importDefault(require("../package.json"));
 exports.methods = {
     openPanel() {
         Editor.Panel.open(package_json_1.default.name);
-        console.log("aaa");
     },
 };
 /**

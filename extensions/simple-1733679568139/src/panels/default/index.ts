@@ -1,5 +1,8 @@
 import { readFileSync } from 'fs-extra';
 import { join } from 'path';
+
+const templateContent = readFileSync(join(__dirname, '../../../static/template/default/index.html'), 'utf-8')
+
 /**
  * @zh 如果希望兼容 3.3 之前的版本可以使用下方的代码
  * @en You can add the code below if you want compatibility with versions prior to 3.3
@@ -10,7 +13,7 @@ module.exports = Editor.Panel.define({
         show() { console.log('show'); },
         hide() { console.log('hide'); },
     },
-    template: readFileSync(join(__dirname, '../../../static/template/default/index.html'), 'utf-8'),
+    template: templateContent,
     style: readFileSync(join(__dirname, '../../../static/style/default/index.css'), 'utf-8'),
     $: {
         app: '#app',
@@ -18,14 +21,14 @@ module.exports = Editor.Panel.define({
     methods: {
         hello() {
             if (this.$.app) {
-                this.$.app.innerHTML = 'hello';
+                this.$.app.innerHTML = templateContent;
                 console.log('[cocos-panel-html.default]: hello');
             }
         },
     },
     ready() {
         if (this.$.app) {
-            this.$.app.innerHTML = 'Hello Cocos.';
+            this.$.app.innerHTML = templateContent;
         }
     },
     beforeClose() { },

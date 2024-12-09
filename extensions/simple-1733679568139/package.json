@@ -18,10 +18,10 @@
             "type": "dockable",
             "main": "dist/panels/default",
             "size": {
-                "min-width": 400,
-                "min-height": 300,
-                "width": 1024,
-                "height": 600
+                "min-width": 200,
+                "min-height": 400,
+                "width": 600,
+                "height": 800
             }
         }
     },
@@ -31,11 +31,6 @@
                 "path": "i18n:menu.panel/simple-1733679568139",
                 "label": "i18n:simple-1733679568139.open_panel",
                 "message": "open-panel"
-            },
-            {
-                "path": "i18n:menu.develop/simple-1733679568139",
-                "label": "i18n:simple-1733679568139.send_to_panel",
-                "message": "send-to-panel"
             }
         ],
         "messages": {
@@ -49,7 +44,15 @@
                     "default.hello"
                 ]
             }
-        }
+        },
+        "shortcuts": [
+            {
+                "message": "undo",
+                "when": "panelName === 'hello-world'",
+                "win": "ctrl+z",
+                "mac": "cmd+z",
+            }
+        ]
     },
     "author": "l0rdyolo",
     "editor": ">=3.6.0",

@@ -19,10 +19,18 @@ Todo:
 Hexasort GUI:
   ☐ end card
   ☐ snowfall extensions
-      localdeki dosyaların ile extension menusundeki dosyaların çakışır olmalı yani vscode'da düzgün dosyaları göremeiyorusn
-      şu an snowfy görünüyor fakat bu proje extensionlarında yok.
-      buraya yeni kurduğun extensionu aktar
-      npm install
-      npm run build
+      ✔ localdeki dosyaların ile extension menusundeki dosyaların çakışır olmalı yani vscode'da düzgün dosyaları göremeiyorusn @done(24-12-09 11:24)
+      ✔ şu an snowfy görünüyor fakat bu proje extensionlarında yok. @done(24-12-09 11:24)
+      ✔ buraya yeni kurduğun extensionu aktar @done(24-12-09 11:24)
+      ✔ npm install @done(24-12-09 11:24)
+      ✔ npm run build @done(24-12-09 11:24)
+      ✔ sonrası video @done(24-12-09 11:24)
+      
 
-      sonrası video
+      ☐ extentionda logo ve giriş yapmak istiyorsun
+      ☐ kaç tane ekran olacağını soracaksın.
+      ☐ ekran ekleme ve silme yapabileceksin
+      ☐ ekranların hiyerarşik sıralarını belirleyebileceksin
+      ☐ her ekran ayrı sayfada ya da sayfa içinde açılabilsin
+      ☐ sayfa içeriği
+          ☐ bu kısmı doldururuz.
