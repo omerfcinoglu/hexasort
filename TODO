@@ -12,13 +12,15 @@ Todo:
   ✔ stackten sonra bazen transfer olmuyorlar @done(24-12-08 16:45)
 
   ☐ stack görsel olarak olmadı bir seferde
+  ☐ stackten sonra komşuluk kontrolü olmuyor
   ✔ stack animasyonu olurken yeni eklenen groundlar eklenebiliyor. lock çalışmıyor demek ki @done(24-12-09 14:50)
-  ☐ stack animasyonu ya da trasnfer animasyonu varken yeni gelen komşuluğu tutarlı ise animasyon bitimini beklemeli ve işlenmeli
+  ✔ stack animasyonu ya da trasnfer animasyonu varken yeni gelen komşuluğu tutarlı ise animasyon bitimini beklemeli ve işlenmeli @done(24-12-09 19:53)
 
   ✔ snowfall @done(24-12-07 20:47)
 
 Hexasort GUI:
   ☐ end card
+
   ☐ snowfall extensions
       ✔ localdeki dosyaların ile extension menusundeki dosyaların çakışır olmalı yani vscode'da düzgün dosyaları göremeiyorusn @done(24-12-09 11:24)
       ✔ şu an snowfy görünüyor fakat bu proje extensionlarında yok. @done(24-12-09 11:24)

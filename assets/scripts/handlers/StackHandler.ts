@@ -15,7 +15,7 @@ interface StackedGroundInfo {
 export class StackHandler {
     private minStackCount = 0;
 
-    constructor(minStackCount = 5) {
+    constructor(minStackCount:number) {
         this.minStackCount = minStackCount;
     }
 
