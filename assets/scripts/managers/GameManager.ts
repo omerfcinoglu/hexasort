@@ -9,7 +9,6 @@ import { NeighborHandler } from "../handlers/NeighborHandler";
 import { StackHandler } from "../handlers/StackHandler";
 import { TaskQueue } from "../core/TaskQueue";
 import { LevelConfig } from "../../data/LevelConfig";
-import { TileAnimator } from "../helpers/TileAnimator";
 
 const { ccclass, property } = _decorator;
 

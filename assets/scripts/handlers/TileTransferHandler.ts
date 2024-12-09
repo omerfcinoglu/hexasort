@@ -24,6 +24,7 @@ export class TileTransferHandler {
         // Attempt to lock source and target GroundTiles
 
         try {
+            targetGround.tryLock();
             await TileAnimator.animateClusterTransfer(cluster, targetGround, source);
             
             const targetTopCluster = targetGround.getLastCluster();
