@@ -20,7 +20,7 @@ export class TileTransferHandler {
 
         const cluster = source.getLastCluster();
         if (!cluster) return;
-
+        if (!source.tryLock()) return;
         // Attempt to lock source and target GroundTiles
 
         try {

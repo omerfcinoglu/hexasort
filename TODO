@@ -12,8 +12,26 @@ Todo:
   ✔ stackten sonra bazen transfer olmuyorlar @done(24-12-08 16:45)
 
   ☐ stack görsel olarak olmadı bir seferde
+  ✔ stack animasyonu olurken yeni eklenen groundlar eklenebiliyor. lock çalışmıyor demek ki @done(24-12-09 14:50)
+  ☐ stack animasyonu ya da trasnfer animasyonu varken yeni gelen komşuluğu tutarlı ise animasyon bitimini beklemeli ve işlenmeli
 
   ✔ snowfall @done(24-12-07 20:47)
 
 Hexasort GUI:
   ☐ end card
+  ☐ snowfall extensions
+      ✔ localdeki dosyaların ile extension menusundeki dosyaların çakışır olmalı yani vscode'da düzgün dosyaları göremeiyorusn @done(24-12-09 11:24)
+      ✔ şu an snowfy görünüyor fakat bu proje extensionlarında yok. @done(24-12-09 11:24)
+      ✔ buraya yeni kurduğun extensionu aktar @done(24-12-09 11:24)
+      ✔ npm install @done(24-12-09 11:24)
+      ✔ npm run build @done(24-12-09 11:24)
+      ✔ sonrası video @done(24-12-09 11:24)
+      
+
+      ☐ extentionda logo ve giriş yapmak istiyorsun
+      ☐ kaç tane ekran olacağını soracaksın.
+      ☐ ekran ekleme ve silme yapabileceksin
+      ☐ ekranların hiyerarşik sıralarını belirleyebileceksin
+      ☐ her ekran ayrı sayfada ya da sayfa içinde açılabilsin
+      ☐ sayfa içeriği
+          ☐ bu kısmı doldururuz.
