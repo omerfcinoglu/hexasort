@@ -18,3 +18,11 @@ Todo:
 
 Hexasort GUI:
   ☐ end card
+  ☐ snowfall extensions
+      localdeki dosyaların ile extension menusundeki dosyaların çakışır olmalı yani vscode'da düzgün dosyaları göremeiyorusn
+      şu an snowfy görünüyor fakat bu proje extensionlarında yok.
+      buraya yeni kurduğun extensionu aktar
+      npm install
+      npm run build
+
+      sonrası video
