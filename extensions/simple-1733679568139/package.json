@@ -50,7 +50,7 @@
                 "message": "undo",
                 "when": "panelName === 'hello-world'",
                 "win": "ctrl+z",
-                "mac": "cmd+z",
+                "mac": "cmd+z"
             }
         ]
     },
