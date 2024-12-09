@@ -13,6 +13,7 @@ Todo:
 
   ☐ stack görsel olarak olmadı bir seferde
   ☐ stackten sonra komşuluk kontrolü olmuyor
+    bunun nedenini anlayamıyorum, bazılarında istenilen gibi davranıyor
   ✔ stack animasyonu olurken yeni eklenen groundlar eklenebiliyor. lock çalışmıyor demek ki @done(24-12-09 14:50)
   ✔ stack animasyonu ya da trasnfer animasyonu varken yeni gelen komşuluğu tutarlı ise animasyon bitimini beklemeli ve işlenmeli @done(24-12-09 19:53)
 
