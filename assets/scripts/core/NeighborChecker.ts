@@ -33,6 +33,7 @@ export class NeighborChecker {
     public async findNeighbors(placedGround: GroundTile): Promise<GroundTile[]> {
         const neighborGrounds: GroundTile[] = [];
         const { row, col } = placedGround.gridPosition;
+        console.log(`Processing ${placedGround.gridPosition.row},${placedGround.gridPosition.col} `);
 
         // Select directions based on column parity
         const directions = col % 2 === 0 ? this.evenColmDirections : this.oddColmDirections;
@@ -44,7 +45,7 @@ export class NeighborChecker {
             // Access GroundTile from GridManager
             const neighborGround = GridManager.getInstance().getGroundTile(neighborRow, neighborCol);
 
-            if (neighborGround && !neighborGround.isLocked && neighborGround.getLastCluster()) {
+            if (neighborGround  && neighborGround.getLastCluster()) {
                 neighborGrounds.push(neighborGround);
             }
         }

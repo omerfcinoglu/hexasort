@@ -2,7 +2,7 @@ import { _decorator, Component } from "cc";
 import { GridManager } from "./GridManager";
 import { TileSelectionHandler } from "../handlers/TileSelectionHandler";
 import { TilePlacementHandler } from "../handlers/TilePlacementHandler";
-import { GroundTile } from "../entity/GroundTile";
+import { GroundTile, GroundTileStates } from "../entity/GroundTile";
 import { SelectableTiles } from "../entity/SelectableTiles";
 import { SelectableManager } from "./SelectableManager";
 import { NeighborHandler } from "../handlers/NeighborHandler";
@@ -47,6 +47,7 @@ export class GameManager extends Component {
         const placedGround = await this.tilePlacementHandler?.place(selectedTile, this.selectableManager);
         if (placedGround) {
             placedGround.highlight(false);
+            placedGround.state = GroundTileStates.Ready
             EventSystem.getInstance().emit(Events.MarkGrounds);
             return;
         }

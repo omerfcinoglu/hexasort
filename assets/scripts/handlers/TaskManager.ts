@@ -5,6 +5,7 @@ import { EventSystem } from '../utils/EventSystem';
 import { Events } from '../../data/Events';
 import { GroundTile } from '../entity/GroundTile';
 import { NeighborHandler } from './NeighborHandler';
+import { sleep } from '../helpers/Promises';
 const { ccclass, property } = _decorator;
 
 @ccclass('TaskManager')
@@ -19,13 +20,12 @@ export class TaskManager extends SingletonComponent<TaskManager> {
     }
 
     ProcessMarkedGround(markedGrounds: GroundTile[]) {
-        console.log(`Processing ${markedGrounds.length} marked grounds`);
         
         markedGrounds.forEach(groundTile => {
             let newMarked = []
             this.m_queue.add(async () => {
                 newMarked = await this.m_neighborHandler.processNeighbors(groundTile)
-                this.ProcessMarkedGround(newMarked)
+                await sleep(1000)
             });
         });
         console.log(`Processing marked grounds is done`);

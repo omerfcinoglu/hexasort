@@ -22,6 +22,8 @@ export class NeighborHandler {
 
         if (typeMatches.length > 0) {
             if (typeMatches.length > 1) {
+                console.log("aga");
+                
                 for (const match of typeMatches) {
                     await this.transferHandler?.transferClusterToTarget(match, currentGround);
                 }

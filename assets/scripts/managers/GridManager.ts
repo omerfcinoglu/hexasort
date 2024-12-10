@@ -43,12 +43,12 @@ export class GridManager extends SingletonComponent<GridManager> {
         this.grid.forEach(row => {
             row.forEach(groundTile => {
                 if (groundTile.node && groundTile.state == GroundTileStates.Ready) {
-                    groundTile.state  = GroundTileStates.Busy
+                    groundTile.state = GroundTileStates.Busy
                     markedGrounds.push(groundTile)
                 }
             });
         });
-
+        
         EventSystem.getInstance().emit(Events.ProcessMarkedGround , markedGrounds);
     }
 

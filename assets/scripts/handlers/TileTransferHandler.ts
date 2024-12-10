@@ -30,7 +30,6 @@ export class TileTransferHandler {
                 targetTopCluster.attachedGround = targetGround;
             }
 
-            source.state = GroundTileStates.Ready
             source.popTileCluster();
 
         } catch (error) {

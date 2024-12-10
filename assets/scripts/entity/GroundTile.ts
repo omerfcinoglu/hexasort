@@ -25,6 +25,7 @@ export const enum GroundTileStates {
     Empty,
     Ready,
     Busy,
+    Filled,
 }
 
 @ccclass('GroundTile')
@@ -75,7 +76,7 @@ export class GroundTile extends LockableComponent {
             this.node.position.z
         ));
         tileCluster.node.setPosition(currentWorldPos);
-        this.state = GroundTileStates.Ready;
+        this.state = GroundTileStates.Filled;
     }
 
     public setActiveCollider(value: boolean) {
@@ -92,7 +93,9 @@ export class GroundTile extends LockableComponent {
             this.addTileCluster(tileCluster);
             tileCluster.place(this);
         }
+        this.state = GroundTileStates.Ready;
         selectableTile.node.removeFromParent();
+
     }
 
     public popTileCluster() {

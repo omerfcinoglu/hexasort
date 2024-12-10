@@ -21,6 +21,9 @@ Todo:
 
 
 
+  ☐ event system istediğimiz sonucu veriyor. şu anki gridde 1.selectable'ı koyunca kırmızılar doğru şekilde sıralanıyor. 
+  ☐ bu adımdan sonra transfer olmuşsa source ve target komşularına tekrar bakmalıdır.
+
 Hexasort GUI:
   ☐ end card
 
