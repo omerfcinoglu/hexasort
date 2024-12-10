@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Collider, Color, Vec3, MeshRenderer, Mesh } from 'cc';
+import { _decorator, Component, Node, Collider, Color, Vec3, MeshRenderer, Mesh, EmptyDevice } from 'cc';
 import { TileCluster } from '../core/TileCluster';
 import { SelectableTiles } from '../entity/SelectableTiles';
 import { ColorProvider } from '../core/ColorProvider';
@@ -20,20 +20,27 @@ const { ccclass, property } = _decorator;
  * 
  */
 
+
+export const enum GroundTileStates {
+    Empty,
+    Ready,
+    Busy,
+}
+
 @ccclass('GroundTile')
 export class GroundTile extends LockableComponent {
 
     public gridPosition: { row: number; col: number } = { row: 0, col: 0 };
     public attachedClusters: TileCluster[] = [];
-    private mesh : MeshRenderer;
-
+    
     public isPlacedGround: boolean = false;
     
+    private mesh : MeshRenderer;
     private defaultColor: Colors = null;
     private highlightColor: Colors = null;
-
     private comboCounter = 0;
     private m_colorProvider : ColorProvider;
+    public state : GroundTileStates;
 
     get Combo() {
         return this.comboCounter
@@ -44,9 +51,9 @@ export class GroundTile extends LockableComponent {
 
     
     onLoad() {
+        this.state = GroundTileStates.Empty;
         this.mesh = this.node.getComponentInChildren(MeshRenderer);
         this.m_colorProvider = ColorProvider.getInstance();
-        
         this.highlightColor = Colors.highlightGround
         this.defaultColor = Colors.ground
         this.highlight(false);
@@ -59,12 +66,20 @@ export class GroundTile extends LockableComponent {
     }
 
     private CheckNeighbor(){
-        console.log("iki dört iki");
+        if(this.state == GroundTileStates.Empty){
+            
+        }
+        else if(this.state == GroundTileStates.Ready){
+            console.log("im ready");
+            
+        }
+        else{
+
+        }
     }
 
     addTileCluster(tileCluster: TileCluster) {
         this.attachedClusters.push(tileCluster);
-
         const currentWorldPos = tileCluster.node.worldPosition.clone();
         tileCluster.node.parent = this.node.parent;
         tileCluster.node.setWorldPosition(new Vec3(
@@ -73,6 +88,7 @@ export class GroundTile extends LockableComponent {
             this.node.position.z
         ));
         tileCluster.node.setPosition(currentWorldPos);
+        this.state = GroundTileStates.Ready;
     }
 
     public setActiveCollider(value: boolean) {

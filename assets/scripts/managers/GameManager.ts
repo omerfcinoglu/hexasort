@@ -49,11 +49,11 @@ export class GameManager extends Component {
     }
 
     async onPlacementTriggered(selectedTile: SelectableTiles) {
-        EventSystem.getInstance().emit(Events.CheckNeighbor);
-        return;
         const placedGround = await this.tilePlacementHandler?.place(selectedTile, this.selectableManager);
         if (placedGround) {
             placedGround.highlight(false);
+            EventSystem.getInstance().emit(Events.CheckNeighbor);
+            return;
             await this.processPlacement(placedGround);
         }
     }
