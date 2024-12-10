@@ -31,7 +31,6 @@ export class GridManager extends SingletonComponent<GridManager> {
             this.tileClusterPrefab,
             this.tileSize
         )
-        this.registerEvent();
     }
     registerEvent(): void {
         EventSystem.getInstance().on(Events.MarkGrounds, this.MarkGrounds.bind(this), this);

@@ -88,13 +88,12 @@ export class GroundTile extends LockableComponent {
         return this.attachedClusters[this.attachedClusters.length - 1];
     }
 
-    public placeSelectableTile(selectableTile: SelectableTiles, targetGround: GroundTile) {
-        for (const tileCluster of selectableTile.tileClusters) {
-            this.addTileCluster(tileCluster);
-            tileCluster.place(this);
-        }
+    public placeSelectableTile() {
+        this.setActiveCollider(false);
+        this.isPlacedGround = true;
+        this.highlight(false);
         this.state = GroundTileStates.Ready;
-        selectableTile.node.removeFromParent();
+        EventSystem.getInstance().emit(Events.ProcessMarkedGround , [this]);
 
     }
 

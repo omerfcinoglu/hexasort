@@ -1,13 +1,11 @@
-import { _decorator } from 'cc';
-
 export class TaskQueue {
     private tasks: (() => Promise<void>)[] = [];
     private isProcessing = false;
 
-    public async add(task: () => Promise<void>): Promise<void> {
+    public add(task: () => Promise<void>): void {
         this.tasks.push(task);
         if (!this.isProcessing) {
-            await this.processQueue();
+            this.processQueue(); // Kendi içinde çalıştırılır
         }
     }
 
@@ -16,16 +14,19 @@ export class TaskQueue {
         while (this.tasks.length > 0) {
             const task = this.tasks.shift();
             if (task) {
-                await task();
+                try {
+                    await task();
+                } catch (error) {
+                    console.error('Task failed:', error);
+                }
             }
         }
         this.isProcessing = false;
     }
 
-    public async processParallel(): Promise<void> {
-        this.isProcessing = true;
-        await Promise.all(this.tasks);
-        this.tasks = [];
-        this.isProcessing = false;
+    public async start(): Promise<void> {
+        if (!this.isProcessing) {
+            await this.processQueue();
+        }
     }
 }
