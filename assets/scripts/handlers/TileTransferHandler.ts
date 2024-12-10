@@ -1,8 +1,6 @@
 import { _decorator, Node, Vec3 } from 'cc';
-import { TileCluster } from '../core/TileCluster';
-import { GroundTile } from '../entity/GroundTile';
+import { GroundTile, GroundTileStates } from '../entity/GroundTile';
 import { TileAnimator } from '../helpers/TileAnimator';
-import { sleep } from '../helpers/Promises';
 
 const { ccclass } = _decorator;
 
@@ -20,8 +18,6 @@ export class TileTransferHandler {
 
         const cluster = source.getLastCluster();
         if (!cluster) return;
-        if (!source.tryLock()) return;
-        // Attempt to lock source and target GroundTiles
 
         try {
             targetGround.tryLock();
@@ -34,13 +30,12 @@ export class TileTransferHandler {
                 targetTopCluster.attachedGround = targetGround;
             }
 
-            // Remove the cluster from the source
+            source.state = GroundTileStates.Ready
             source.popTileCluster();
 
         } catch (error) {
             console.error('Error during cluster transfer:', error);
         } finally {
-            // Ensure locks are released
             source.unlock();
             targetGround.unlock();
         }
