@@ -29,14 +29,12 @@ export class TileTransferHandler {
                 await targetTopCluster.transferTiles(transferTiles);
                 targetTopCluster.attachedGround = targetGround;
             }
-
             source.popTileCluster();
 
         } catch (error) {
             console.error('Error during cluster transfer:', error);
         } finally {
-            source.unlock();
-            targetGround.unlock();
+            source.state = GroundTileStates.ReadyForNeighbor
         }
     }
 }

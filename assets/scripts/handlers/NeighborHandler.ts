@@ -1,7 +1,7 @@
 import { _decorator } from 'cc';
 import { NeighborChecker } from '../core/NeighborChecker';
 import { TileTransferHandler } from './TileTransferHandler';
-import { GroundTile } from '../entity/GroundTile';
+import { GroundTile, GroundTileStates } from '../entity/GroundTile';
 
 const { ccclass } = _decorator;
 
@@ -28,13 +28,12 @@ export class NeighborHandler {
             } else {
                 for (const match of typeMatches) {
                     await this.transferHandler?.transferClusterToTarget(match, currentGround);
+                    currentGround.state = GroundTileStates.ReadyForNeighbor;
                     transferedGrounds.push(match);
                     transferedGrounds.push(currentGround);
                 }
             }
         }
-        console.log(transferedGrounds);
-        
         return transferedGrounds;
     }
 

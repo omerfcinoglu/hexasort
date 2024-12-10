@@ -32,24 +32,6 @@ export class GridManager extends SingletonComponent<GridManager> {
             this.tileSize
         )
     }
-    registerEvent(): void {
-        EventSystem.getInstance().on(Events.MarkGrounds, this.MarkGrounds.bind(this), this);
-    }
-
-    private MarkGrounds() {
-        let markedGrounds = []
-
-        this.grid.forEach(row => {
-            row.forEach(groundTile => {
-                if (groundTile.node && groundTile.state == GroundTileStates.Ready) {
-                    groundTile.state = GroundTileStates.Busy
-                    markedGrounds.push(groundTile)
-                }
-            });
-        });
-        
-        EventSystem.getInstance().emit(Events.ProcessMarkedGround , markedGrounds);
-    }
 
     public setGrid(levelMatrix: number[][]): void {
         this.grid = this.gridGenerator.generateGrid(levelMatrix, this.gridArea);

@@ -7,41 +7,68 @@ import { GroundTile, GroundTileStates } from '../entity/GroundTile';
 import { NeighborHandler } from './NeighborHandler';
 import { sleep } from '../helpers/Promises';
 import { group } from 'console';
+import { StackHandler } from './StackHandler';
 const { ccclass, property } = _decorator;
-
 @ccclass('TaskManager')
 export class TaskManager extends SingletonComponent<TaskManager> {
 
     private m_queue = new TaskQueue();
-    private m_neighborHandler : NeighborHandler = new NeighborHandler();
+    private m_neighborHandler: NeighborHandler = new NeighborHandler();
+    private m_stackHandler: StackHandler = new StackHandler();
 
     protected onLoad(): void {
         super.onLoad();
-        EventSystem.getInstance().on(Events.ProcessMarkedGround, this.ProcessMarkedGround.bind(this), this);
+        EventSystem.getInstance().on(Events.ProcessMarkedGround, this.ProcessMarkedGroundTransfer.bind(this), this);
     }
 
-    async ProcessMarkedGround(initialMarkedGrounds: GroundTile[]): Promise<void> {
-        let processTransferedGrounds : GroundTile[] = [];
-        const processingQueue: GroundTile[] = [...initialMarkedGrounds];
-        
-        while (processingQueue.length > 0) {
-            const currentGround = processingQueue.shift();
-            
-            if (!currentGround ) continue;
-            
-            console.log(currentGround);
+    async ProcessMarkedGroundTransfer(initialMarkedGround: GroundTile): Promise<void> {
+        const stack = await this.ProcessTransfer([initialMarkedGround]);
+        if (stack.size > 0) {
+            await this.ProcessStack(Array.from(stack));
+        }
+    }
 
-            try {
-                processTransferedGrounds = await this.m_neighborHandler?.processNeighbors(currentGround);
-                for (const ground of processTransferedGrounds) {
-                        if (!processingQueue.includes(ground)) {
-                            processingQueue.push(ground);
-                        }
+    async ProcessStack(processedGrounds: GroundTile[]) {
+        const stackedGrounds: GroundTile[] = [];
+        for (const ground of processedGrounds) {
+            console.log(ground.state);
+            if (ground.state === GroundTileStates.ReadyForStack) {
+                const stackResult = await this.m_stackHandler.processSingleStack(ground);
+                if (stackResult) {
+                    stackedGrounds.push(ground);
                 }
-            } finally {
-                // const stackedGrounds = await this.stackHandler?.processStacks(transferedGrounds);
-                currentGround.state = GroundTileStates.Ready;
             }
         }
+
+        await this.ProcessTransfer(stackedGrounds);
+    }
+
+    async ProcessTransfer(markedGround: GroundTile[]): Promise<Set<GroundTile>> {
+        const processTransferedGrounds: GroundTile[] = [];
+        const processingQueue: GroundTile[] = [...markedGround];
+        const processedGroundsLog: Set<GroundTile> = new Set();
+
+        while (processingQueue.length > 0) {
+            const currentGround = processingQueue.shift();
+            if (!currentGround || processedGroundsLog.has(currentGround)) continue;
+            processedGroundsLog.add(currentGround);
+
+            if (currentGround.state !== GroundTileStates.ReadyForNeighbor) continue;
+
+            try {
+                currentGround.state = GroundTileStates.Busy;
+                const neighbors = await this.m_neighborHandler.processNeighbors(currentGround);
+
+                for (const ground of neighbors) {
+                    if (!processingQueue.includes(ground) && !processedGroundsLog.has(ground)) {
+                        processingQueue.push(ground);
+                    }
+                }
+            } finally {
+                currentGround.state = GroundTileStates.ReadyForStack;
+            }
+        }
+
+        return processedGroundsLog;
     }
 }

@@ -23,7 +23,8 @@ const { ccclass, property } = _decorator;
 
 export const enum GroundTileStates {
     Empty,
-    Ready,
+    ReadyForNeighbor,
+    ReadyForStack,
     Busy,
     Filled,
 }
@@ -76,7 +77,7 @@ export class GroundTile extends LockableComponent {
             this.node.position.z
         ));
         tileCluster.node.setPosition(currentWorldPos);
-        this.state = GroundTileStates.Filled;
+        this.state = GroundTileStates.ReadyForStack;
     }
 
     public setActiveCollider(value: boolean) {
@@ -92,7 +93,7 @@ export class GroundTile extends LockableComponent {
         this.setActiveCollider(false);
         this.isPlacedGround = true;
         this.highlight(false);
-        this.state = GroundTileStates.Ready;
+        this.state = GroundTileStates.ReadyForNeighbor;
         EventSystem.getInstance().emit(Events.ProcessMarkedGround , [this]);
 
     }
@@ -106,7 +107,7 @@ export class GroundTile extends LockableComponent {
             this.setActiveCollider(true);
         }
         else{
-
+            this.state = GroundTileStates.ReadyForNeighbor;
         }
     }
 

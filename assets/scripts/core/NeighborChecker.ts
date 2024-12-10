@@ -1,5 +1,5 @@
 import { _decorator } from 'cc';
-import { GroundTile } from '../entity/GroundTile';
+import { GroundTile, GroundTileStates } from '../entity/GroundTile';
 import { GridManager } from '../managers/GridManager';
 
 const { ccclass, property } = _decorator;
@@ -43,8 +43,8 @@ export class NeighborChecker {
 
             // Access GroundTile from GridManager
             const neighborGround = GridManager.getInstance().getGroundTile(neighborRow, neighborCol);
-
-            if (neighborGround  && neighborGround.getLastCluster()) {
+            if (neighborGround  && neighborGround.getLastCluster() && neighborGround.state === GroundTileStates.ReadyForNeighbor) {
+                neighborGround.state = GroundTileStates.Busy
                 neighborGrounds.push(neighborGround);
             }
         }

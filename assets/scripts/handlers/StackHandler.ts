@@ -1,8 +1,7 @@
 import { _decorator } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
 import { TileAnimator } from '../helpers/TileAnimator';
-import { ScoreInfo, ScoreManager } from '../managers/ScoreManager';
-import { TaskQueue } from '../core/TaskQueue';
+import { BlobOptions } from 'buffer';
 
 const { ccclass } = _decorator;
 
@@ -13,47 +12,53 @@ interface StackedGroundInfo {
 
 @ccclass('StackHandler')
 export class StackHandler {
-    private minStackCount = 0;
+    private minStackCount: number;
 
-    constructor(minStackCount:number) {
+    constructor(minStackCount: number = 10) {
         this.minStackCount = minStackCount;
     }
 
-    async processStacks(grounds: GroundTile[]): Promise<StackedGroundInfo[]> {
-        const processedInfo: StackedGroundInfo[] = [];
-
-        // Paralel işlemler için Promise listesi oluştur
-        const stackTasks = grounds.map(async (ground) => {
-            if (!ground.tryLock()) return null; // Eğer kilitlenemiyorsa işleme alma
-
-            try {
-                const lastCluster = ground.getLastCluster();
-                if (lastCluster) {
-                    const lastClusterLength = lastCluster.getLength();
-
-                    if (lastClusterLength >= this.minStackCount) {
-                        // Stack'i temizle
-                        await TileAnimator.animateTilesToZeroScale(lastCluster.getTiles());
-                        ground.popTileCluster();
-
-                        processedInfo.push({
-                            groundTile: ground,
-                            stackedCount: lastClusterLength,
-                        });
-
-                        // Skoru güncelle
-                        ScoreManager.getInstance().addScore({
-                            score: lastClusterLength,
-                            isCombo: false,
-                        });
-                    }
-                }
-            } finally {
-                ground.unlock(); // Kilidi aç
-            }
-        });
+    /**
+     * Process stacks for the given grounds.
+     * @param grounds List of GroundTile to process.
+     * @returns List of processed GroundTile.
+     */
+    async processStacks(grounds: GroundTile[]): Promise<GroundTile[]> {
+        const processedInfo: GroundTile[] = [];
+        const stackTasks = grounds.map((ground) => this.processSingleStack(ground));
         await Promise.all(stackTasks);
-
         return processedInfo;
+    }
+
+    /**
+     * Process a single stack for a ground tile.
+     * @param ground The GroundTile to process.
+     * @param processedInfo The shared list of processed GroundTile.
+     */
+    public async processSingleStack(ground: GroundTile): Promise<boolean> {
+        if (!ground.tryLock()) return; // If cannot lock, skip
+
+        try {
+            const lastCluster = ground.getLastCluster();
+            if (lastCluster && lastCluster.getLength() >= this.minStackCount) {
+                await this.clearStack(ground, lastCluster);
+            }
+            return true;
+        } catch (error) {
+            console.error('Error processing stack:', error);
+            return false;
+        } finally {
+            ground.unlock();
+        }
+    }
+
+    /**
+     * Clear the stack for a ground tile.
+     * @param ground The GroundTile to clear.
+     * @param cluster The cluster to clear.
+     */
+    private async clearStack(ground: GroundTile, cluster: any): Promise<void> {
+        await TileAnimator.animateTilesToZeroScale(cluster.getTiles());
+        ground.popTileCluster();
     }
 }

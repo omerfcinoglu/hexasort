@@ -81,6 +81,7 @@ export class GridGenerator {
             groundTileComp.attachedClusters.push(tileCluster);
             groundTileComp.setActiveCollider(false);
             groundTileComp.isPlacedGround = true;
+            groundTileComp.state = GroundTileStates.ReadyForNeighbor
             // groundTileComp.addTileCluster(tileCluster);
         }
     }
