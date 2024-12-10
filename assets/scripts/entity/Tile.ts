@@ -1,4 +1,4 @@
-import { _decorator, Component, MeshRenderer, Color, Mesh , Node } from 'cc';
+import { _decorator, Component, MeshRenderer, Node } from 'cc';
 import { ColorProvider } from '../core/ColorProvider';
 import { ITile } from '../interfaces/ITile';
 const { ccclass, property } = _decorator;

@@ -9,6 +9,8 @@ import { NeighborHandler } from "../handlers/NeighborHandler";
 import { StackHandler } from "../handlers/StackHandler";
 import { TaskQueue } from "../core/TaskQueue";
 import { LevelConfig } from "../../data/LevelConfig";
+import { EventSystem } from "../utils/EventSystem";
+import { Events } from "../../data/Events";
 
 const { ccclass, property } = _decorator;
 
@@ -47,6 +49,8 @@ export class GameManager extends Component {
     }
 
     async onPlacementTriggered(selectedTile: SelectableTiles) {
+        EventSystem.getInstance().emit(Events.CheckNeighbor);
+        return;
         const placedGround = await this.tilePlacementHandler?.place(selectedTile, this.selectableManager);
         if (placedGround) {
             placedGround.highlight(false);

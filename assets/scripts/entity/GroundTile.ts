@@ -7,6 +7,8 @@ import { TileConfig } from '../core/TileConfig';
 import { TileAnimator } from '../helpers/TileAnimator';
 import { TilePlacementHandler } from '../handlers/TilePlacementHandler';
 import { Colors } from '../../data/Colors';
+import { EventSystem } from '../utils/EventSystem';
+import { Events } from '../../data/Events';
 
 const { ccclass, property } = _decorator;
 
@@ -36,6 +38,10 @@ export class GroundTile extends LockableComponent {
     get Combo() {
         return this.comboCounter
     }
+
+
+
+
     
     onLoad() {
         this.mesh = this.node.getComponentInChildren(MeshRenderer);
@@ -44,7 +50,16 @@ export class GroundTile extends LockableComponent {
         this.highlightColor = Colors.highlightGround
         this.defaultColor = Colors.ground
         this.highlight(false);
+        this.registerEvent();
 
+    }
+
+    registerEvent(): void {
+        EventSystem.getInstance().on(Events.CheckNeighbor, this.CheckNeighbor.bind(this), this);
+    }
+
+    private CheckNeighbor(){
+        console.log("iki dört iki");
     }
 
     addTileCluster(tileCluster: TileCluster) {
