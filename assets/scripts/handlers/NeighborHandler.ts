@@ -19,23 +19,23 @@ export class NeighborHandler {
 
         const transferedGrounds: GroundTile[] = [];
         const typeMatches = await this.neighborChecker?.findAllMatches(currentGround) || [];
-
+        
         if (typeMatches.length > 0) {
-            if (typeMatches.length > 1) {
-                console.log("aga");
-                
-                for (const match of typeMatches) {
-                    await this.transferHandler?.transferClusterToTarget(match, currentGround);
-                }
-                transferedGrounds.push(currentGround);
-            } else {
+            if (typeMatches.length === 1) {
+
                 const { source, target } = this.determineTransferTargets(currentGround, typeMatches[0]);
+                await this.transferHandler?.transferClusterToTarget(source, target);     
                 transferedGrounds.push(source);
                 transferedGrounds.push(target);
-                await this.transferHandler?.transferClusterToTarget(source, target);
+            } else {
+                for (const match of typeMatches) {
+                    await this.transferHandler?.transferClusterToTarget(match, currentGround);
+                    transferedGrounds.push(match);
+                    transferedGrounds.push(currentGround);
+                }
             }
-        }
 
+        }
         return transferedGrounds;
     }
 

@@ -23,6 +23,7 @@ Todo:
 
   ☐ event system istediğimiz sonucu veriyor. şu anki gridde 1.selectable'ı koyunca kırmızılar doğru şekilde sıralanıyor. 
   ☐ bu adımdan sonra transfer olmuşsa source ve target komşularına tekrar bakmalıdır.
+  ✔ ortaya yerleştirdiğimiz tile'a değil de en yakına gidiyor - transfer @done(24-12-10 22:43)
 
 Hexasort GUI:
   ☐ end card

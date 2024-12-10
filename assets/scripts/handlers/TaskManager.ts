@@ -19,17 +19,18 @@ export class TaskManager extends SingletonComponent<TaskManager> {
         EventSystem.getInstance().on(Events.ProcessMarkedGround, this.ProcessMarkedGround.bind(this), this);
     }
 
-    ProcessMarkedGround(markedGrounds: GroundTile[]) {
+    async ProcessMarkedGround(markedGrounds: GroundTile[]) {
         
+        let newMarked = []
         markedGrounds.forEach(groundTile => {
-            let newMarked = []
             this.m_queue.add(async () => {
                 newMarked = await this.m_neighborHandler.processNeighbors(groundTile)
                 await sleep(1000)
             });
         });
-        console.log(`Processing marked grounds is done`);
-
+        await sleep(1000)
+        console.log(newMarked);
+        
     }
 
 
