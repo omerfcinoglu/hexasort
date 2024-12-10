@@ -36,7 +36,6 @@ export class UIManager extends SingletonComponent<UIManager> {
 
     start() {
         this.transform = this.canvas.getComponent(UITransform);
-        // this.orientationChange();
     }
 
     alingItems(orientation: Orientation) {
@@ -56,7 +55,7 @@ export class UIManager extends SingletonComponent<UIManager> {
     }
 
     orientationChange() {
-        // this.alingItems(this.getOrientation());
+        this.alingItems(this.getOrientation());
     }
 
     getOrientation() : Orientation{
