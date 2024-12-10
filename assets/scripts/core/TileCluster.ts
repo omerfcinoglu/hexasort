@@ -2,9 +2,6 @@
 import { _decorator, Component, Node, Prefab, Vec3, instantiate, tween, Collider } from 'cc';
 import { Tile } from '../entity/Tile';
 import { GroundTile } from '../entity/GroundTile';
-import { LockableComponent } from '../helpers/LockableComponent';
-import { SoundManager } from '../managers/SoundManager';
-import { Sounds } from './Sounds';
 import { TileConfig } from './TileConfig';
 
 const { ccclass, property } = _decorator;

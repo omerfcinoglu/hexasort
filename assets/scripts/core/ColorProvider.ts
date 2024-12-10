@@ -1,38 +1,16 @@
-import { _decorator, Component, Color, director , Node, MeshRenderer } from 'cc';
+import { _decorator, Component, Color, director, Node, Sprite, MeshRenderer } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass("ColorProvider")
 export class ColorProvider extends Component {
     private static _instance: ColorProvider | null = null;
 
-    @property
-    public color1: Color = Color.RED.clone();
+    @property([Color])
+    public colors: Color[] = [];
 
-    @property
-    public color2: Color = Color.GREEN.clone();
-
-    @property
-    public color3: Color = Color.BLUE.clone();
-
-    @property
-    public color4: Color = Color.YELLOW.clone();
-
-    @property
-    public color5: Color = Color.CYAN.clone();
-
-    @property
-    public color6: Color = Color.MAGENTA.clone();
-
-    @property
-    public ground: Color = Color.MAGENTA.clone();
-    
-    @property
-    public highlight: Color = Color.MAGENTA.clone();
-    
     onLoad() {
         if (ColorProvider._instance === null) {
             ColorProvider._instance = this;
-            // Sahneler arası geçişlerde yok olmaması için
             director.addPersistRootNode(this.node);
         } else {
             this.destroy();
@@ -48,34 +26,40 @@ export class ColorProvider extends Component {
     }
 
     public getColor(type: number): Color {
-        switch (type) {
-            case 0: return this.color1.clone();
-            case 1: return this.color2.clone();
-            case 2: return this.color3.clone();
-            case 3: return this.color4.clone();
-            case 4: return this.color5.clone();
-            case 5: return this.color6.clone();
-            case 6: return this.ground.clone();
-            case 7: return this.highlight.clone();
-            default: return Color.WHITE.clone();
+        if (type >= 0 && type < this.colors.length) {
+            return this.colors[type].clone();
+        } else {
+            console.warn(`Invalid type ${type}. Returning default color.`);
+            return Color.WHITE.clone(); 
         }
     }
 
-    public static ChangeDiffuseColor(color: Color , body : MeshRenderer){
+    public changeColor(type: number, node: Node) {
+        const sprite = node.getComponent(Sprite);
+        if (sprite) {
+            sprite.color = ColorProvider.getInstance().getColor(type);
+        } else {
+            console.error("The node does not have a Sprite component.");
+        }
+    }
+
+    public  ChangeDiffuseColor(type: number , body : MeshRenderer){
         if (body) {
             const material = body.material;
             if (material) {
+                const color = this.getColor(type)
                 material.setProperty('diffuseColor', color);
             } else {
                 console.error('Material not found on MeshRenderer.');
             }                                           
         }
     }
-
-    public static ChangeAlbedoColor(color: Color , body : MeshRenderer){
+    
+    public  ChangeAlbedoColor(type: number , body : MeshRenderer){
         if (body) {
             const material = body.material;
             if (material) {
+                const color = this.getColor(type)
                 material.setProperty('albedo', color);
             } else {
                 console.error('Material not found on MeshRenderer.');

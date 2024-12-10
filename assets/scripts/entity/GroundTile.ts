@@ -6,6 +6,7 @@ import { LockableComponent } from '../helpers/LockableComponent';
 import { TileConfig } from '../core/TileConfig';
 import { TileAnimator } from '../helpers/TileAnimator';
 import { TilePlacementHandler } from '../handlers/TilePlacementHandler';
+import { Colors } from '../../data/Colors';
 
 const { ccclass, property } = _decorator;
 
@@ -26,10 +27,11 @@ export class GroundTile extends LockableComponent {
 
     public isPlacedGround: boolean = false;
     
-    private defaultColor: Color = null;
-    private highlightColor: Color = null;
+    private defaultColor: Colors = null;
+    private highlightColor: Colors = null;
 
     private comboCounter = 0;
+    private m_colorProvider : ColorProvider;
 
     get Combo() {
         return this.comboCounter
@@ -37,9 +39,12 @@ export class GroundTile extends LockableComponent {
     
     onLoad() {
         this.mesh = this.node.getComponentInChildren(MeshRenderer);
-        this.highlightColor = ColorProvider.getInstance().getColor(7);
-        this.defaultColor = ColorProvider.getInstance().getColor(6);
+        this.m_colorProvider = ColorProvider.getInstance();
+        
+        this.highlightColor = Colors.highlightGround
+        this.defaultColor = Colors.ground
         this.highlight(false);
+
     }
 
     addTileCluster(tileCluster: TileCluster) {
@@ -86,8 +91,8 @@ export class GroundTile extends LockableComponent {
 
     public highlight(flag: boolean) {
         flag
-            ? ColorProvider.ChangeAlbedoColor(this.highlightColor, this.mesh)
-            : ColorProvider.ChangeAlbedoColor(this.defaultColor, this.mesh);
+            ? this.m_colorProvider.ChangeAlbedoColor(this.highlightColor, this.mesh)
+            : this.m_colorProvider.ChangeAlbedoColor(this.defaultColor, this.mesh);
     }
 
     getAllTileCount(): number {

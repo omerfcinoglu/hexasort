@@ -8,21 +8,18 @@ export class Tile extends Component implements ITile {
 
     @property
     public type: number = 0;
+    private meshe : MeshRenderer;
 
-    private color : Color = null;
-    private meshes : MeshRenderer[];
-
-    private temp_other_mesh : MeshRenderer;
+    private m_colorProvider: ColorProvider;
+    protected onLoad(): void {
+        this.m_colorProvider = ColorProvider.getInstance();
+    }
 
     init(type:number){
         this.type = type;
-        this.name = this.type.toString();
-        this.meshes = this.node.getComponentsInChildren(MeshRenderer)
+        this.meshe = this.node.getComponentInChildren(MeshRenderer)
 
-        this.color = ColorProvider.getInstance().getColor(this.type);
-        for (const mesh of this.meshes) {
-            ColorProvider.ChangeDiffuseColor(this.color , mesh);
-        }
+        this.m_colorProvider.ChangeDiffuseColor(this.type , this.meshe)
     }
 }
 

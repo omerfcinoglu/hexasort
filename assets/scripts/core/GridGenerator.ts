@@ -1,9 +1,6 @@
 import { _decorator, Prefab, Vec3, Node, instantiate } from "cc";
 import { GroundTile } from "../entity/GroundTile";
-import { Tile } from "../entity/Tile";
 import { TileCluster } from "./TileCluster";
-import { ColorProvider } from "./ColorProvider";
-import { TileConfig } from "./TileConfig";
 const { ccclass, property } = _decorator;
 
 @ccclass("GridGenerator")
