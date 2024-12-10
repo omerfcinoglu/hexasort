@@ -29,7 +29,6 @@ export class GridGenerator {
         const adjustedTileSizeX = this.tileSize + tileSpacingX;
         const adjustedTileSizeZ = this.tileSize + tileSpacingZ;
     
-        // Calculating offsets to center the grid
         const offsetX = (numCols - 1) * adjustedTileSizeX * 0.5;
         const offsetZ = (numRows - 1) * adjustedTileSizeZ * 0.5;
     

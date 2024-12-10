@@ -1,4 +1,4 @@
-import { _decorator, Component, MeshRenderer, Color, Mesh } from 'cc';
+import { _decorator, Component, MeshRenderer, Color, Mesh , Node } from 'cc';
 import { ColorProvider } from '../core/ColorProvider';
 import { ITile } from '../interfaces/ITile';
 const { ccclass, property } = _decorator;
@@ -8,18 +8,20 @@ export class Tile extends Component implements ITile {
 
     @property
     public type: number = 0;
-    private meshe : MeshRenderer;
+    private mesh : MeshRenderer;
 
+    private m_hexagon : Node = null;
     private m_colorProvider: ColorProvider;
-    protected onLoad(): void {
-        this.m_colorProvider = ColorProvider.getInstance();
-    }
-
+    
     init(type:number){
         this.type = type;
-        this.meshe = this.node.getComponentInChildren(MeshRenderer)
-
-        this.m_colorProvider.ChangeDiffuseColor(this.type , this.meshe)
+        this.m_colorProvider = ColorProvider.getInstance();
+        this.m_hexagon = this.node.getChildByName("Hexagon")
+        
+        this.m_colorProvider.ChangeDiffuseColor(
+            this.type,
+            this.m_hexagon.getComponent(MeshRenderer)
+        )
     }
 }
 
