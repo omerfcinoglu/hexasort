@@ -40,16 +40,21 @@ export class GroundTile extends LockableComponent {
     private highlightColor: Colors = null;
     private comboCounter = 0;
     private m_colorProvider : ColorProvider;
-    public state : GroundTileStates;
+    private m_state : GroundTileStates;
 
     get Combo() {
         return this.comboCounter
     }
 
-
-
-
     
+    get state(){
+        return this.m_state
+    }
+
+    set state(state : GroundTileStates){
+        this.m_state = state;
+    } 
+
     onLoad() {
         this.state = GroundTileStates.Empty;
         this.mesh = this.node.getComponentInChildren(MeshRenderer);
@@ -57,25 +62,7 @@ export class GroundTile extends LockableComponent {
         this.highlightColor = Colors.highlightGround
         this.defaultColor = Colors.ground
         this.highlight(false);
-        this.registerEvent();
 
-    }
-
-    registerEvent(): void {
-        EventSystem.getInstance().on(Events.CheckNeighbor, this.CheckNeighbor.bind(this), this);
-    }
-
-    private CheckNeighbor(){
-        if(this.state == GroundTileStates.Empty){
-            
-        }
-        else if(this.state == GroundTileStates.Ready){
-            console.log("im ready");
-            
-        }
-        else{
-
-        }
     }
 
     addTileCluster(tileCluster: TileCluster) {
@@ -129,6 +116,7 @@ export class GroundTile extends LockableComponent {
     getAllTileCount(): number {
         return this.attachedClusters.reduce((count, cluster) => count + cluster.getTiles().length, 0);
     }
+
 
     clearAllTiles(twenDuration : number){
         this.attachedClusters.forEach((cluster)=>{
