@@ -5,8 +5,6 @@ import { EventSystem } from '../utils/EventSystem';
 import { Events } from '../../data/Events';
 import { GroundTile, GroundTileStates } from '../entity/GroundTile';
 import { NeighborHandler } from './NeighborHandler';
-import { sleep } from '../helpers/Promises';
-import { group } from 'console';
 import { StackHandler } from './StackHandler';
 const { ccclass, property } = _decorator;
 @ccclass('TaskManager')
@@ -31,8 +29,10 @@ export class TaskManager extends SingletonComponent<TaskManager> {
     async ProcessStack(processedGrounds: GroundTile[]) {
         const stackedGrounds: GroundTile[] = [];
         for (const ground of processedGrounds) {
-            console.log(ground.state);
+            
             if (ground.state === GroundTileStates.ReadyForStack) {
+                console.log(ground.state);
+
                 const stackResult = await this.m_stackHandler.processSingleStack(ground);
                 if (stackResult) {
                     stackedGrounds.push(ground);
@@ -44,7 +44,6 @@ export class TaskManager extends SingletonComponent<TaskManager> {
     }
 
     async ProcessTransfer(markedGround: GroundTile[]): Promise<Set<GroundTile>> {
-        const processTransferedGrounds: GroundTile[] = [];
         const processingQueue: GroundTile[] = [...markedGround];
         const processedGroundsLog: Set<GroundTile> = new Set();
 

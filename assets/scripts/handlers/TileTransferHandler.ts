@@ -34,7 +34,6 @@ export class TileTransferHandler {
         } catch (error) {
             console.error('Error during cluster transfer:', error);
         } finally {
-            source.state = GroundTileStates.ReadyForNeighbor
         }
     }
 }

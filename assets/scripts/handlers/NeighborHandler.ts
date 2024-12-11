@@ -24,13 +24,11 @@ export class NeighborHandler {
                 const { source, target } = this.determineTransferTargets(currentGround, typeMatches[0]);
                 await this.transferHandler?.transferClusterToTarget(source, target);     
                 transferedGrounds.push(source);
-                transferedGrounds.push(target);
             } else {
                 for (const match of typeMatches) {
                     await this.transferHandler?.transferClusterToTarget(match, currentGround);
                     currentGround.state = GroundTileStates.ReadyForNeighbor;
                     transferedGrounds.push(match);
-                    transferedGrounds.push(currentGround);
                 }
             }
         }

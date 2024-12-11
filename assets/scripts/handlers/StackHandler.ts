@@ -36,7 +36,6 @@ export class StackHandler {
      * @param processedInfo The shared list of processed GroundTile.
      */
     public async processSingleStack(ground: GroundTile): Promise<boolean> {
-        if (!ground.tryLock()) return; // If cannot lock, skip
 
         try {
             const lastCluster = ground.getLastCluster();
