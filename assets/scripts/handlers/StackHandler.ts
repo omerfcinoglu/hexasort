@@ -1,7 +1,6 @@
 import { _decorator } from 'cc';
-import { GroundTile } from '../entity/GroundTile';
+import { GroundTile, GroundTileStates } from '../entity/GroundTile';
 import { TileAnimator } from '../helpers/TileAnimator';
-import { BlobOptions } from 'buffer';
 
 const { ccclass } = _decorator;
 
@@ -24,31 +23,39 @@ export class StackHandler {
      * @returns List of processed GroundTile.
      */
     async processStacks(grounds: GroundTile[]): Promise<GroundTile[]> {
-        const processedInfo: GroundTile[] = [];
-        const stackTasks = grounds.map((ground) => this.processSingleStack(ground));
+        const processedGrounds: GroundTile[] = [];
+
+        const stackTasks = grounds.map(async (ground) => {
+            const isProcessed = await this.processSingleStack(ground);
+            if (isProcessed) {
+                processedGrounds.push(ground);
+            }
+        });
+
         await Promise.all(stackTasks);
-        return processedInfo;
+        return processedGrounds;
     }
 
     /**
      * Process a single stack for a ground tile.
      * @param ground The GroundTile to process.
-     * @param processedInfo The shared list of processed GroundTile.
+     * @returns Whether the ground was processed.
      */
-    public async processSingleStack(ground: GroundTile): Promise<boolean> {
-
+    private async processSingleStack(ground: GroundTile): Promise<boolean> {
         try {
-            const lastCluster = ground.getLastCluster();
-            if (lastCluster && lastCluster.getLength() >= this.minStackCount) {
-                await this.clearStack(ground, lastCluster);
+            if(ground.getLastCluster){
+
+                const lastCluster = ground.getLastCluster();
+                if (lastCluster && lastCluster.getLength() >= this.minStackCount) {
+                    await this.clearStack(ground, lastCluster);
+                    ground.state = GroundTileStates.ReadyForNeighbor; // Mark as ready for neighbor
+                    return true; // Mark as processed
+                }
             }
-            return true;
         } catch (error) {
             console.error('Error processing stack:', error);
-            return false;
-        } finally {
-            ground.unlock();
         }
+        return false; // Not processed
     }
 
     /**

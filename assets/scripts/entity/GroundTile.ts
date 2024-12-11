@@ -21,14 +21,6 @@ const { ccclass, property } = _decorator;
  */
 
 
-export const enum GroundTileStates {
-    Empty,
-    ReadyForNeighbor,
-    ReadyForStack,
-    Busy,
-    Filled,
-}
-
 @ccclass('GroundTile')
 export class GroundTile extends LockableComponent {
 
@@ -42,23 +34,13 @@ export class GroundTile extends LockableComponent {
     private highlightColor: Colors = null;
     private comboCounter = 0;
     private m_colorProvider : ColorProvider;
-    private m_state : GroundTileStates;
 
     get Combo() {
         return this.comboCounter
     }
 
-    
-    get state(){
-        return this.m_state
-    }
-
-    set state(state : GroundTileStates){
-        this.m_state = state;
-    } 
 
     onLoad() {
-        this.state = GroundTileStates.Empty;
         this.mesh = this.node.getComponentInChildren(MeshRenderer);
         this.m_colorProvider = ColorProvider.getInstance();
         this.highlightColor = Colors.highlightGround
@@ -77,7 +59,6 @@ export class GroundTile extends LockableComponent {
             this.node.position.z
         ));
         tileCluster.node.setPosition(currentWorldPos);
-        this.state = GroundTileStates.ReadyForStack;
     }
 
     public setActiveCollider(value: boolean) {
@@ -93,21 +74,14 @@ export class GroundTile extends LockableComponent {
         this.setActiveCollider(false);
         this.isPlacedGround = true;
         this.highlight(false);
-        this.state = GroundTileStates.ReadyForNeighbor;
-        EventSystem.getInstance().emit(Events.ProcessMarkedGround , [this]);
-
     }
 
     public popTileCluster() {
         const lastCluster = this.attachedClusters.pop();
         if (this.attachedClusters.length === 0) {
             this.isPlacedGround = false;
-            this.state = GroundTileStates.Empty;
             this.unlock();
             this.setActiveCollider(true);
-        }
-        else{
-            this.state = GroundTileStates.ReadyForNeighbor;
         }
     }
 

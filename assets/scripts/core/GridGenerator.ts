@@ -1,5 +1,5 @@
 import { _decorator, Prefab, Vec3, Node, instantiate } from "cc";
-import { GroundTile, GroundTileStates } from "../entity/GroundTile";
+import { GroundTile } from "../entity/GroundTile";
 import { TileCluster } from "./TileCluster";
 const { ccclass, property } = _decorator;
 
@@ -81,7 +81,6 @@ export class GridGenerator {
             groundTileComp.attachedClusters.push(tileCluster);
             groundTileComp.setActiveCollider(false);
             groundTileComp.isPlacedGround = true;
-            groundTileComp.state = GroundTileStates.ReadyForNeighbor
             // groundTileComp.addTileCluster(tileCluster);
         }
     }

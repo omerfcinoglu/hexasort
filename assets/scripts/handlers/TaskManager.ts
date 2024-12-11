@@ -3,7 +3,7 @@ import { TaskQueue } from '../core/TaskQueue';
 import { SingletonComponent } from '../helpers/SingletonComponent';
 import { EventSystem } from '../utils/EventSystem';
 import { Events } from '../../data/Events';
-import { GroundTile, GroundTileStates } from '../entity/GroundTile';
+import { GroundTile } from '../entity/GroundTile';
 import { NeighborHandler } from './NeighborHandler';
 import { StackHandler } from './StackHandler';
 const { ccclass, property } = _decorator;
@@ -20,6 +20,7 @@ export class TaskManager extends SingletonComponent<TaskManager> {
     }
 
     async ProcessMarkedGroundTransfer(initialMarkedGround: GroundTile): Promise<void> {
+        
         const stack = await this.ProcessTransfer([initialMarkedGround]);
         if (stack.size > 0) {
             await this.ProcessStack(Array.from(stack));
@@ -27,35 +28,23 @@ export class TaskManager extends SingletonComponent<TaskManager> {
     }
 
     async ProcessStack(processedGrounds: GroundTile[]) {
-        const stackedGrounds: GroundTile[] = [];
-        for (const ground of processedGrounds) {
-            
-            if (ground.state === GroundTileStates.ReadyForStack) {
-                console.log(ground.state);
-
-                const stackResult = await this.m_stackHandler.processSingleStack(ground);
+            if (processedGrounds.length>0) {
+                const stackResult = await this.m_stackHandler.processStacks(processedGrounds);
                 if (stackResult) {
-                    stackedGrounds.push(ground);
+                    await this.ProcessTransfer(stackResult);
                 }
-            }
         }
-
-        await this.ProcessTransfer(stackedGrounds);
     }
 
     async ProcessTransfer(markedGround: GroundTile[]): Promise<Set<GroundTile>> {
         const processingQueue: GroundTile[] = [...markedGround];
         const processedGroundsLog: Set<GroundTile> = new Set();
-
+        console.log(markedGround);
+        
         while (processingQueue.length > 0) {
             const currentGround = processingQueue.shift();
-            if (!currentGround || processedGroundsLog.has(currentGround)) continue;
             processedGroundsLog.add(currentGround);
-
-            if (currentGround.state !== GroundTileStates.ReadyForNeighbor) continue;
-
             try {
-                currentGround.state = GroundTileStates.Busy;
                 const neighbors = await this.m_neighborHandler.processNeighbors(currentGround);
 
                 for (const ground of neighbors) {
@@ -64,7 +53,6 @@ export class TaskManager extends SingletonComponent<TaskManager> {
                     }
                 }
             } finally {
-                currentGround.state = GroundTileStates.ReadyForStack;
             }
         }
 

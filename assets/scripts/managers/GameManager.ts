@@ -47,7 +47,6 @@ export class GameManager extends Component {
         const placedGround = await this.tilePlacementHandler?.place(selectedTile, this.selectableManager);
         if (placedGround) {
             placedGround.highlight(false);
-            placedGround.state = GroundTileStates.ReadyForNeighbor
             EventSystem.getInstance().emit(Events.ProcessMarkedGround,placedGround);
             return;
         }
