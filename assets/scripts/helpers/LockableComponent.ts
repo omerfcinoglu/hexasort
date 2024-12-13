@@ -1,5 +1,4 @@
-import { _decorator, Component, Color, MeshRenderer } from 'cc';
-import { ColorProvider } from '../core/ColorProvider';
+import { _decorator, Component } from 'cc';
 const { ccclass } = _decorator;
 
 @ccclass('LockableComponent')
@@ -16,9 +15,8 @@ export class LockableComponent extends Component {
         this._isLocked = true;
     
         this._lockTimeout = setTimeout(() => {
-            // console.warn(`${this.node.name} lock timeout! Unlocking.`);
             this.unlock();
-        }, 1000);
+        }, 5000);
     }
     
     public unlock(): void {
@@ -39,12 +37,4 @@ export class LockableComponent extends Component {
         return true;
     }
 
-    private ChangeDiffuseColor(color: Color): void {
-        const meshRenderer = this.node.getComponentInChildren(MeshRenderer); // MeshRenderer'ı bul
-        if (meshRenderer) {
-            ColorProvider.ChangeDiffuseColor(color, meshRenderer); // ColorProvider ile rengi değiştir
-        } else {
-            console.error(`MeshRenderer not found on node ${this.node.name}.`);
-        }
-    }
 }

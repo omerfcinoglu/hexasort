@@ -18,6 +18,8 @@ Todo:
   ✔ stack animasyonu ya da trasnfer animasyonu varken yeni gelen komşuluğu tutarlı ise animasyon bitimini beklemeli ve işlenmeli @done(24-12-09 19:53)
 
   ✔ snowfall @done(24-12-07 20:47)
+    ☐ snowfall'lar random sağa sola hafifçe hareket edebilir.
+
 
 
 
@@ -44,3 +46,17 @@ Hexasort GUI:
       ☐ her ekran ayrı sayfada ya da sayfa içinde açılabilsin
       ☐ sayfa içeriği
           ☐ bu kısmı doldururuz.
+
+
+
+
+
+!!!
+/**
+ * !TODO
+ * 
+ * Ground Tile'ın içinde transfer olan tilelar kontrol edilip burada pozisyon verilemeli.
+ * Bu tile animatorü groundtile'da çağırmayı sağlar
+ * 
+ */
+

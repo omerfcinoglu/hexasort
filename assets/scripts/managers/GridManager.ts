@@ -1,9 +1,7 @@
 import { _decorator, Component, Node, Prefab, instantiate, Vec3 } from 'cc';
-import { GroundTile, GroundTileStates } from '../entity/GroundTile';
+import { GroundTile } from '../entity/GroundTile';
 import { GridGenerator } from '../core/GridGenerator';
 import { SingletonComponent } from '../helpers/SingletonComponent';
-import { EventSystem } from '../utils/EventSystem';
-import { Events } from '../../data/Events';
 const { ccclass, property } = _decorator;
 
 @ccclass("GridManager")

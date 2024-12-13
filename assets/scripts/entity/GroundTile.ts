@@ -1,24 +1,12 @@
-import { _decorator, Component, Node, Collider, Color, Vec3, MeshRenderer, Mesh, EmptyDevice } from 'cc';
+import { _decorator, Collider, Color, Vec3, MeshRenderer, Mesh, EmptyDevice } from 'cc';
 import { TileCluster } from '../core/TileCluster';
-import { SelectableTiles } from '../entity/SelectableTiles';
 import { ColorProvider } from '../core/ColorProvider';
 import { LockableComponent } from '../helpers/LockableComponent';
 import { TileConfig } from '../core/TileConfig';
 import { TileAnimator } from '../helpers/TileAnimator';
-import { TilePlacementHandler } from '../handlers/TilePlacementHandler';
 import { Colors } from '../../data/Colors';
-import { EventSystem } from '../utils/EventSystem';
-import { Events } from '../../data/Events';
 
 const { ccclass, property } = _decorator;
-
-/**
- * !TODO
- * 
- * Ground Tile'ın içinde transfer olan tilelar kontrol edilip burada pozisyon verilemeli.
- * Bu tile animatorü groundtile'da çağırmayı sağlar
- * 
- */
 
 
 @ccclass('GroundTile')

@@ -1,5 +1,6 @@
 import { _decorator, Node, Vec3 } from 'cc';
-import { GroundTile, GroundTileStates } from '../entity/GroundTile';
+import { TileCluster } from '../core/TileCluster';
+import { GroundTile } from '../entity/GroundTile';
 import { TileAnimator } from '../helpers/TileAnimator';
 
 const { ccclass } = _decorator;
@@ -7,33 +8,32 @@ const { ccclass } = _decorator;
 @ccclass('TileTransferHandler')
 export class TileTransferHandler {
 
-    /**
-     * Transfers a TileCluster from the source GroundTile to the target GroundTile.
-     * Handles animation, locking, and merging logic.
-     * @param source The GroundTile from which the cluster is transferred.
-     * @param targetGround The GroundTile to which the cluster is transferred.
-     */
     async transferClusterToTarget(source: GroundTile, targetGround: GroundTile): Promise<void> {
         if (!source || !targetGround) return;
 
         const cluster = source.getLastCluster();
         if (!cluster) return;
 
+        if (!source.tryLock()) {
+            // console.warn('Cluster is already locked. Skipping transfer.');
+        }
+
         try {
-            targetGround.tryLock();
-            await TileAnimator.animateClusterTransfer(cluster, targetGround, source);
-            
-            const targetTopCluster = targetGround.getLastCluster();
-            if (targetTopCluster) {
-                const transferTiles = cluster.getTiles();
-                await targetTopCluster.transferTiles(transferTiles);
-                targetTopCluster.attachedGround = targetGround;
+            if (targetGround) {
+                targetGround.tryLock();
+                await TileAnimator.animateClusterTransfer(cluster, targetGround , source);
+                const targetTopCluster = targetGround.getLastCluster();
+                if(targetTopCluster){
+                    await targetTopCluster.transferTiles(cluster);
+                }
+                // console.log(`Transferring cluster from (${source.gridPosition.row}, ${source.gridPosition.col}) to (${targetGround.gridPosition.row}, ${targetGround.gridPosition.col}) `);
+            } else {
+                // console.warn('No lastAttachedCluster found on targetGround. Skipping transferTiles.');
             }
             source.popTileCluster();
-
-        } catch (error) {
-            console.error('Error during cluster transfer:', error);
         } finally {
+            targetGround.unlock();
+            source.unlock();
         }
     }
 }

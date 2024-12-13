@@ -2,7 +2,6 @@ import { _decorator, Component } from "cc";
 import { GridManager } from "./GridManager";
 import { TileSelectionHandler } from "../handlers/TileSelectionHandler";
 import { TilePlacementHandler } from "../handlers/TilePlacementHandler";
-import { GroundTile, GroundTileStates } from "../entity/GroundTile";
 import { SelectableTiles } from "../entity/SelectableTiles";
 import { SelectableManager } from "./SelectableManager";
 import { NeighborHandler } from "../handlers/NeighborHandler";
