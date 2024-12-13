@@ -1,4 +1,3 @@
-import { Size } from '@tsparticles/engine';
 import { view, sys } from 'cc';
 
 export enum DeviceType {
@@ -7,18 +6,15 @@ export enum DeviceType {
     Desktop
 }
 
-enum StoreLinks {
-    ANDROID = 'https://play.google.com/store/apps/details?id=com.gamebrain.hexasort&hl=en_US',
-    IOS = 'https://apps.apple.com/us/app/hexa-sort/id6463127238',
+export enum Orientation {
+    Portrait,
+    Landscape
 }
 
 export class DeivceDetector {
-    /**
-     * Cihaz türünü tespit eder.
-     */
     static getDeviceType(): DeviceType {
-        const width = window.visualViewport.width;
-        const height = window.visualViewport.height;
+        const width = view.getCanvasSize().width;
+        const height = view.getCanvasSize().height;
 
         if (sys.isMobile) {
             const minDimension = Math.min(width, height);
@@ -27,33 +23,34 @@ export class DeivceDetector {
             }
             return DeviceType.Tablet;
         }
+
         return DeviceType.Desktop;
     }
 
-    /**
-     * Cihazın ekran boyutlarını döndürür.
-     * @returns {width, height} Ekran genişliği ve yüksekliği.
-     */
-    static getCanvasSize(): { width: number, height: number } {
-        
-        const width = view.getVisibleSize().width;
-        const height = view.getVisibleSize().height
+    static getOrientation(): Orientation {
+        const width = view.getCanvasSize().width;
+        const height = view.getCanvasSize().height;
 
-        return {
-            width: width,
-            height: height
-        };
+        return width > height ? Orientation.Landscape : Orientation.Portrait;
     }
+
+    static getAspectRatio(): number {
+        const size = view.getCanvasSize();
+        return size.width / size.height;
+    }
+
     /**
-     * Uygun mağazaya yönlendirir.
+     * !todo
+     * urlleler bir providerdan gelsin
      */
     static redirectToStore(): void {
         if (sys.platform === sys.Platform.ANDROID) {
-            window.location.href = StoreLinks.ANDROID;
+            window.location.href = 'https://play.google.com/store/apps/details?id=com.gamebrain.hexasort&hl=en_US';
         } else if (sys.platform === sys.Platform.IOS) {
-            window.location.href = StoreLinks.IOS;
+            window.location.href = 'https://apps.apple.com/us/app/hexa-sort/id6463127238';
         } else {
-            window.location.href = StoreLinks.ANDROID;
+            window.location.href = 'https://play.google.com/store/apps/details?id=com.gamebrain.hexasort&hl=en_US';
         }
     }
+    
 }

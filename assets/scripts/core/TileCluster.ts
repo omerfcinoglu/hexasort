@@ -2,6 +2,9 @@
 import { _decorator, Component, Node, Prefab, Vec3, instantiate, tween, Collider } from 'cc';
 import { Tile } from '../entity/Tile';
 import { GroundTile } from '../entity/GroundTile';
+import { LockableComponent } from '../helpers/LockableComponent';
+import { SoundManager } from '../managers/SoundManager';
+import { Sounds } from './Sounds';
 import { TileConfig } from './TileConfig';
 
 const { ccclass, property } = _decorator;
@@ -12,6 +15,7 @@ export class TileCluster extends Component {
     @property({ type: Prefab })
     public tilePrefab: Prefab = null!; // Prefab for creating individual tiles within the cluster
 
+    @property
     public tileCount: number = 0; // Number of tiles in this cluster
 
     private tiles: Tile[] = []; // Holds all Tile instances within the cluster
@@ -47,7 +51,7 @@ export class TileCluster extends Component {
         for (let i = 0; i < tileCount; i++) {
             const tileNode = instantiate(this.tilePrefab);
             tileNode.parent = this.node;
-            this.tileCount++;
+
             const tilePosition = new Vec3(0, (i+1) * TileConfig.spacingY, 0);
             tileNode.setPosition(tilePosition);
 
@@ -66,11 +70,9 @@ export class TileCluster extends Component {
      * @param tiles - Array of Tile instances to add.
      */
     async transferTiles(tiles: Tile[]) {
-		const reversedTiles = [...tiles].reverse()
-        
-        const tilesToAddCount = reversedTiles.length;
+        const tilesToAddCount = tiles.length;
         for (let i = 0; i < tilesToAddCount; i++) {
-            const tile = reversedTiles.pop();
+            const tile = tiles.pop();
             const worldPosition = tile!.node.getWorldPosition();
             this.tileCount++;
             tile!.node.removeFromParent();

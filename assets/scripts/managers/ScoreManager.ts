@@ -1,29 +1,18 @@
-import { _decorator, Component, Node, tween, UITransform, Vec3, RichText, EventTarget, CylinderCollider } from 'cc';
+import { _decorator, Component, Node, tween, UITransform, Vec3, RichText, EventTarget } from 'cc';
 import { SingletonComponent } from '../helpers/SingletonComponent';
-import { UIManager } from './UIManager';
 
 const { ccclass, property } = _decorator;
 
-export interface ScoreInfo{
-    score : number,
-    isCombo : boolean
-}
-
 @ccclass('ScoreManager')
 export class ScoreManager extends SingletonComponent<ScoreManager> {
+    @property(Node)
+    private barLogic: Node = null!;
 
-    private progressBar_sprite :Node;
-    private progressBar_progress :Node;
-
-    private s_base = 10;
-    private s_external = 15;
-    private s_singleCombo = 2;
-    private s_multiCombo = 4;
+    @property(Node)
+    private barSprite: Node = null!;
 
     private m_score = 0;
-    private m_goal = 100;
-
-    private scoreQueue : ScoreInfo[] = [];
+    private m_goal = 50;
 
     public static goalReached = new EventTarget(); // EventTarget for managing events
 
@@ -32,33 +21,22 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
     }
 
     start() {
-        this.progressBar_progress = UIManager.getInstance().barLogic;
-        this.progressBar_sprite = UIManager.getInstance().barSprite; 
         this.updateText();
     }
 
     updateText() {
         if (this.m_score >= this.m_goal) this.m_score = this.m_goal;
-        this.progressBar_progress.getComponentInChildren(RichText).string = `<color=#ffffff>${this.m_score}</color>/<color=#ffffff>${this.m_goal}</color>`;
+        this.barLogic.getComponentInChildren(RichText).string = `<color=#ffffff>${this.m_score}</color>/<color=#ffffff>${this.m_goal}</color>`;
     }
 
-    addScoreToQueue(scoreInfo : ScoreInfo){
-        this.scoreQueue.push(scoreInfo);
-        
-        if(this.scoreQueue.length>1){
-            const addingScore = this.scoreQueue[0]
-            this.addScore(addingScore)
-        }
-    } 
-
-    async addScore(scoreInfo : ScoreInfo) {
-        const isCombo = scoreInfo.isCombo;
-        const score = scoreInfo.score;
-        if (!this.progressBar_progress || !this.progressBar_sprite) {
+    addScore(score: number) {
+        score = 50;
+        if (!this.barLogic || !this.barSprite) {
             console.error("BarLogic or BarSprite node is missing in the hierarchy.");
             return;
         }
-        const barLogicWidth = this.progressBar_progress.getComponent(UITransform).width;
+
+        const barLogicWidth = this.barLogic.getComponent(UITransform).width;
         const minX = -barLogicWidth;
         const maxX = 0;
 
@@ -66,34 +44,28 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
         const targetProgress = newScore / this.m_goal;
         const targetX = minX + targetProgress * (maxX - minX);
 
-        const initialX = this.progressBar_sprite.position.x;
-        // console.log(isCombo);
-        
-        if(isCombo) UIManager.getInstance().AnimateCombo();
+        const initialX = this.barSprite.position.x;
 
-        await new Promise<void>((resolve)=>{
-            tween({ value: initialX })
+        tween({ value: initialX })
             .to(
                 0.5,
                 { value: targetX },
                 {
                     easing: 'quadOut',
                     onUpdate: (obj: any) => {
-                        this.progressBar_sprite.setPosition(new Vec3(obj.value, this.progressBar_sprite.position.y, this.progressBar_sprite.position.z));
-
+                        this.barSprite.setPosition(new Vec3(obj.value, this.barSprite.position.y, this.barSprite.position.z));
                     },
                 }
             )
             .call(() => {
                 this.m_score = newScore;
                 this.updateText();
+
                 if (this.m_score >= this.m_goal) {
                      ScoreManager.goalReached.emit('goalReached');
                 }
-                resolve();
             })
             .start();
-        })
     }
 
     shakeUI(node: Node, shakeIntensity: number = 3, shakeDuration: number = 0.3) {
@@ -117,31 +89,4 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
             .call(() => node.setPosition(originalPosition))
             .start();
     }
-
-
-    /**
-     * 
-     * @param combo combo count
-     * @param currentStackCount last cluster tile length for current stack count 
-     * @param minStackCount stack handler provides min stack count
-     */
-    calculateScore(combo:number , currentStackCount : number , minStackCount : number){
-        let baseScore = this.decideBaseScore(currentStackCount,minStackCount);
-        // console.log("decided base score  ",baseScore);
-        if(currentStackCount>minStackCount && combo === 1) baseScore += (this.s_singleCombo * (currentStackCount - minStackCount));
-        if(currentStackCount>minStackCount && combo >= 2){
-            if(currentStackCount === minStackCount){
-                baseScore += (this.s_multiCombo  * (currentStackCount - (minStackCount/1.5)));
-            }
-            baseScore += (this.s_multiCombo  * (currentStackCount - minStackCount));
-        }
-
-        return baseScore;
-
-    }
-
-
-    decideBaseScore(currentStackCount : number , minStackCount : number) : number{
-        return currentStackCount / minStackCount > 2 ?  this.s_external : this.s_base 
-    }   
 }

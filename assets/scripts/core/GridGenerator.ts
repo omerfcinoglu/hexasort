@@ -1,6 +1,9 @@
 import { _decorator, Prefab, Vec3, Node, instantiate } from "cc";
 import { GroundTile } from "../entity/GroundTile";
+import { Tile } from "../entity/Tile";
 import { TileCluster } from "./TileCluster";
+import { ColorProvider } from "./ColorProvider";
+import { TileConfig } from "./TileConfig";
 const { ccclass, property } = _decorator;
 
 @ccclass("GridGenerator")
@@ -21,7 +24,7 @@ export class GridGenerator {
         const numCols = levelMatrix[0].length;
     
         // Define spacing adjustments
-        const tileSpacingX = 0.84; // X-axis spacing adjustment for closer columns
+        const tileSpacingX = 0.9; // X-axis spacing adjustment for closer columns
         const tileSpacingZ = 1.1; // Z-axis spacing adjustment for row spacing
         const staggerOffset = -1; // Lowering offset for every even column
     
@@ -29,6 +32,7 @@ export class GridGenerator {
         const adjustedTileSizeX = this.tileSize + tileSpacingX;
         const adjustedTileSizeZ = this.tileSize + tileSpacingZ;
     
+        // Calculating offsets to center the grid
         const offsetX = (numCols - 1) * adjustedTileSizeX * 0.5;
         const offsetZ = (numRows - 1) * adjustedTileSizeZ * 0.5;
     
@@ -72,12 +76,13 @@ export class GridGenerator {
         const clusterNode = instantiate(this.tileClusterPrefab);
         const tileCluster = clusterNode.getComponent(TileCluster);
         if (tileCluster) {
-            tileCluster.initCluster(tileType,8); 
+            tileCluster.initCluster(tileType,3); 
             tileCluster.node.setPosition(new Vec3(groundTileNode.position.x, 0 ,groundTileNode.position.z))
             tileCluster.node.setParent(groundTileNode.parent);
             tileCluster.attachedGround = groundTileComp;
 
             
+
             groundTileComp.attachedClusters.push(tileCluster);
             groundTileComp.setActiveCollider(false);
             groundTileComp.isPlacedGround = true;
