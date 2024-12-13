@@ -10,14 +10,18 @@ Hexasort GamePlay:
   ✔ ortaya yerleştirdiğimiz tile'a değil de en yakına gidiyor - transfer @done(24-12-10 22:43)
 
 
+  recovery yaptık
+  eksikleri gidermem gerekiyor
+
+  ☐ responsive
   ☐ snowfall'lar random sağa sola hafifçe hareket edebilir.
-  ☐ stack görsel olarak olmadı bir seferde
-  ☐ stackten sonra komşuluk kontrolü olmuyor
   ☐ Score system
   ☐ We need to create a queue for the score, add everything to the queue, and remove them once processed.
   ☐ Check if screen adjustments work correctly in the build.
 
-
+  !!KONTROL ET OLUYOR MU DİYE
+  ✘ stack görsel olarak olmadı bir seferde   @cancelled(24-12-13 23:46)
+  ✘ stackten sonra komşuluk kontrolü olmuyor @cancelled(24-12-13 23:46)
 Hexasort GUI:
   ☐ end card
   ☐ snowfall extensions

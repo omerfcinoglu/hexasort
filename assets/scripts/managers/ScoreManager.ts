@@ -12,7 +12,7 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
     private barSprite: Node = null!;
 
     private m_score = 0;
-    private m_goal = 50;
+    private m_goal = 100;
 
     public static goalReached = new EventTarget(); // EventTarget for managing events
 
@@ -30,7 +30,6 @@ export class ScoreManager extends SingletonComponent<ScoreManager> {
     }
 
     addScore(score: number) {
-        score = 50;
         if (!this.barLogic || !this.barSprite) {
             console.error("BarLogic or BarSprite node is missing in the hierarchy.");
             return;

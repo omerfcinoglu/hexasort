@@ -6,10 +6,6 @@ export enum DeviceType {
     Desktop
 }
 
-export enum Orientation {
-    Portrait,
-    Landscape
-}
 
 export class DeivceDetector {
     static getDeviceType(): DeviceType {
@@ -23,16 +19,9 @@ export class DeivceDetector {
             }
             return DeviceType.Tablet;
         }
-
         return DeviceType.Desktop;
     }
 
-    static getOrientation(): Orientation {
-        const width = view.getCanvasSize().width;
-        const height = view.getCanvasSize().height;
-
-        return width > height ? Orientation.Landscape : Orientation.Portrait;
-    }
 
     static getAspectRatio(): number {
         const size = view.getCanvasSize();

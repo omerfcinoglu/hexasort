@@ -1,4 +1,4 @@
-import { _decorator, Component, Camera, tween } from 'cc';
+import { _decorator, Component, Camera, tween, Vec2, Vec3 } from 'cc';
 import { SingletonComponent } from '../helpers/SingletonComponent';
 const { ccclass, property } = _decorator;
 
@@ -12,6 +12,12 @@ export class CameraManager extends SingletonComponent<CameraManager> {
 
     @property
     public maxOrthoHeight: number = 20;
+
+    private startPos : Vec3;
+
+    protected start(): void {
+        this.startPos = this.mainCamera.node.getPosition().clone();
+    }
 
     zoom(inOrOut: boolean, duration: number) {
         if (!this.mainCamera) {
@@ -31,5 +37,18 @@ export class CameraManager extends SingletonComponent<CameraManager> {
                 { easing: 'quadOut' }
             )
             .start();
+    }
+
+    changeToAlternative(value:boolean){
+        if(value){
+            this.mainCamera.node.setPosition(
+                this.startPos.clone().add3f(-9,0,0)
+            )
+        }
+        else{
+            console.log("ana");
+            
+            this.mainCamera.node.setPosition(this.startPos)
+        }
     }
 }
