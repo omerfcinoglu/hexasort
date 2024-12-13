@@ -7,8 +7,6 @@ import { SelectableManager } from "./SelectableManager";
 import { NeighborHandler } from "../handlers/NeighborHandler";
 import { StackHandler } from "../handlers/StackHandler";
 import { LevelConfig } from "../../data/LevelConfig";
-import { EventSystem } from "../utils/EventSystem";
-import { Events } from "../../data/Events";
 import { GroundTile } from "../entity/GroundTile";
 
 const { ccclass, property } = _decorator;
@@ -46,61 +44,66 @@ export class GameManager extends Component {
     async onPlacementTriggered(selectedTile: SelectableTiles) {
         const placedGround = await this.tilePlacementHandler?.place(selectedTile, this.selectableManager);
         if (placedGround) {
-            placedGround.highlight(false);
-            await this.ProcessMarkedGroundTransfer(placedGround);
-            return;
+            await this.ProcessMarkedGround(placedGround);
         }
     }
 
+    /**
+     * Komşuluk ve Stack işlemlerini başlatır.
+     */
+    async ProcessMarkedGround(initialMarkedGround: GroundTile): Promise<void> {
+        // 1. Komşuluk kontrolleri
+        const markedGrounds = await this.ProcessTransfer([initialMarkedGround]);
 
-        async ProcessMarkedGroundTransfer(initialMarkedGround: GroundTile): Promise<void> {
-            const markedGrounds = await this.ProcessTransfer([initialMarkedGround]);
-    
-            if (markedGrounds.size > 0) {
-                const processedGrounds = Array.from(markedGrounds);
-                await this.ProcessStack(processedGrounds);
+        // 2. Komşuluk bitti, stack kontrolüne geç
+        if (markedGrounds.size > 0) {
+            const processedGrounds = Array.from(markedGrounds);
+            await this.ProcessStack(processedGrounds);
+        }
+    }
+
+    /**
+     * Komşuluk Kontrolleri (Tüm Komşular Bitene Kadar Çalışır)
+     */
+
+
+    /**
+     * Tek Bir Transfer Döngüsü (Bir Kuyruk için)
+     */
+    async ProcessTransfer(markedGrounds: GroundTile[]): Promise<Set<GroundTile>> {
+        const processingQueue: GroundTile[] = [...markedGrounds];
+        const newMarkedGrounds: Set<GroundTile> = new Set();
+
+        while (processingQueue.length > 0) {
+            const currentGround = processingQueue.shift();
+            if (!currentGround || newMarkedGrounds.has(currentGround)) continue;
+
+            try {
+                newMarkedGrounds.add(currentGround);
+                const neighbors = await this.m_neighborHandler.processNeighbors(currentGround);
+
+                neighbors.forEach((neighbor) => {
+                        processingQueue.push(neighbor);
+                });
+            } finally {
             }
         }
-    
-        /**
-         * Komşuluk Kontrolü ve Transfer İşlemleri
-         */
-        async ProcessTransfer(markedGrounds: GroundTile[]): Promise<Set<GroundTile>> {
-            const processingQueue: GroundTile[] = [...markedGrounds];
-            const processedGrounds: Set<GroundTile> = new Set();
-    
-            while (processingQueue.length > 0) {
-                const currentGround = processingQueue.shift();
-                if (!currentGround || processedGrounds.has(currentGround)) continue;
-                
-                try {
-                    processedGrounds.add(currentGround);
-                    const neighbors = await this.m_neighborHandler.processNeighbors(currentGround);
-                    
-                    neighbors.forEach((neighbor) => {
-                        if (!processedGrounds.has(neighbor)) {
-                            processingQueue.push(neighbor);
-                        }
-                    });
-                } finally {
-                }
-            }
-    
-            return processedGrounds;
-        }
-    
-        /**
-         * Stack Kontrolü
-         */
-        async ProcessStack(processedGrounds: GroundTile[]): Promise<void> {
-            let stackProcessedGrounds: GroundTile[] = [];
-            stackProcessedGrounds = await this.m_stackHandler.processStacks(processedGrounds);
-            
-            if (stackProcessedGrounds.length > 0) {
-                const markedGrounds = await this.ProcessTransfer(stackProcessedGrounds);
-                if (markedGrounds.size > 0) {
-                    await this.ProcessStack(Array.from(markedGrounds));
-                }
+
+        return newMarkedGrounds;
+    }
+
+    /**
+     * Stack Kontrolü
+     */
+    async ProcessStack(processedGrounds: GroundTile[]): Promise<void> {
+        const stackProcessedGrounds = await this.m_stackHandler.processStacks(processedGrounds);
+
+        if (stackProcessedGrounds.length > 0) {
+            // Stack'ten dönen ground'lar tekrar komşuluk kontrolüne gönderilir
+            const newMarkedGrounds = await this.ProcessTransfer(stackProcessedGrounds);
+            if (newMarkedGrounds.size > 0) {
+                await this.ProcessStack(Array.from(newMarkedGrounds));
             }
         }
+    }
 }

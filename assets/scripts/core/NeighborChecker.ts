@@ -42,7 +42,8 @@ export class NeighborChecker {
             const neighborCol = col + dCol;
 
             const neighborGround = GridManager.getInstance().getGroundTile(neighborRow, neighborCol);
-            if (neighborGround  && neighborGround.getLastCluster()) {
+            if (neighborGround && !neighborGround.isLocked && neighborGround.getLastCluster()) {
+                neighborGround.lock();
                 neighborGrounds.push(neighborGround);
             }
         }
@@ -55,6 +56,7 @@ export class NeighborChecker {
      * @returns An array of neighboring GroundTiles with matching cluster types.
      */
     public async findAllMatches(placedGround: GroundTile): Promise<GroundTile[]> {
+        
         const lastCluster = placedGround.getLastCluster();
         if (!lastCluster) return []; // Return empty if no last cluster exists
 

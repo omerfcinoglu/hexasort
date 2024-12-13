@@ -1,7 +1,6 @@
 import { _decorator,  } from 'cc';
 import { GroundTile } from '../entity/GroundTile';
 import { TileAnimator } from '../helpers/TileAnimator';
-import { ScoreManager } from '../managers/ScoreManager';
 
 const { ccclass } = _decorator;
 
@@ -19,7 +18,6 @@ export class StackHandler {
                 const lastCluster = ground.getLastCluster();
                 if (lastCluster) {
                     const lastClusterLength = lastCluster.getLength();
-                    console.log(lastClusterLength);
                     
                     if (lastClusterLength >= this.minStackCount) {
                         ground.popTileCluster();
@@ -31,6 +29,7 @@ export class StackHandler {
                     }
                 }
             } finally {
+                ground.unlock();
             }
         }
         return processedGrounds;

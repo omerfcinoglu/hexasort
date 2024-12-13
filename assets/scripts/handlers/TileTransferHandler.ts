@@ -13,7 +13,6 @@ export class TileTransferHandler {
 
         const cluster = source.getLastCluster();
         if (!cluster) return;
-
         try {
             if (targetGround) {
                 await TileAnimator.animateClusterTransfer(cluster, targetGround , source);
@@ -27,6 +26,8 @@ export class TileTransferHandler {
             }
             source.popTileCluster();
         } finally {
+            source.unlock();
+            targetGround.unlock();
         }
     }
 }

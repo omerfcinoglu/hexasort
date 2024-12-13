@@ -15,8 +15,10 @@ export class LockableComponent extends Component {
         this._isLocked = true;
     
         this._lockTimeout = setTimeout(() => {
+            console.log("lock timout");
+            
             this.unlock();
-        }, 5000);
+        }, 2000);
     }
     
     public unlock(): void {

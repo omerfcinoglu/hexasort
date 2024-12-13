@@ -70,7 +70,6 @@ export class Snowfall extends Component {
         this.snowflakes.forEach(flake => flake.reset(this.width,this.height));
     }
 }
-
 class Snowflake {
     posX: number;
     posY: number;
@@ -81,6 +80,9 @@ class Snowflake {
     opacity: number;
     opacityDecreaser: number;
     isActive: boolean;
+    isMovingX: boolean; // X ekseninde hareket eden snowflake
+    xSpeed: number; // X eksenindeki dalga hızı
+    xAmplitude: number; // X eksenindeki dalga genliği
 
     constructor(canvasWidth: number, canvasHeight: number, minSize: number, maxSize: number, startHeight: number, startX: number) {
         this.width = canvasWidth;
@@ -97,13 +99,21 @@ class Snowflake {
         this.radius = Math.sqrt(math.randomRange(0, Math.pow(canvasWidth / 2, 2)));
         this.opacity = 255; // Tamamen opak başlar
         this.isActive = true;
+
+        // X ekseninde hareket için %40 olasılık
+        this.isMovingX = true;
+        this.xSpeed = math.randomRange(-100, 100); // Dalganın hızı
+        this.xAmplitude = math.randomRange(250, 500); // Dalganın genliği
     }
 
     update(deltaTime: number) {
+        this.posY += Math.pow(this.size, 0.5); // Y eksenindeki düşme hareketi
+        this.opacity -= this.opacityDecreaser; // Opaklığın azalması
+        this.size -= 0.009; // Boyutun azalması
 
-        this.posY += Math.pow(this.size, 0.5);
-        this.opacity -= this.opacityDecreaser;
-        this.size -= 0.009;
+        // X ekseninde hareket
+        if (this.isMovingX) {
+        }
     }
 
     display(graphics: Graphics) {
@@ -116,3 +126,4 @@ class Snowflake {
         }
     }
 }
+

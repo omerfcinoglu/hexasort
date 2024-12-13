@@ -1,35 +1,25 @@
 
-Todo:
+Hexasort GamePlay:
   ✔ When tile transfer occurs, the source and target are not processed @done(24-12-07 20:12)
       ✔ refactoring game manager @done(24-12-07 20:12)
       ✔ !!!! transfer yerleşince olsa da transferlerden sonra yeni transferler hesaplanmıyor @done(24-12-07 20:12)
-
-  ☐ Score system
-      ☐ We need to create a queue for the score, add everything to the queue, and remove them once processed.
-  
-  ☐ Check if screen adjustments work correctly in the build.
-  
   ✔ stackten sonra bazen transfer olmuyorlar @done(24-12-08 16:45)
-
-  ☐ stack görsel olarak olmadı bir seferde
-  ☐ stackten sonra komşuluk kontrolü olmuyor
-    bunun nedenini anlayamıyorum, bazılarında istenilen gibi davranıyor
   ✔ stack animasyonu olurken yeni eklenen groundlar eklenebiliyor. lock çalışmıyor demek ki @done(24-12-09 14:50)
   ✔ stack animasyonu ya da trasnfer animasyonu varken yeni gelen komşuluğu tutarlı ise animasyon bitimini beklemeli ve işlenmeli @done(24-12-09 19:53)
-
   ✔ snowfall @done(24-12-07 20:47)
-    ☐ snowfall'lar random sağa sola hafifçe hareket edebilir.
-
-
-
-
-  ☐ event system istediğimiz sonucu veriyor. şu anki gridde 1.selectable'ı koyunca kırmızılar doğru şekilde sıralanıyor. 
-  ☐ bu adımdan sonra transfer olmuşsa source ve target komşularına tekrar bakmalıdır.
   ✔ ortaya yerleştirdiğimiz tile'a değil de en yakına gidiyor - transfer @done(24-12-10 22:43)
+
+
+  ☐ snowfall'lar random sağa sola hafifçe hareket edebilir.
+  ☐ stack görsel olarak olmadı bir seferde
+  ☐ stackten sonra komşuluk kontrolü olmuyor
+  ☐ Score system
+  ☐ We need to create a queue for the score, add everything to the queue, and remove them once processed.
+  ☐ Check if screen adjustments work correctly in the build.
+
 
 Hexasort GUI:
   ☐ end card
-
   ☐ snowfall extensions
       ✔ localdeki dosyaların ile extension menusundeki dosyaların çakışır olmalı yani vscode'da düzgün dosyaları göremeiyorusn @done(24-12-09 11:24)
       ✔ şu an snowfy görünüyor fakat bu proje extensionlarında yok. @done(24-12-09 11:24)
@@ -37,8 +27,6 @@ Hexasort GUI:
       ✔ npm install @done(24-12-09 11:24)
       ✔ npm run build @done(24-12-09 11:24)
       ✔ sonrası video @done(24-12-09 11:24)
-      
-
       ☐ extentionda logo ve giriş yapmak istiyorsun
       ☐ kaç tane ekran olacağını soracaksın.
       ☐ ekran ekleme ve silme yapabileceksin
