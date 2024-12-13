@@ -42,8 +42,7 @@ export class NeighborChecker {
             const neighborCol = col + dCol;
 
             const neighborGround = GridManager.getInstance().getGroundTile(neighborRow, neighborCol);
-            if (neighborGround && !neighborGround.isLocked && neighborGround.getLastCluster()) {
-                neighborGround.lock();
+            if (neighborGround  && neighborGround.getLastCluster()) {
                 neighborGrounds.push(neighborGround);
             }
         }

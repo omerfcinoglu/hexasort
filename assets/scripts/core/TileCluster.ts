@@ -12,7 +12,6 @@ export class TileCluster extends Component {
     @property({ type: Prefab })
     public tilePrefab: Prefab = null!; // Prefab for creating individual tiles within the cluster
 
-    @property
     public tileCount: number = 0; // Number of tiles in this cluster
 
     private tiles: Tile[] = []; // Holds all Tile instances within the cluster

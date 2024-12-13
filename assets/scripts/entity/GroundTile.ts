@@ -68,7 +68,6 @@ export class GroundTile extends LockableComponent {
         const lastCluster = this.attachedClusters.pop();
         if (this.attachedClusters.length === 0) {
             this.isPlacedGround = false;
-            this.unlock();
             this.setActiveCollider(true);
         }
     }

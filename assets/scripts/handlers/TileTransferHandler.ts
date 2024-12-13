@@ -14,17 +14,12 @@ export class TileTransferHandler {
         const cluster = source.getLastCluster();
         if (!cluster) return;
 
-        if (!source.tryLock()) {
-            // console.warn('Cluster is already locked. Skipping transfer.');
-        }
-
         try {
             if (targetGround) {
-                targetGround.tryLock();
                 await TileAnimator.animateClusterTransfer(cluster, targetGround , source);
                 const targetTopCluster = targetGround.getLastCluster();
                 if(targetTopCluster){
-                    await targetTopCluster.transferTiles(cluster);
+                    await targetTopCluster.transferTiles(cluster.getTiles());
                 }
                 // console.log(`Transferring cluster from (${source.gridPosition.row}, ${source.gridPosition.col}) to (${targetGround.gridPosition.row}, ${targetGround.gridPosition.col}) `);
             } else {
@@ -32,8 +27,6 @@ export class TileTransferHandler {
             }
             source.popTileCluster();
         } finally {
-            targetGround.unlock();
-            source.unlock();
         }
     }
 }

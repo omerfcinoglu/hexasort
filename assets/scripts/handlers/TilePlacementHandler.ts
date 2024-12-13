@@ -11,16 +11,11 @@ export class TilePlacementHandler {
         const targetGround = selectedTile.attachedGround;
         if (!targetGround || !selectedTile) return null;
 
-        if (!targetGround.tryLock()) {
-            console.warn('Target GroundTile is locked, cannot place.');
-            return null;
-        }
 
         try {
             this.addClustersToGround(selectedTile, targetGround);
             this.finalizePlacement(selectedTile, selectableManager);
         } finally {
-            targetGround.unlock();
         }
 
         return targetGround;
