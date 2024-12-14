@@ -26,7 +26,7 @@ export class SelectableManager extends SingletonComponent<SelectableManager> {
     }
 
     async createSelectableTiles(startTiles: { [key: number]: { tileType: number; tileCount: number }[] }) {
-        const idlePositionOffset = -5
+        const idlePositionOffset = -4.5
         const startX = (this.tilesCount - 1) + idlePositionOffset ;
         const startXOffset = 20;
         const gap = 3;

@@ -1,6 +1,5 @@
-import { _decorator, Component, Camera, tween, Vec3 } from 'cc';
+import { _decorator, Component, Camera, tween, Vec2, Vec3 } from 'cc';
 import { SingletonComponent } from '../helpers/SingletonComponent';
-import { Orientation } from '../core/Orientation';
 const { ccclass, property } = _decorator;
 
 @ccclass('CameraManager')
@@ -15,20 +14,12 @@ export class CameraManager extends SingletonComponent<CameraManager> {
     public maxOrthoHeight: number = 20;
 
     private startPos : Vec3;
-    private orientationChangePos : Vec3;
-
-    
-    protected onLoad(): void {
-        super.onLoad();
-    }
 
     protected start(): void {
-        this.startPos = this.mainCamera.node.getPosition()
-        this.orientationChangePos = this.mainCamera.node.getPosition().add3f(-10,0,0)
+        this.startPos = this.mainCamera.node.getPosition().clone();
     }
 
-
-    public zoom(inOrOut: boolean, duration: number) {
+    zoom(inOrOut: boolean, duration: number) {
         if (!this.mainCamera) {
             console.error('Main camera is not assigned.');
             return;
@@ -36,8 +27,8 @@ export class CameraManager extends SingletonComponent<CameraManager> {
 
         const currentOrthoHeight = this.mainCamera.orthoHeight;
         const targetOrthoHeight = inOrOut
-            ? 11 // Zoom In
-            : 15 // Zoom Out
+            ? Math.max(this.minOrthoHeight, currentOrthoHeight - 5) // Zoom In
+            : Math.min(this.maxOrthoHeight, currentOrthoHeight + 5); // Zoom Out
 
         tween(this.mainCamera)
             .to(
@@ -46,15 +37,18 @@ export class CameraManager extends SingletonComponent<CameraManager> {
                 { easing: 'quadOut' }
             )
             .start();
-
     }
 
-    changePosition(orientation: Orientation) {
-        const targetPosition = 
-            orientation == Orientation.Portrait 
-                ? this.startPos 
-                : this.orientationChangePos;
-    
-        this.mainCamera.node.setPosition(targetPosition);
+    changeToAlternative(value:boolean){
+        if(value){
+            this.mainCamera.node.setPosition(
+                this.startPos.clone().add3f(-9,0,0)
+            )
+        }
+        else{
+            console.log("ana");
+            
+            this.mainCamera.node.setPosition(this.startPos)
+        }
     }
 }

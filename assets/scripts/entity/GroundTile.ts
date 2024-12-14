@@ -1,44 +1,44 @@
-import { _decorator, Collider, Color, Vec3, MeshRenderer, Mesh, EmptyDevice } from 'cc';
+import { _decorator, Component, Node, Collider, Color, Vec3, MeshRenderer, Mesh } from 'cc';
 import { TileCluster } from '../core/TileCluster';
+import { SelectableTiles } from '../entity/SelectableTiles';
 import { ColorProvider } from '../core/ColorProvider';
 import { LockableComponent } from '../helpers/LockableComponent';
 import { TileConfig } from '../core/TileConfig';
 import { TileAnimator } from '../helpers/TileAnimator';
-import { Colors } from '../../data/Colors';
+import { TilePlacementHandler } from '../handlers/TilePlacementHandler';
 
 const { ccclass, property } = _decorator;
 
+/**
+ * !TODO
+ * 
+ * Ground Tile'ın içinde transfer olan tilelar kontrol edilip burada pozisyon verilemeli.
+ * Bu tile animatorü groundtile'da çağırmayı sağlar
+ * 
+ */
 
 @ccclass('GroundTile')
 export class GroundTile extends LockableComponent {
 
     public gridPosition: { row: number; col: number } = { row: 0, col: 0 };
     public attachedClusters: TileCluster[] = [];
-    
+    private mesh : MeshRenderer;
+
     public isPlacedGround: boolean = false;
     
-    private mesh : MeshRenderer;
-    private defaultColor: Colors = null;
-    private highlightColor: Colors = null;
-    private comboCounter = 0;
-    private m_colorProvider : ColorProvider;
-
-    get Combo() {
-        return this.comboCounter
-    }
-
+    private defaultColor: Color = null;
+    private highlightColor: Color = null;
 
     onLoad() {
         this.mesh = this.node.getComponentInChildren(MeshRenderer);
-        this.m_colorProvider = ColorProvider.getInstance();
-        this.highlightColor = Colors.highlightGround
-        this.defaultColor = Colors.ground
+        this.highlightColor = ColorProvider.getInstance().getColor(7);
+        this.defaultColor = ColorProvider.getInstance().getColor(6);
         this.highlight(false);
-
     }
 
     addTileCluster(tileCluster: TileCluster) {
         this.attachedClusters.push(tileCluster);
+
         const currentWorldPos = tileCluster.node.worldPosition.clone();
         tileCluster.node.parent = this.node.parent;
         tileCluster.node.setWorldPosition(new Vec3(
@@ -58,45 +58,37 @@ export class GroundTile extends LockableComponent {
         return this.attachedClusters[this.attachedClusters.length - 1];
     }
 
-    public placeSelectableTile() {
-        this.setActiveCollider(false);
-        this.isPlacedGround = true;
-        this.highlight(false);
+    public placeSelectableTile(selectableTile: SelectableTiles, targetGround: GroundTile) {
+        for (const tileCluster of selectableTile.tileClusters) {
+            this.addTileCluster(tileCluster);
+            tileCluster.place(this);
+        }
+        selectableTile.node.removeFromParent();
     }
 
     public popTileCluster() {
         const lastCluster = this.attachedClusters.pop();
         if (this.attachedClusters.length === 0) {
-            this.isPlacedGround = false;
-            this.setActiveCollider(true)
-            this.unlock();;
+            this.setActiveCollider(true);
+        }
+        else{
+
         }
     }
 
     public highlight(flag: boolean) {
         flag
-            ? this.m_colorProvider.ChangeAlbedoColor(this.highlightColor, this.mesh)
-            : this.m_colorProvider.ChangeAlbedoColor(this.defaultColor, this.mesh);
+            ? ColorProvider.ChangeAlbedoColor(this.highlightColor, this.mesh)
+            : ColorProvider.ChangeAlbedoColor(this.defaultColor, this.mesh);
     }
 
     getAllTileCount(): number {
         return this.attachedClusters.reduce((count, cluster) => count + cluster.getTiles().length, 0);
     }
 
-
     clearAllTiles(twenDuration : number){
         this.attachedClusters.forEach((cluster)=>{
             TileAnimator.animateTilesToZeroScale(cluster.getTiles(),twenDuration);
         })
     }
-
-    addCombo(){
-        this.comboCounter ++;
-    }
-
-    resetCombo(){
-        this.comboCounter = 0;
-    }
-
-
 }

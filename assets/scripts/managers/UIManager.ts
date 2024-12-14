@@ -2,10 +2,13 @@ import { _decorator, Component, Node, tween, UITransform, Vec2, Vec3, Widget } f
 import { SingletonComponent } from '../helpers/SingletonComponent';
 import { CameraManager } from './CameraManager';
 import { ProgressBarContainer } from '../entity/ProgressBarContainer';
-import { Orientation } from '../core/Orientation';
 const { ccclass, property } = _decorator;
 
 
+export enum Orientation {
+    Portrait = "portrait-primary",
+    Landscape = "landscape-primary"
+}
 
 @ccclass('UIManager')
 export class UIManager extends SingletonComponent<UIManager> {
@@ -20,21 +23,18 @@ export class UIManager extends SingletonComponent<UIManager> {
     public barLogic: Node = null!;
 
     @property(Node)
-    public barSprite: Node = null!;
-
-
-    @property(Node)
-    public combo: Node = null!;
+    public endCardContent: Node = null!;
 
     private transform: UITransform = null;
+    private cameraManager : CameraManager;
 
     protected onLoad(): void {
         super.onLoad();
-        window.addEventListener("orientationchange", this.orientationChange.bind(this));
 
     }
 
     start() {
+        this.cameraManager = CameraManager.getInstance();
         this.transform = this.canvas.getComponent(UITransform);
     }
 
@@ -45,35 +45,16 @@ export class UIManager extends SingletonComponent<UIManager> {
     }
 
     setItemsPortrait() {
-        this.progressBarContainer.changeOrientation(Orientation.Portrait)
-        CameraManager.getInstance().changePosition(Orientation.Portrait);
+        this.cameraManager.changeToAlternative(false);
+        this.progressBarContainer.portraitMode();
+        this.endCardContent.active = false;
     }
 
     setItemsLandscape() {
-        this.progressBarContainer.changeOrientation(Orientation.Landscape)
-        CameraManager.getInstance().changePosition(Orientation.Landscape);
+        this.cameraManager.changeToAlternative(true);
+        this.progressBarContainer.landscapeMode();
+        this.endCardContent.active = true;
     }
-
-    orientationChange() {
-        this.alingItems(this.getOrientation());
-    }
-
-    getOrientation() : Orientation{
-        const contentSize = this.transform.contentSize
-        
-        return contentSize.width > contentSize.height
-            ?  Orientation.Landscape
-            :  Orientation.Portrait;
-    }
-
-    getDimensions(){
-        return this.transform.contentSize
-    }
-
-    public AnimateCombo(){
-        this.combo.active = true;
-    }
-
 
     /**
      * 

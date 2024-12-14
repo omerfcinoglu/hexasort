@@ -4,7 +4,6 @@ import { ScoreManager } from './ScoreManager';
 import { GridManager } from './GridManager';
 import { InputManager } from './InputManager';
 import { SelectableManager } from './SelectableManager';
-import { UIManager } from './UIManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('SceneManager')
@@ -21,6 +20,8 @@ export class SceneManager extends Component {
     @property(Node)
     private HexasortPlay: Node = null!;
 
+    @property(Node)
+    private ProgressBar: Node = null!;
 
     onLoad(): void {
         ScoreManager.goalReached.on('goalReached', this.onGoalReached, this);
@@ -34,26 +35,27 @@ export class SceneManager extends Component {
         if (!this.particle || !this.gridContainer || !this.EndCard) return;
     
         this.particle.active = true;
+        this.ProgressBar.active = false;
         CameraManager.getInstance().zoom(false, 1.5);
         GridManager.getInstance().ClearStack();
         InputManager.getInstance().lockInputs();
         SelectableManager.getInstance().clear();
-        UIManager.getInstance().displayProgressBar(false);
+
         try {
             await Promise.all([
                 this.rotateGridContainerY(),
-                this.fadeInEndCard(255, 1),
+                this.fadeInEndCard(150, 1),
             ]);
         } catch (error) {
             console.error("Error in onGoalReached:", error);
         } finally {
-            // this.HexasortPlay.active = true;
+            this.HexasortPlay.active = true;
             InputManager.getInstance().unlockInputs();
         }
     }
 
     private rotateGridContainerY(): Promise<void> {
-        return new Promise((resolve) => {   
+        return new Promise((resolve) => {
             const currentRotation = this.gridContainer!.getRotation();
             const currentEuler = new Vec3();
             currentRotation.getEulerAngles(currentEuler);

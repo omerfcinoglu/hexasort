@@ -1,14 +1,5 @@
 import { _decorator, Component, Node, Vec3 } from 'cc';
-import { Orientation } from '../core/Orientation';
 const { ccclass, property } = _decorator;
-
-
-/**
- * !TODO
- * her ekran değişiminde yeniden konumlandırabiliriz
- * bazen bar geriye hareket ediyor
- */
-
 
 
 @ccclass('ProgressBarContainer')
@@ -19,24 +10,18 @@ export class ProgressBarContainer extends Component {
 
     start() {
         this.initPos = this.node.getPosition();
-        this.landscapePos = this.initPos.clone().add3f(-500,-300,0)
+        this.landscapePos = this.node.getPosition().clone().add3f(-500,-100,0)
     }
 
-
-    changeOrientation(orientation : Orientation){
-        orientation === Orientation.Portrait
-        ? this.portraitMode()
-        : this.landscapeMode()        
-    }
 
     portraitMode(){
+        this.node.setScale(1.5,1.5,1.5)
         this.node.setPosition(this.initPos)
-        this.node.setScale(1,1,1)
     }
 
     landscapeMode(){
+        this.node.setScale(2.3,2.3,2.3)
         this.node.setPosition(this.landscapePos)
-        this.node.setScale(1.7,1.7,1.7)
     }
 }
 

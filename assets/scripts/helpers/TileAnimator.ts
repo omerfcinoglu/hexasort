@@ -2,6 +2,7 @@ import { Node, Vec3, tween, Quat } from 'cc';
 import { Tile } from '../entity/Tile';
 import { TileCluster } from '../core/TileCluster';
 import { GroundTile } from '../entity/GroundTile';
+import { ScoreManager } from '../managers/ScoreManager';
 import { SoundManager } from '../managers/SoundManager';
 import { Sounds } from '../core/Sounds';
 import { TileConfig } from '../core/TileConfig';
@@ -31,7 +32,7 @@ export class TileAnimator {
 		let cumulativeHeight = (targetTileCount) * TileConfig.spacingY;
 	 
 		const baseDuration = 0.35;
-		const delayBetweenTiles = 0.06;
+		const delayBetweenTiles = 0.09;
 		const peakHeightFactor = 0.9;
 		const down_easingFunction = 'quartOut';
 		const lift_easingFunction = 'linear';
